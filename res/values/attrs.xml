@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="textStyle" format="string" />
+
+    <declare-styleable name="PTextView">
+        <attr name="textStyle" />
+    </declare-styleable>
+    <declare-styleable name="PButton">
+        <attr name="textStyle" />
+    </declare-styleable>
+
+</resources>

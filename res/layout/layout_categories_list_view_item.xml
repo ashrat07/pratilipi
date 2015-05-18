@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pratilipi.android.widget.PTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_tab_text_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical"
+    android:padding="15dp"
+    android:singleLine="true"
+    android:textColor="@android:color/black"
+    android:textSize="@dimen/text_large" />

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:orientation="vertical" >
+
+        <com.pratilipi.android.widget.PTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"
+            android:text="Choose Language"
+            android:textColor="@color/text_gray"
+            android:textSize="@dimen/text_small"
+            app:textStyle="light" />
+
+        <com.pratilipi.android.widget.PButton
+            android:id="@+id/hindi_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_selector_red"
+            android:text="Hindi"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_large" />
+
+        <com.pratilipi.android.widget.PButton
+            android:id="@+id/tamil_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_selector_red"
+            android:text="Tamil"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_large" />
+
+        <com.pratilipi.android.widget.PButton
+            android:id="@+id/gujrati_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_selector_red"
+            android:text="Gujrati"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_large" />
+    </LinearLayout>
+
+    <com.pratilipi.android.widget.PButton
+        android:id="@+id/go_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        android:background="@drawable/button_selector_green"
+        android:text="GO"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_large"
+        app:textStyle="bold" />
+
+    <com.pratilipi.android.widget.PTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Don&apos;t worry you can change it later"
+        android:textColor="@color/text_gray"
+        app:textStyle="light" />
+
+</LinearLayout>

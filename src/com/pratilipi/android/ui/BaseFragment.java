@@ -1,0 +1,90 @@
+package com.pratilipi.android.ui;
+
+import org.json.JSONObject;
+
+import com.pratilipi.android.R;
+import com.pratilipi.android.http.HttpResponseListener;
+import com.pratilipi.android.util.LoggerUtils;
+
+import android.app.Activity;
+import android.app.Fragment;
+
+public abstract class BaseFragment extends Fragment implements
+		HttpResponseListener {
+
+	SplashActivity mParentActivity;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if (activity instanceof SplashActivity) {
+			mParentActivity = (SplashActivity) activity;
+		}
+	}
+
+	/**
+	 * Set result from a HTTP POST Call
+	 * 
+	 * @param finalResult
+	 *            - JSON Result returned by server
+	 * @param postUrl
+	 *            - URL on which HTTP Post was created
+	 * @return true if result was consumed
+	 */
+	@Override
+	public Boolean setPostStatus(JSONObject finalResult, String postUrl,
+			int responseCode) {
+
+		if (finalResult == null && mParentActivity != null) {
+			LoggerUtils.logWarn("Get Response", "No value returned");
+			mParentActivity.showError(mParentActivity.getResources().getString(
+					R.string.error_system_issue));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set result from a HTTP GET Call
+	 * 
+	 * @param finalResult
+	 *            - JSON Result returned by server
+	 * @param getUrl
+	 *            - URL on which HTTP GET was created
+	 * @return true if result was consumed
+	 */
+	@Override
+	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
+			int responseCode) {
+
+		if (finalResult == null && mParentActivity != null) {
+			LoggerUtils.logWarn("Get Response", "No value returned");
+			mParentActivity.showError(mParentActivity.getResources().getString(
+					R.string.error_system_issue));
+			return true;
+		}
+		return false;
+	}
+
+	public abstract String getCustomTag();
+
+	/**
+	 * introducing a functionality similar to the Activity.onBackPressed()
+	 * callbacks
+	 */
+	public void onBackPressed() {
+	}
+
+	public void activateUserInput() {
+	}
+
+	public void onContinueClick() {
+	}
+
+	public void toggleFragmentFooter(Boolean b) {
+	}
+
+	public void toggleSpinner(Boolean b) {
+	}
+
+}

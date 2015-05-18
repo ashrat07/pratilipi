@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="text_red">#ED1C24</color>
+    <color name="text_gray">#999999</color>
+    <color name="background_xlight_red">#D82626</color>
+    <color name="background_light_red">#E28386</color>
+    <color name="background_red">#FD4B4B</color>
+    <color name="background_dark_red">#FF4040</color>
+    <color name="background_light_green">#80CAC4</color>
+    <color name="background_green">#009688</color>
+    <color name="background_gray">#999999</color>
+    <color name="background_transparent_gray">#99999999</color>
+
+</resources>

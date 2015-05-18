@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pratilipi</string>
+    <string name="blank"></string>
+    <string name="error_system_issue">Something went wrong and we are sorry for that. Please try again later</string>
+    <string name="view_all">View All&#62;&#62;</string>
+
+</resources>
