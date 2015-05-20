@@ -11,15 +11,17 @@ public class Book implements Parcelable {
 	public String artist;
 	public String summary;
 	public String category;
+	public String price;
 
 	public Book(String imageURL, String title, String name, String artist,
-			String summary, String category) {
+			String summary, String category, String price) {
 		this.imageURL = imageURL;
 		this.title = title;
 		this.name = name;
 		this.artist = artist;
 		this.summary = summary;
 		this.category = category;
+		this.price = price;
 	}
 
 	protected Book(Parcel in) {
@@ -29,6 +31,7 @@ public class Book implements Parcelable {
 		artist = in.readString();
 		summary = in.readString();
 		category = in.readString();
+		price = in.readString();
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class Book implements Parcelable {
 		dest.writeString(artist);
 		dest.writeString(summary);
 		dest.writeString(category);
+		dest.writeString(price);
 	}
 
 	public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {

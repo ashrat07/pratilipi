@@ -300,7 +300,7 @@ public class StoreFragment extends BaseFragment {
 									.getJSONObject("attributes")
 									.getString("label");
 							book = new Book(imageURL, title, name, artist,
-									summary, category);
+									summary, category, "");
 							featuredList.add(book);
 
 							View view = View.inflate(mParentActivity,
@@ -349,7 +349,7 @@ public class StoreFragment extends BaseFragment {
 									.getJSONObject("attributes")
 									.getString("label");
 							book = new Book(imageURL, title, name, artist,
-									summary, category);
+									summary, category, "");
 							newReleasesList.add(book);
 
 							View view = View.inflate(mParentActivity,
