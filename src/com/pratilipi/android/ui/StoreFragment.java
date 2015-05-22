@@ -194,80 +194,49 @@ public class StoreFragment extends BaseFragment {
 
 	private class StoreHome implements HttpResponseListener {
 
-		private View featuredViewAll;
-		private LinearLayout featuredScrollLayout;
-		private View newReleasesViewAll;
-		private LinearLayout newReleasesScrollLayout;
-
-		private List<Book> featuredList;
-		private List<Book> newReleasesList;
-		private Book book;
+		private View topReadContentViewAll;
+		private LinearLayout topReadContentScrollLayout;
+		private List<Book> topReadContentList;
 
 		public View getView() {
 
 			View view = View.inflate(mParentActivity,
 					R.layout.layout_store_home, null);
 
-			featuredViewAll = view.findViewById(R.id.featured_view_all);
-			featuredScrollLayout = (LinearLayout) view
+			topReadContentViewAll = view.findViewById(R.id.featured_view_all);
+			topReadContentScrollLayout = (LinearLayout) view
 					.findViewById(R.id.featured_scroll_layout);
-			newReleasesViewAll = view.findViewById(R.id.new_releases_view_all);
-			newReleasesScrollLayout = (LinearLayout) view
-					.findViewById(R.id.new_releases_scroll_layout);
 
-			featuredViewAll.setOnClickListener(new View.OnClickListener() {
+			topReadContentViewAll
+					.setOnClickListener(new View.OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					mParentActivity
-							.showNextView(new LanguageSelectionFragment());
-				}
-			});
-			newReleasesViewAll.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							mParentActivity
+									.showNextView(new LanguageSelectionFragment());
+						}
+					});
 
-				@Override
-				public void onClick(View v) {
-					mParentActivity
-							.showNextView(new LanguageSelectionFragment());
-				}
-			});
-
-			if (featuredList == null) {
-				featuredList = new ArrayList<>();
+			if (topReadContentList == null) {
+				topReadContentList = new ArrayList<>();
 			} else {
-				featuredList.clear();
+				topReadContentList.clear();
 			}
 			requestFeatured();
-
-			if (newReleasesList == null) {
-				newReleasesList = new ArrayList<>();
-			} else {
-				newReleasesList.clear();
-			}
-			requestNewReleases();
 
 			return view;
 		}
 
 		public void requestFeatured() {
-			HttpGet featuredRequest = new HttpGet(this, PConstants.FEATURED_URL);
+			HttpGet featuredRequest = new HttpGet(this,
+					PConstants.TOP_READ_CONTENT_URL);
 
 			HashMap<String, String> requestHashMap = new HashMap<>();
-			requestHashMap.put(PConstants.URL,
-					PConstants.FEATURED_URL.replace(PConstants.TERM, "data"));
+			requestHashMap.put(PConstants.URL, PConstants.TOP_READ_CONTENT_URL
+					.replace(PConstants.PLACEHOLDER_LANGUAGE_ID,
+							mParentActivity.mApp.getLanguageId()));
 
 			featuredRequest.run(requestHashMap);
-		}
-
-		public void requestNewReleases() {
-			HttpGet newReleasedRequest = new HttpGet(this,
-					PConstants.NEW_RELEASES_URL);
-
-			HashMap<String, String> requestHashMap = new HashMap<>();
-			requestHashMap.put(PConstants.URL, PConstants.NEW_RELEASES_URL
-					.replace(PConstants.TERM, "data"));
-
-			newReleasedRequest.run(requestHashMap);
 		}
 
 		@Override
@@ -279,29 +248,16 @@ public class StoreFragment extends BaseFragment {
 		@Override
 		public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 				int responseCode) {
-			if (getUrl.equals(PConstants.FEATURED_URL)) {
+			if (getUrl.equals(PConstants.TOP_READ_CONTENT_URL)) {
 				if (finalResult != null) {
 					try {
-						JSONObject feed = finalResult.getJSONObject("feed");
-						JSONArray entries = feed.getJSONArray("entry");
-						for (int i = 0; i < entries.length(); i++) {
-							JSONObject entry = entries.getJSONObject(i);
-							String imageURL = entry.getJSONArray("im:image")
-									.getJSONObject(2).getString("label");
-							String title = entry.getJSONObject("title")
-									.getString("label");
-							String name = entry.getJSONObject("im:name")
-									.getString("label");
-							String artist = entry.getJSONObject("im:artist")
-									.getString("label");
-							String summary = entry.getJSONObject("summary")
-									.getString("label");
-							String category = entry.getJSONObject("category")
-									.getJSONObject("attributes")
-									.getString("label");
-							book = new Book(imageURL, title, name, artist,
-									summary, category);
-							featuredList.add(book);
+						JSONArray topReadContentArray = finalResult
+								.getJSONArray("topReadPratilipiDataList");
+						for (int i = 0; i < topReadContentArray.length(); i++) {
+							JSONObject topReadContentObj = topReadContentArray
+									.getJSONObject(i);
+							final Book book = new Book(topReadContentObj);
+							topReadContentList.add(book);
 
 							View view = View.inflate(mParentActivity,
 									R.layout.layout_book_preview, null);
@@ -310,7 +266,7 @@ public class StoreFragment extends BaseFragment {
 							TextView titleTextView = (TextView) view
 									.findViewById(R.id.title_text_view);
 							mParentActivity.mImageLoader.displayImage(
-									book.imageURL, imageView);
+									book.coverImageUrl, imageView);
 							titleTextView.setText(book.title);
 							view.setOnClickListener(new View.OnClickListener() {
 
@@ -322,56 +278,7 @@ public class StoreFragment extends BaseFragment {
 											new BookSummaryFragment(), bundle);
 								}
 							});
-							featuredScrollLayout.addView(view);
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
-			} else if (getUrl.equals(PConstants.NEW_RELEASES_URL)) {
-				if (finalResult != null) {
-					try {
-						JSONObject feed = finalResult.getJSONObject("feed");
-						JSONArray entries = feed.getJSONArray("entry");
-						for (int i = 0; i < entries.length(); i++) {
-							JSONObject entry = entries.getJSONObject(i);
-							String imageURL = entry.getJSONArray("im:image")
-									.getJSONObject(2).getString("label");
-							String title = entry.getJSONObject("title")
-									.getString("label");
-							String name = entry.getJSONObject("im:name")
-									.getString("label");
-							String artist = entry.getJSONObject("im:artist")
-									.getString("label");
-							String summary = entry.getJSONObject("summary")
-									.getString("label");
-							String category = entry.getJSONObject("category")
-									.getJSONObject("attributes")
-									.getString("label");
-							book = new Book(imageURL, title, name, artist,
-									summary, category);
-							newReleasesList.add(book);
-
-							View view = View.inflate(mParentActivity,
-									R.layout.layout_book_preview, null);
-							ImageView imageView = (ImageView) view
-									.findViewById(R.id.image_view);
-							TextView titleTextView = (TextView) view
-									.findViewById(R.id.title_text_view);
-							mParentActivity.mImageLoader.displayImage(
-									book.imageURL, imageView);
-							titleTextView.setText(book.title);
-							view.setOnClickListener(new View.OnClickListener() {
-
-								@Override
-								public void onClick(View v) {
-									Bundle bundle = new Bundle();
-									bundle.putParcelable("BOOK", book);
-									mParentActivity.showNextView(
-											new BookSummaryFragment(), bundle);
-								}
-							});
-							newReleasesScrollLayout.addView(view);
+							topReadContentScrollLayout.addView(view);
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();

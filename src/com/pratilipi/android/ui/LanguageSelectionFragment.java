@@ -22,6 +22,7 @@ public class LanguageSelectionFragment extends BaseFragment {
 	private View mGoButton;
 
 	private String mLanguageSelected;
+	private String mLanguageIdSelected;
 
 	@Override
 	public String getCustomTag() {
@@ -40,14 +41,15 @@ public class LanguageSelectionFragment extends BaseFragment {
 		mGoButton = mRootView.findViewById(R.id.go_button);
 
 		mLanguageSelected = null;
+		mLanguageIdSelected = null;
 
-		mHindiButton.setTag(PConstants.LANGUAGE.HINDI.toString());
+		mHindiButton.setTag(PConstants.LANGUAGE.HINDI);
 		mHindiButton.setOnClickListener(mLanguageSelectionListener);
 
-		mTamilButton.setTag(PConstants.LANGUAGE.TAMIL.toString());
+		mTamilButton.setTag(PConstants.LANGUAGE.TAMIL);
 		mTamilButton.setOnClickListener(mLanguageSelectionListener);
 
-		mGujratiButton.setTag(PConstants.LANGUAGE.GUJRATI.toString());
+		mGujratiButton.setTag(PConstants.LANGUAGE.GUJARATI);
 		mGujratiButton.setOnClickListener(mLanguageSelectionListener);
 
 		mGoButton.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +58,7 @@ public class LanguageSelectionFragment extends BaseFragment {
 			public void onClick(View v) {
 				if (!TextUtils.isEmpty(mLanguageSelected)) {
 					mParentActivity.mApp.setLanguage(mLanguageSelected);
+					mParentActivity.mApp.setLanguageId(mLanguageIdSelected);
 					mParentActivity.mStack.popAll();
 					mParentActivity.showNextView(new StoreFragment());
 				} else {
@@ -83,7 +86,9 @@ public class LanguageSelectionFragment extends BaseFragment {
 				}
 				v.setSelected(true);
 				((Button) v).setTypeface(FontManager.getInstance().get("bold"));
-				mLanguageSelected = (String) v.getTag();
+				PConstants.LANGUAGE language = (PConstants.LANGUAGE) v.getTag();
+				mLanguageSelected = language.toString();
+				mLanguageIdSelected = language.getId();
 			}
 		}
 	};

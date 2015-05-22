@@ -50,7 +50,7 @@ public class SplashActivity extends Activity {
 
 		mImageLoader = new ImageLoader(this);
 
-		if (TextUtils.isEmpty(mApp.getLanguage())) {
+		if (TextUtils.isEmpty(mApp.getLanguageId())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
 			showNextView(new StoreFragment());

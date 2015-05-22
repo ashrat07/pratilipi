@@ -8,6 +8,7 @@ public class AppState {
 	SharedPreferences mConf;
 
 	private static final String LANGUAGE = "LANGUAGE";
+	private static final String LANGUAGE_ID = "LANGUAGE_ID";
 
 	private static AppState instance;
 
@@ -43,6 +44,16 @@ public class AppState {
 
 	public String getLanguage() {
 		return mConf.getString(LANGUAGE, "");
+	}
+
+	public Boolean setLanguageId(String languageId) {
+		SharedPreferences.Editor ed = mConf.edit();
+		ed.putString(LANGUAGE_ID, languageId);
+		return ed.commit();
+	}
+
+	public String getLanguageId() {
+		return mConf.getString(LANGUAGE_ID, "");
 	}
 
 }

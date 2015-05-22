@@ -4,6 +4,8 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
 
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +44,13 @@ public class BookSummaryFragment extends BaseFragment {
 		if (bundle != null) {
 			Book book = bundle.getParcelable("BOOK");
 			if (book != null) {
-				mParentActivity.mImageLoader.displayImage(book.imageURL,
+				mParentActivity.mImageLoader.displayImage(book.coverImageUrl,
 						mImageView);
-				mNameTextView.setText(book.name);
-				mArtistTextView.setText(book.artist);
-				mSummaryTextView.setText(book.summary);
+				mNameTextView.setText(book.title);
+				mArtistTextView.setText(book.author.fullName);
+				if (!TextUtils.isEmpty(book.summary)) {
+					mSummaryTextView.setText(Html.fromHtml(book.summary));
+				}
 			}
 		}
 
