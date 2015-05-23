@@ -52,15 +52,16 @@ containing a value of this type.
         public static final int button_selector_red=0x7f020001;
         public static final int dotted=0x7f020002;
         public static final int header_selector_white=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int noimage=0x7f020005;
-        public static final int search=0x7f020006;
-        public static final int tab_selected_focused_white=0x7f020007;
-        public static final int tab_selected_pressed_white=0x7f020008;
-        public static final int tab_selected_white=0x7f020009;
-        public static final int tab_unselected_focused_white=0x7f02000a;
-        public static final int tab_unselected_pressed_white=0x7f02000b;
-        public static final int tab_unselected_white=0x7f02000c;
+        public static final int hindi_img=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int noimage=0x7f020006;
+        public static final int search=0x7f020007;
+        public static final int tab_selected_focused_white=0x7f020008;
+        public static final int tab_selected_pressed_white=0x7f020009;
+        public static final int tab_selected_white=0x7f02000a;
+        public static final int tab_unselected_focused_white=0x7f02000b;
+        public static final int tab_unselected_pressed_white=0x7f02000c;
+        public static final int tab_unselected_white=0x7f02000d;
     }
     public static final class id {
         public static final int artist_text_view=0x7f090005;
@@ -71,7 +72,7 @@ containing a value of this type.
         public static final int featured_scroll_layout=0x7f090014;
         public static final int featured_view_all=0x7f090013;
         public static final int go_button=0x7f09000a;
-        public static final int gujrati_button=0x7f090009;
+        public static final int gujarati_button=0x7f090009;
         public static final int header=0x7f090019;
         public static final int header_layout=0x7f09000e;
         public static final int header_scroll=0x7f09000d;
@@ -104,9 +105,23 @@ containing a value of this type.
     }
     public static final class string {
         public static final int app_name=0x7f070000;
-        public static final int blank=0x7f070001;
-        public static final int error_system_issue=0x7f070002;
-        public static final int view_all=0x7f070003;
+        public static final int blank=0x7f070004;
+        public static final int categories=0x7f070008;
+        public static final int classics=0x7f07000c;
+        public static final int error_system_issue=0x7f070005;
+        public static final int featuredBooks=0x7f07000a;
+        public static final int ghazals=0x7f070011;
+        public static final int gujarati=0x7f070003;
+        public static final int hindi=0x7f070001;
+        public static final int home=0x7f070007;
+        public static final int horror=0x7f07000d;
+        public static final int newReleases=0x7f07000b;
+        public static final int poems=0x7f07000e;
+        public static final int profiles=0x7f070009;
+        public static final int romance=0x7f07000f;
+        public static final int stories=0x7f070010;
+        public static final int tamil=0x7f070002;
+        public static final int view_all=0x7f070006;
     }
     public static final class style {
         public static final int ErrorAnimation=0x7f080001;

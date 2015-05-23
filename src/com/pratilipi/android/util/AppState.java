@@ -43,7 +43,7 @@ public class AppState {
 	}
 
 	public String getLanguage() {
-		return mConf.getString(LANGUAGE, "");
+		return mConf.getString(LANGUAGE, "regular");
 	}
 
 	public Boolean setLanguageId(String languageId) {

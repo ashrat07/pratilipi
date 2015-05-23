@@ -28,9 +28,9 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/button_selector_red"
-            android:text="Hindi"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_large" />
+            android:textSize="@dimen/text_large"
+            app:textStyle="hindi" />
 
         <com.pratilipi.android.widget.PButton
             android:id="@+id/tamil_button"
@@ -38,19 +38,19 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/button_selector_red"
-            android:text="Tamil"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_large" />
+            android:textSize="@dimen/text_large"
+            app:textStyle="tamil" />
 
         <com.pratilipi.android.widget.PButton
-            android:id="@+id/gujrati_button"
+            android:id="@+id/gujarati_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:background="@drawable/button_selector_red"
-            android:text="Gujrati"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_large" />
+            android:textSize="@dimen/text_large"
+            app:textStyle="gujarati" />
     </LinearLayout>
 
     <com.pratilipi.android.widget.PButton

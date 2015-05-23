@@ -2,8 +2,22 @@
 <resources>
 
     <string name="app_name">Pratilipi</string>
+    <string name="hindi">Hindi</string>
+    <string name="tamil">Tamil</string>
+    <string name="gujarati">Gujarati</string>
     <string name="blank"></string>
     <string name="error_system_issue">Something went wrong and we are sorry for that. Please try again later</string>
     <string name="view_all">View All&#62;&#62;</string>
+    <string name="home">HOME</string>
+    <string name="categories">CATEGORIES</string>
+    <string name="profiles">PROFILES</string>
+    <string name="featuredBooks">Featured Books</string>
+    <string name="newReleases">New Releases</string>
+    <string name="classics">Classics</string>
+    <string name="horror">Horror</string>
+    <string name="poems">Poems</string>
+    <string name="romance">Romance</string>
+    <string name="stories">Stories</string>
+    <string name="ghazals">Ghazals</string>
 
 </resources>

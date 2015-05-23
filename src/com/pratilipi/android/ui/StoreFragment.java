@@ -46,7 +46,8 @@ public class StoreFragment extends BaseFragment {
 	private ArrayList<TextView> mHeaderTabs;
 	private PHeaderScroll mHeaderScroll;
 
-	private String pages[] = new String[] { "HOME", "CATEGORIES", "PROFILE" };
+	private int pages[] = new int[] { R.string.home, R.string.categories,
+			R.string.profiles };
 
 	@Override
 	public String getCustomTag() {
@@ -115,8 +116,9 @@ public class StoreFragment extends BaseFragment {
 
 	private class StorePagerAdapter extends PagerAdapter {
 
-		private String categories[] = new String[] { "Classics", "Horror",
-				"Poems", "Romance", "Stories", "Ghazals" };
+		private Integer categories[] = new Integer[] { R.string.classics,
+				R.string.horror, R.string.poems, R.string.romance,
+				R.string.stories, R.string.ghazals };
 
 		@Override
 		public int getCount() {
@@ -150,8 +152,7 @@ public class StoreFragment extends BaseFragment {
 				ListView listView = new ListView(mParentActivity);
 				listView.setDivider(null);
 				listView.setDividerHeight(0);
-				ArrayAdapter<String> adapter = new ArrayAdapter<>(
-						mParentActivity,
+				CategoryAdapter adapter = new CategoryAdapter(
 						R.layout.layout_categories_list_view_item, categories);
 				listView.setAdapter(adapter);
 				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -160,7 +161,7 @@ public class StoreFragment extends BaseFragment {
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
 						Bundle bundle = new Bundle();
-						bundle.putString("CATEGORY", categories[position]);
+						bundle.putInt("CATEGORY", categories[position]);
 						mParentActivity.showNextView(
 								new LanguageSelectionFragment(), bundle);
 					}
@@ -288,6 +289,29 @@ public class StoreFragment extends BaseFragment {
 			return null;
 		}
 
+	}
+
+	private class CategoryAdapter extends ArrayAdapter<Integer> {
+
+		int layoutResourceId;
+
+		CategoryAdapter(int layoutResourceId, Integer[] list) {
+			super(mParentActivity, layoutResourceId, list);
+			this.layoutResourceId = layoutResourceId;
+
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mParentActivity).inflate(
+						layoutResourceId, parent, false);
+			}
+			int item = getItem(position);
+			((TextView) convertView).setText(mParentActivity.getResources()
+					.getString(item));
+			return convertView;
+		}
 	}
 
 }
