@@ -1,14 +1,12 @@
 package com.pratilipi.android.model;
 
-import java.util.Random;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.pratilipi.android.util.PConstants;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.pratilipi.android.util.PConstants;
 
 public class Book implements Parcelable {
 

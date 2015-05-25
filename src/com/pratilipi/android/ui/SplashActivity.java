@@ -16,8 +16,10 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.ImageLoader;
+import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
+import com.pratilipi.android.util.PUtils;
 import com.pratilipi.android.util.PopupErrorRunner;
 
 public class SplashActivity extends Activity {
@@ -39,6 +41,16 @@ public class SplashActivity extends Activity {
 
 		AppState.init(getApplicationContext());
 		mApp = AppState.getInstance();
+		if (mApp.getLanguage().equals(PConstants.LANGUAGE.GUJARATI.toString())) {
+			PUtils.setLocale(this, "gu");
+		} else if (mApp.getLanguage().equals(
+				PConstants.LANGUAGE.TAMIL.toString())) {
+			PUtils.setLocale(this, "ta");
+		} else if (mApp.getLanguage().equals(
+				PConstants.LANGUAGE.HINDI.toString())) {
+			PUtils.setLocale(this, "hi");
+		}
+
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
 

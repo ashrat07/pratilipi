@@ -5,12 +5,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -174,5 +176,14 @@ public class PUtils {
 		} catch (Exception e) {
 			LoggerUtils.logWarn("FreeCharge", Log.getStackTraceString(e));
 		}
+	}
+
+	public static void setLocale(Context context, String selectedLanguage) {
+		Locale locale = new Locale(selectedLanguage);
+		Resources res = context.getResources();
+		DisplayMetrics display = res.getDisplayMetrics();
+		Configuration conf = res.getConfiguration();
+		conf.locale = locale;
+		res.updateConfiguration(conf, display);
 	}
 }

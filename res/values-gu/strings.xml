@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="gujarati">ગુજરાતી</string>
     <string name="error_system_issue">કંઈક ખોટું થયું હતું અને અમે તે માટે દિલગીર હોય છે. પછીથી ફરી પ્રયત્ન કરો</string>
     <string name="view_all">જુઓ બધા&#62;&#62;</string>
     <string name="home">ઘર</string>
     <string name="categories">શ્રેણીઓ</string>
     <string name="profiles">પ્રોફાઇલ્સ</string>
-    <string name="featuredBooks">ફીચર્ડ પુસ્તકો</string>
-    <string name="newReleases">ન્યૂ સલાહ</string>
+    <string name="featured_books">ફીચર્ડ પુસ્તકો</string>
+    <string name="new_releases">ન્યૂ સલાહ</string>
     <string name="classics">ઉત્તમ નમૂનાના</string>
     <string name="horror">હૉરર</string>
     <string name="poems">કવિતાઓ</string>

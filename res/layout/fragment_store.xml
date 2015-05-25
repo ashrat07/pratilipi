@@ -51,9 +51,9 @@
         android:id="@+id/header_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fillViewport="true"
-        android:scrollbars="none" >
+        android:background="#5544FF"
+        android:scrollbars="none" 
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/header_layout"
