@@ -1,5 +1,11 @@
 <resources>
 
+    <style name="PTheme" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:colorPrimary">@color/background_red</item>
+        <item name="android:colorPrimaryDark">@color/background_xdark_red</item>
+        <item name="android:colorAccent">#4455FF</item>
+    </style>
+
     <style name="PTheme.Edit" parent="@android:style/Widget.EditText">
         <item name="android:textSize">@dimen/text_default</item>
         <item name="android:textColor">@android:color/white</item>

@@ -2,12 +2,10 @@ package com.pratilipi.android.ui;
 
 import java.util.Vector;
 
-import org.json.JSONObject;
-
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,7 +20,7 @@ import com.pratilipi.android.util.PThreadPool;
 import com.pratilipi.android.util.PUtils;
 import com.pratilipi.android.util.PopupErrorRunner;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends FragmentActivity {
 
 	public View mProgressBarParent;
 
@@ -54,7 +52,7 @@ public class SplashActivity extends Activity {
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
 
-		mStack = new PStack(getFragmentManager());
+		mStack = new PStack(getSupportFragmentManager());
 
 		setContentView(R.layout.activity_splash);
 
@@ -65,7 +63,7 @@ public class SplashActivity extends Activity {
 		if (TextUtils.isEmpty(mApp.getLanguageId())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
-			showNextView(new StoreFragment());
+			showNextView(new HomeFragment());
 		}
 	}
 
@@ -89,16 +87,6 @@ public class SplashActivity extends Activity {
 
 	public void setLayoutBackgroundColor(int color) {
 		findViewById(R.id.base).setBackgroundColor(color);
-	}
-
-	public Boolean setPostStatus(JSONObject finalResult, String url,
-			int responseCode) {
-		return null;
-	}
-
-	public Boolean setGetStatus(JSONObject finalResult, String url,
-			int responseCode) {
-		return null;
 	}
 
 	public void showProgressBar() {
@@ -199,4 +187,5 @@ public class SplashActivity extends Activity {
 	public void showError(SpannableString header, SpannableString body) {
 		doTransaction(new PopupErrorRunner(this, header, body));
 	}
+
 }

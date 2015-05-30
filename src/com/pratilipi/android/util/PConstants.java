@@ -26,7 +26,7 @@ public class PConstants {
 	public static final String TOP_READ_CONTENT_URL = HOST
 			+ "/mobileinit?languageId={language_id}";
 	public static final String COVER_IMAGE_URL = HOST
-			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=150";
+			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=200";
 
 	public enum LANGUAGE {
 

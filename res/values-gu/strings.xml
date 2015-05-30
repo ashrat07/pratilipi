@@ -2,7 +2,7 @@
 <resources>
 
     <string name="error_system_issue">કંઈક ખોટું થયું હતું અને અમે તે માટે દિલગીર હોય છે. પછીથી ફરી પ્રયત્ન કરો</string>
-    <string name="view_all">જુઓ બધા&#62;&#62;</string>
+    <string name="view_all">જુઓ બધા</string>
     <string name="home">ઘર</string>
     <string name="categories">શ્રેણીઓ</string>
     <string name="profiles">પ્રોફાઇલ્સ</string>

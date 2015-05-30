@@ -70,8 +70,7 @@ public class LanguageSelectionFragment extends BaseFragment {
 					}
 
 					mParentActivity.mStack.popAll();
-					mParentActivity.showNextView(new StoreFragment());
-
+					mParentActivity.showNextView(new HomeFragment());
 				} else {
 					mParentActivity.showError("Please select some language.");
 				}
