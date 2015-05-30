@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
         android:orientation="vertical" >
 
         <com.pratilipi.android.widget.PTextView
@@ -17,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="30dp"
-            android:text="Choose Language"
+            android:text="@string/choose_language"
             android:textColor="@color/text_gray"
             android:textSize="@dimen/text_small"
             app:textStyle="light" />
@@ -26,8 +25,12 @@
             android:id="@+id/hindi_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_selector_red"
+            android:text="@string/hindi"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_large"
             app:textStyle="hindi" />
@@ -36,8 +39,12 @@
             android:id="@+id/tamil_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_selector_red"
+            android:text="@string/tamil"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_large"
             app:textStyle="tamil" />
@@ -46,8 +53,12 @@
             android:id="@+id/gujarati_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_selector_red"
+            android:text="@string/gujarati"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_large"
             app:textStyle="gujarati" />
@@ -58,9 +69,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_margin="40dp"
+        android:layout_margin="30dp"
         android:background="@drawable/button_selector_green"
-        android:text="GO"
+        android:text="@string/go"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_large"
         app:textStyle="bold" />
@@ -69,7 +80,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Don&apos;t worry you can change it later"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="@string/dont_worry"
         android:textColor="@color/text_gray"
         app:textStyle="light" />
 

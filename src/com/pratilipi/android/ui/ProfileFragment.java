@@ -3,6 +3,7 @@ package com.pratilipi.android.ui;
 import com.pratilipi.android.R;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,28 +11,34 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ProfileFragment {
+public class ProfileFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Profile";
 
-	public View getView(Context mParentActivity) {
+	private Integer[] profileItemsList = new Integer[] { R.string.reset_menu,
+			R.string.reset_content, R.string.about };
 
-		View view = View.inflate(mParentActivity, R.layout.fragment_profile,
-				null);
-		
-		Integer[] profileItemsList = new Integer[] { R.string.reset_menu,
-				R.string.reset_content, R.string.about };
+	private View mRootView;
+	private ListView mListView;
 
-		ListView listView = (ListView)view.findViewById(R.id.profile_list_view);
-		
+	@Override
+	public String getCustomTag() {
+		return TAG_NAME;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mRootView = inflater.inflate(R.layout.fragment_profile, container,
+				false);
+
+		mListView = (ListView) mRootView.findViewById(R.id.profile_list_view);
+
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,
 				R.layout.layout_profile_list_view, profileItemsList);
-		
-		
-		
-		listView.setAdapter(adapter);
-		
-		return view;
+		mListView.setAdapter(adapter);
+
+		return mRootView;
 	}
 
 	class ProfileAdapter extends ArrayAdapter<Integer> {
@@ -43,9 +50,10 @@ public class ProfileFragment {
 				Integer[] profileItemsList) {
 			super(mParentActivity, resource, profileItemsList);
 			this.layoutResourceId = resource;
-			this.mParentActivity= mParentActivity;
-			
+			this.mParentActivity = mParentActivity;
+
 		}
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
@@ -58,7 +66,6 @@ public class ProfileFragment {
 			return convertView;
 		}
 
-		
 	}
 
 }

@@ -7,6 +7,7 @@
     <color name="background_light_red">#E28386</color>
     <color name="background_red">#FD4B4B</color>
     <color name="background_dark_red">#FF4040</color>
+    <color name="background_xdark_red">#802020</color>
     <color name="background_light_green">#80CAC4</color>
     <color name="background_green">#009688</color>
     <color name="background_gray">#999999</color>

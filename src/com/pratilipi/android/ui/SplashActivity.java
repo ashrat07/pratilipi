@@ -2,12 +2,10 @@ package com.pratilipi.android.ui;
 
 import java.util.Vector;
 
-import org.json.JSONObject;
-
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,11 +14,13 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.ImageLoader;
+import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
+import com.pratilipi.android.util.PUtils;
 import com.pratilipi.android.util.PopupErrorRunner;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends FragmentActivity {
 
 	public View mProgressBarParent;
 
@@ -39,10 +39,20 @@ public class SplashActivity extends Activity {
 
 		AppState.init(getApplicationContext());
 		mApp = AppState.getInstance();
+		if (mApp.getLanguage().equals(PConstants.LANGUAGE.GUJARATI.toString())) {
+			PUtils.setLocale(this, "gu");
+		} else if (mApp.getLanguage().equals(
+				PConstants.LANGUAGE.TAMIL.toString())) {
+			PUtils.setLocale(this, "ta");
+		} else if (mApp.getLanguage().equals(
+				PConstants.LANGUAGE.HINDI.toString())) {
+			PUtils.setLocale(this, "hi");
+		}
+
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
 
-		mStack = new PStack(getFragmentManager());
+		mStack = new PStack(getSupportFragmentManager());
 
 		setContentView(R.layout.activity_splash);
 
@@ -53,7 +63,7 @@ public class SplashActivity extends Activity {
 		if (TextUtils.isEmpty(mApp.getLanguageId())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
-			showNextView(new StoreFragment());
+			showNextView(new HomeFragment());
 		}
 	}
 
@@ -77,16 +87,6 @@ public class SplashActivity extends Activity {
 
 	public void setLayoutBackgroundColor(int color) {
 		findViewById(R.id.base).setBackgroundColor(color);
-	}
-
-	public Boolean setPostStatus(JSONObject finalResult, String url,
-			int responseCode) {
-		return null;
-	}
-
-	public Boolean setGetStatus(JSONObject finalResult, String url,
-			int responseCode) {
-		return null;
 	}
 
 	public void showProgressBar() {
@@ -187,4 +187,5 @@ public class SplashActivity extends Activity {
 	public void showError(SpannableString header, SpannableString body) {
 		doTransaction(new PopupErrorRunner(this, header, body));
 	}
+
 }
