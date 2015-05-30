@@ -171,15 +171,14 @@ public class StoreFragment extends BaseFragment {
 				break;
 			}
 
-			default:
-				TextView textView = new TextView(mParentActivity);
-				textView.setTextColor(Color.BLACK);
-				textView.setTextSize(30);
-				textView.setTypeface(Typeface.DEFAULT_BOLD);
-				textView.setText(String.valueOf(position));
-
-				layout.addView(textView);
+			default:{	
+				ProfileFragment profileFragment = new ProfileFragment();
+				View profileView= profileFragment.getView(mParentActivity);
+				layout.addView(profileView);
+				
+				
 				break;
+			}
 			}
 
 			container.addView(layout);
@@ -291,7 +290,7 @@ public class StoreFragment extends BaseFragment {
 
 	}
 
-	private class CategoryAdapter extends ArrayAdapter<Integer> {
+	public class CategoryAdapter extends ArrayAdapter<Integer> {
 
 		int layoutResourceId;
 

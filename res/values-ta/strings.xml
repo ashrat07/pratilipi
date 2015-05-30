@@ -15,4 +15,8 @@
     <string name="romance">காதல்</string>
     <string name="stories">செய்திகள்</string>
     <string name="ghazals">கஜல்ஸ்</string>
+    
+    <string name="reset_content">மீட்டமை உள்ளடக்க</string>
+    <string name="reset_menu">மீட்டமை பட்டி</string>
+    <string name="about">Pratilipi பற்றி</string>
 </resources>

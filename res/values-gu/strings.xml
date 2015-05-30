@@ -16,4 +16,7 @@
     <string name="stories">વાર્તાઓ</string>
     <string name="ghazals">ગઝલ</string>
 
+      <string name="reset_content">રીસેટ સામગ્રી</string>
+    <string name="reset_menu">રીસેટ મેનુ</string>
+    <string name="about">Pratilipi વિશે</string>
 </resources>

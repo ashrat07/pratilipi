@@ -19,5 +19,8 @@
     <string name="romance">Romance</string>
     <string name="stories">Stories</string>
     <string name="ghazals">Ghazals</string>
+    <string name="reset_content">Reset Content</string>
+    <string name="reset_menu">Reset Menu</string>
+    <string name="about">About Pratilipi</string>
 
 </resources>
