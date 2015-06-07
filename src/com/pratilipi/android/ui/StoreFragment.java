@@ -9,16 +9,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.StoreAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Book;
+import com.pratilipi.android.model.StoreListing;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
 
@@ -27,9 +28,9 @@ public class StoreFragment extends BaseFragment {
 	public static final String TAG_NAME = "Store";
 
 	private View mRootView;
-	private View topReadContentViewAll;
-	private LinearLayout topReadContentScrollLayout;
-	private List<Book> topReadContentList;
+	private ListView mListView;
+	private StoreAdapter mAdapter;
+	private List<StoreListing> storeListingList;
 
 	@Override
 	public String getCustomTag() {
@@ -42,36 +43,28 @@ public class StoreFragment extends BaseFragment {
 
 		mRootView = inflater.inflate(R.layout.fragment_store, container, false);
 
-		topReadContentViewAll = mRootView.findViewById(R.id.featured_view_all);
-		topReadContentScrollLayout = (LinearLayout) mRootView
-				.findViewById(R.id.featured_scroll_layout);
-
-		topReadContentViewAll.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mParentActivity.showNextView(new LanguageSelectionFragment());
-			}
-		});
-
-		if (topReadContentList == null) {
-			topReadContentList = new ArrayList<>();
+		mListView = (ListView) mRootView.findViewById(R.id.list_view);
+		if (storeListingList == null) {
+			storeListingList = new ArrayList<>();
 		} else {
-			topReadContentList.clear();
+			storeListingList.clear();
 		}
+		mAdapter = new StoreAdapter(mParentActivity,
+				R.layout.layout_store_list_view_item, storeListingList);
+		mListView.setAdapter(mAdapter);
+
 		requestFeatured();
 
 		return mRootView;
 	}
 
 	public void requestFeatured() {
-		HttpGet featuredRequest = new HttpGet(this,
-				PConstants.TOP_READ_CONTENT_URL);
+		HttpGet featuredRequest = new HttpGet(this, PConstants.HOME_LISTING_URL);
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
-		requestHashMap.put(PConstants.URL, PConstants.TOP_READ_CONTENT_URL
-				.replace(PConstants.PLACEHOLDER_LANGUAGE_ID, AppState
-						.getInstance().getLanguageId()));
+		requestHashMap.put(PConstants.URL, PConstants.HOME_LISTING_URL.replace(
+				PConstants.PLACEHOLDER_LANGUAGE_ID, AppState.getInstance()
+						.getLanguageId()));
 
 		featuredRequest.run(requestHashMap);
 	}
@@ -85,38 +78,29 @@ public class StoreFragment extends BaseFragment {
 	@Override
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
-		if (getUrl.equals(PConstants.TOP_READ_CONTENT_URL)) {
+		if (getUrl.equals(PConstants.HOME_LISTING_URL)) {
 			if (finalResult != null) {
 				try {
-					JSONArray topReadContentArray = finalResult
-							.getJSONArray("topReadPratilipiDataList");
-					for (int i = 0; i < topReadContentArray.length(); i++) {
-						JSONObject topReadContentObj = topReadContentArray
-								.getJSONObject(i);
-						final Book book = new Book(topReadContentObj);
-						topReadContentList.add(book);
-
-						View view = View.inflate(mParentActivity,
-								R.layout.layout_book_preview, null);
-						ImageView imageView = (ImageView) view
-								.findViewById(R.id.image_view);
-						TextView titleTextView = (TextView) view
-								.findViewById(R.id.title_text_view);
-						mParentActivity.mImageLoader.displayImage(
-								book.coverImageUrl, imageView);
-						titleTextView.setText(book.title);
-						view.setOnClickListener(new View.OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								Bundle bundle = new Bundle();
-								bundle.putParcelable("BOOK", book);
-								mParentActivity.showNextView(
-										new BookSummaryFragment(), bundle);
-							}
-						});
-						topReadContentScrollLayout.addView(view);
+					JSONArray json = new JSONArray(
+							finalResult.getString("response"));
+					Log.e("json", "" + json);
+					for (int index = 0; index < json.length(); index++) {
+						JSONObject listObj = json.getJSONObject(index);
+						String name = listObj.getString("name");
+						String id = listObj.getString("id");
+						JSONArray contentArray = new JSONArray(
+								listObj.getString("content"));
+						List<Book> content = new ArrayList<Book>();
+						for (int i = 0; i < contentArray.length(); i++) {
+							Book book = new Book(contentArray.getJSONObject(i));
+							content.add(book);
+						}
+						StoreListing storeListing = new StoreListing(id, name,
+								content);
+						storeListingList.add(storeListing);
 					}
+					mAdapter.notifyDataSetChanged();
+					// mListView.invalidateViews();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

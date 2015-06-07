@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="error_system_issue">कुछ गलत हो गया और हम उसके लिए खेद है। कृपया बाद में पुन: प्रयास करें</string>
-    <string name="view_all">सभी को देखें</string>
-    <string name="home">घर</string>
-    <string name="categories">श्रेणियों</string>
-    <string name="profiles">प्रोफाइल</string>
-    <string name="featured_books">विशेष रुप से प्रदर्शित पुस्तकें</string>
     <string name="new_releases">नया प्रदर्शन</string>
     <string name="classics">क्लासिक्स</string>
     <string name="horror">डरावना</string>

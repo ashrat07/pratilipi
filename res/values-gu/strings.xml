@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="error_system_issue">કંઈક ખોટું થયું હતું અને અમે તે માટે દિલગીર હોય છે. પછીથી ફરી પ્રયત્ન કરો</string>
-    <string name="view_all">જુઓ બધા</string>
-    <string name="home">ઘર</string>
-    <string name="categories">શ્રેણીઓ</string>
-    <string name="profiles">પ્રોફાઇલ્સ</string>
-    <string name="featured_books">ફીચર્ડ પુસ્તકો</string>
     <string name="new_releases">ન્યૂ સલાહ</string>
     <string name="classics">ઉત્તમ નમૂનાના</string>
     <string name="horror">હૉરર</string>
@@ -14,8 +8,8 @@
     <string name="romance">રોમાંચક</string>
     <string name="stories">વાર્તાઓ</string>
     <string name="ghazals">ગઝલ</string>
-
-      <string name="reset_content">રીસેટ સામગ્રી</string>
+    <string name="reset_content">રીસેટ સામગ્રી</string>
     <string name="reset_menu">રીસેટ મેનુ</string>
-    <string name="about">Pratilipi વિશે</string>
+    <string name="about">પ્રતીલીપી વિશે</string>
+
 </resources>

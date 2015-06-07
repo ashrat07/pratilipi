@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="error_system_issue">ஏதோ தவறு நடந்து கொண்ட நாம் அந்த வருந்துகிறோம். தயவு செய்து மீண்டும் முயற்சிக்கவும்</string>
-    <string name="view_all">எல்லாம் பாருங்கள்</string>
-    <string name="home">முகப்பு</string>
-    <string name="categories">பிரிவுகள்</string>
-    <string name="profiles">விவரக்குறிப்புகள்</string>
-    <string name="featured_books">சிறப்பு புத்தகங்கள்</string>
     <string name="new_releases">புதிய வெளியீடுகள்</string>
     <string name="classics">கிளாசிக்</string>
     <string name="horror">திகில் படங்கள்</string>
@@ -14,8 +8,8 @@
     <string name="romance">காதல்</string>
     <string name="stories">செய்திகள்</string>
     <string name="ghazals">கஜல்ஸ்</string>
-    
     <string name="reset_content">மீட்டமை உள்ளடக்க</string>
     <string name="reset_menu">மீட்டமை பட்டி</string>
-    <string name="about">Pratilipi பற்றி</string>
+    <string name="about">பிராதிலிப்பி பற்றி</string>
+
 </resources>

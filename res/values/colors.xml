@@ -10,6 +10,8 @@
     <color name="background_xdark_red">#802020</color>
     <color name="background_light_green">#80CAC4</color>
     <color name="background_green">#009688</color>
+    <color name="background_xlight_gray">#EEEEEE</color>
+    <color name="background_light_gray">#AAAAAA</color>
     <color name="background_gray">#999999</color>
     <color name="background_transparent_gray">#99999999</color>
 

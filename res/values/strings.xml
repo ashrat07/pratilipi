@@ -13,7 +13,6 @@
     <string name="view_all">View All</string>
     <string name="home">HOME</string>
     <string name="categories">CATEGORIES</string>
-    <string name="profiles">PROFILES</string>
     <string name="featured_books">Featured Books</string>
     <string name="new_releases">New Releases</string>
     <string name="classics">Classics</string>
@@ -25,5 +24,10 @@
     <string name="reset_content">Reset Content</string>
     <string name="reset_menu">Reset Menu</string>
     <string name="about">About Pratilipi</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Title/ Author</string>
+    <string name="shelf">Shelf</string>
+    <string name="profile">Profile</string>
+    <string name="free">FREE!</string>
 
 </resources>

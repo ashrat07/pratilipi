@@ -17,6 +17,7 @@ public class HomeFragment extends BaseFragment {
 
 	private View mRootView;
 	private ViewPager mViewPager;
+	private HomeFragmentPagerAdapter mPagerAdapter;
 	private SlidingTabLayout mSlidingTabLayout;
 
 	@Override
@@ -30,8 +31,9 @@ public class HomeFragment extends BaseFragment {
 		mRootView = inflater.inflate(R.layout.fragment_home, container, false);
 
 		mViewPager = (ViewPager) mRootView.findViewById(R.id.view_pager);
-		mViewPager.setAdapter(new HomeFragmentPagerAdapter(mParentActivity
-				.getSupportFragmentManager(), mParentActivity));
+		mPagerAdapter = new HomeFragmentPagerAdapter(
+				mParentActivity.getSupportFragmentManager(), mParentActivity);
+		mViewPager.setAdapter(mPagerAdapter);
 
 		mSlidingTabLayout = (SlidingTabLayout) mRootView
 				.findViewById(R.id.sliding_tab_layout);
