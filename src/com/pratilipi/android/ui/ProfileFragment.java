@@ -1,15 +1,17 @@
 package com.pratilipi.android.ui;
 
-import com.pratilipi.android.R;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.ProfileAdapter;
+import com.pratilipi.android.util.ImageLoader;
 
 public class ProfileFragment extends BaseFragment {
 
@@ -32,40 +34,29 @@ public class ProfileFragment extends BaseFragment {
 		mRootView = inflater.inflate(R.layout.fragment_profile, container,
 				false);
 
+		ImageView userImageView = (ImageView) mRootView
+				.findViewById(R.id.profile_img);
+		String userImgUrl = "http://dummyimage.com/250/EF724B/";
+		new ImageLoader(mRootView.getContext()).displayFullImage(userImgUrl,
+				userImageView);
+
 		mListView = (ListView) mRootView.findViewById(R.id.profile_list_view);
 
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,
-				R.layout.layout_profile_list_view, profileItemsList);
+				R.layout.layout_list_view_text_item, profileItemsList);
 		mListView.setAdapter(adapter);
 
-		return mRootView;
-	}
-
-	class ProfileAdapter extends ArrayAdapter<Integer> {
-
-		int layoutResourceId;
-		Context mParentActivity;
-
-		public ProfileAdapter(Context mParentActivity, int resource,
-				Integer[] profileItemsList) {
-			super(mParentActivity, resource, profileItemsList);
-			this.layoutResourceId = resource;
-			this.mParentActivity = mParentActivity;
-
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = LayoutInflater.from(mParentActivity).inflate(
-						layoutResourceId, parent, false);
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> adapter, View view,
+					int position, long id) {
+				switch (position) {
+				case 0:
+					mParentActivity.showNextView(new ProfileLanguageFragment());
+					break;
+				}
 			}
-			int item = getItem(position);
-			((TextView) convertView).setText(mParentActivity.getResources()
-					.getString(item));
-			return convertView;
-		}
-
+		});
+		return mRootView;
 	}
 
 }

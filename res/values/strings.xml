@@ -25,5 +25,7 @@
     <string name="reset_content">Reset Content</string>
     <string name="reset_menu">Reset Menu</string>
     <string name="about">About Pratilipi</string>
+    <string name="content_language">CONTENT LANGUAGE</string>
+    <string name="menu_language">MENU LANGUAGE</string>
 
 </resources>

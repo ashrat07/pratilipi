@@ -17,5 +17,6 @@
     <string name="reset_content">रीसेट सामग्री</string>
     <string name="reset_menu">रीसेट मेनू</string>
     <string name="about">प्रतिलिपि के बारे में</string>
-
+	<string name="content_language">CONTENT LANGUAGE</string>
+    <string name="menu_language">MENU LANGUAGE</string>
 </resources>

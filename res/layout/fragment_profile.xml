@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_bottom"
         android:orientation="horizontal" >
 
         <ImageView
@@ -17,8 +18,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="30dp"
-            android:contentDescription="ADD PHOTO"
-            android:src="@drawable/profile_img" />
+            android:contentDescription="ADD PHOTO" />
+        <!-- android:src="@drawable/profile_img" -->
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -51,12 +52,13 @@
                 android:textSize="10dp" />
         </LinearLayout>
     </LinearLayout>
-    <ListView 
-        android:id="@+id/profile_list_view" 
+
+    <ListView
+        android:id="@+id/profile_list_view"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        />
-        
+        android:divider="#D8D8D8"
+        android:dividerHeight="2dp" />
 
 </LinearLayout>
