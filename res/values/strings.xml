@@ -29,5 +29,7 @@
     <string name="shelf">Shelf</string>
     <string name="profile">Profile</string>
     <string name="free">FREE!</string>
+    <string name="content_language">CONTENT LANGUAGE</string>
+    <string name="menu_language">MENU LANGUAGE</string>
 
 </resources>

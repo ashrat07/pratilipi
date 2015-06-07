@@ -11,5 +11,7 @@
     <string name="reset_content">மீட்டமை உள்ளடக்க</string>
     <string name="reset_menu">மீட்டமை பட்டி</string>
     <string name="about">பிராதிலிப்பி பற்றி</string>
+    <string name="content_language">CONTENT LANGUAGE</string>
+    <string name="menu_language">MENU LANGUAGE</string>
 
 </resources>

@@ -11,5 +11,7 @@
     <string name="reset_content">રીસેટ સામગ્રી</string>
     <string name="reset_menu">રીસેટ મેનુ</string>
     <string name="about">પ્રતીલીપી વિશે</string>
+    <string name="content_language">CONTENT LANGUAGE</string>
+    <string name="menu_language">MENU LANGUAGE</string>
 
 </resources>
