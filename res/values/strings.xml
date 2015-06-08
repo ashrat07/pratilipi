@@ -2,8 +2,11 @@
 <resources>
 
     <string name="app_name">Pratilipi</string>
+    <string name="hindi_en">HINDI</string>
     <string name="hindi">हिन्दी</string>
+    <string name="tamil_en">TAMIL</string>
     <string name="tamil">தமிழ்</string>
+    <string name="gujarati_en">GUJARATI</string>
     <string name="gujarati">ગુજરાતી</string>
     <string name="blank"></string>
     <string name="error_system_issue">Something went wrong and we are sorry for that. Please try again later</string>
@@ -29,6 +32,7 @@
     <string name="shelf">Shelf</string>
     <string name="profile">Profile</string>
     <string name="free">FREE!</string>
+    <string name="add_photo">ADD PHOTO</string>
     <string name="content_language">CONTENT LANGUAGE</string>
     <string name="menu_language">MENU LANGUAGE</string>
 

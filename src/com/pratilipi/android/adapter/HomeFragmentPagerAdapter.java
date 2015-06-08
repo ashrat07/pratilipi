@@ -7,15 +7,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.ui.CategoryFragment;
-import com.pratilipi.android.ui.ProfileFragment;
-import com.pratilipi.android.ui.ShelfFragment;
 import com.pratilipi.android.ui.StoreFragment;
 
 public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 
-	private final int PAGE_COUNT = 4;
+	private final int PAGE_COUNT = 2;
 	private final int tabTitles[] = new int[] { R.string.home,
-			R.string.categories, R.string.shelf, R.string.profile };
+			R.string.categories };
 
 	private Context context;
 
@@ -34,14 +32,6 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 
 		case 1:
 			fragment = new CategoryFragment();
-			break;
-
-		case 2:
-			fragment = new ShelfFragment();
-			break;
-
-		case 3:
-			fragment = new ProfileFragment();
 			break;
 
 		default:

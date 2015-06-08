@@ -30,15 +30,17 @@ public class PConstants {
 
 	public enum LANGUAGE {
 
-		HINDI("hindi", "5130467284090880"), TAMIL("tamil", "6319546696728576"), GUJARATI(
-				"gujarati", "5965057007550464");
+		HINDI("hindi", 0, "5130467284090880"), TAMIL("tamil", 1,
+				"6319546696728576"), GUJARATI("gujarati", 2, "5965057007550464");
 
 		private final String language;
-		private final String id;
+		private final int id;
+		private final String hashCode;
 
-		private LANGUAGE(String language, String id) {
+		private LANGUAGE(String language, int id, String hashCode) {
 			this.language = language;
 			this.id = id;
+			this.hashCode = hashCode;
 		}
 
 		@Override
@@ -46,8 +48,12 @@ public class PConstants {
 			return language;
 		}
 
-		public String getId() {
+		public int getId() {
 			return id;
+		}
+
+		public String getHashCode() {
+			return hashCode;
 		}
 	}
 

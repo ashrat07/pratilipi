@@ -9,11 +9,12 @@ import android.widget.ListView;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.ContentMenuLanguageAdapter;
+import com.pratilipi.android.util.AppState;
 
 public class ContentMenuLanguageFragment extends BaseFragment {
 	public static final String TAG_NAME = "ContentMenuLanguage";
-	private Integer[] _languageList = new Integer[] { R.string.hindi,
-			R.string.tamil, R.string.gujarati };
+	private Integer[] _languageList = new Integer[] { R.string.hindi_en,
+			R.string.tamil_en, R.string.gujarati_en };
 
 	private View mRootView;
 	private ListView listView;
@@ -34,7 +35,8 @@ public class ContentMenuLanguageFragment extends BaseFragment {
 		mAdapter = new ContentMenuLanguageAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, _languageList);
 		listView.setAdapter(mAdapter);
-		mAdapter.setSelectedItem(1);
+		mAdapter.setSelectedItem(AppState.getInstance().getLanguageId());
+
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override

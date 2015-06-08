@@ -18,12 +18,11 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="30dp"
-            android:contentDescription="ADD PHOTO" />
-        <!-- android:src="@drawable/profile_img" -->
+            android:contentDescription="@string/add_photo" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
@@ -31,25 +30,22 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DEMO USER"
                 android:textColor="@android:color/black"
-                android:textSize="14dp" />
+                android:textSize="@dimen/text_medium" />
 
             <TextView
-                android:id="@+id/user_joining"
+                android:id="@+id/member_since"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Member Since"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="10dp" />
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/user_shelf_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="17 Books in shelf"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="10dp" />
+                android:textSize="@dimen/text_small" />
         </LinearLayout>
     </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.pratilipi.android.adapter;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.util.FontManager;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -41,7 +42,8 @@ public class ContentMenuLanguageAdapter extends ArrayAdapter<Integer> {
 			((TextView) convertView).setCompoundDrawablesWithIntrinsicBounds(
 					null, null, null, null);
 		}
-
+		((TextView) convertView).setTypeface(FontManager.getInstance().get("regular"));
+		
 		return convertView;
 	}
 

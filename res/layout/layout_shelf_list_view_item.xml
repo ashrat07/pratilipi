@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/blank"
+            android:scaleType="fitXY" />
+
+        <com.pratilipi.android.widget.PTextView
+            android:id="@+id/title_text_view"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/image_view"
+            android:layout_gravity="center"
+            android:background="@color/background_transparent_gray"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_xsmall" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <com.pratilipi.android.widget.PTextView
+            android:id="@+id/title_en_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_xsmall"
+            app:textStyle="regular" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                style="@style/PRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="3.2" />
+
+            <com.pratilipi.android.widget.PTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(382)"
+                android:textColor="#5544FF"
+                android:textSize="@dimen/text_xsmall"
+                app:textStyle="regular" />
+        </LinearLayout>
+
+        <com.pratilipi.android.widget.PTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/background_green"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/free"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_large"
+            app:textStyle="regular" />
+
+        <LinearLayout
+            android:id="@+id/price_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <com.pratilipi.android.widget.PTextView
+                android:id="@+id/mrp_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_small"
+                app:textStyle="rupee" />
+
+            <com.pratilipi.android.widget.PTextView
+                android:id="@+id/selling_price_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_red"
+                android:textSize="@dimen/text_large"
+                app:textStyle="rupee" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

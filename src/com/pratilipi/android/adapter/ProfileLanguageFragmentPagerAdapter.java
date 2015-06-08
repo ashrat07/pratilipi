@@ -1,4 +1,4 @@
-package com.pratilipi.android.ui;
+package com.pratilipi.android.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,13 +6,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.ui.ContentMenuLanguageFragment;
 
 public class ProfileLanguageFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	private Context context;
+
 	private static final int PAGE_COUNT = 2;
-	private Integer[] tabTitles = new Integer[] { R.string.content_language,
-			R.string.menu_language };
+	private Integer[] tabTitles = new Integer[] { R.string.menu_language,
+			R.string.content_language };
 
 	public ProfileLanguageFragmentPagerAdapter(FragmentManager fm,
 			Context context) {
@@ -22,11 +24,7 @@ public class ProfileLanguageFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Fragment fragment;
-		if (position == 0) {
-			fragment = new ContentMenuLanguageFragment();
-		} else
-			fragment = new ContentMenuLanguageFragment();
+		Fragment fragment = new ContentMenuLanguageFragment();
 		return fragment;
 	}
 

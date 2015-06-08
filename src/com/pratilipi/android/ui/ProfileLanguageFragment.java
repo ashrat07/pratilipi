@@ -6,9 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.ProfileLanguageFragmentPagerAdapter;
 import com.pratilipi.android.widget.SlidingTabLayout;
 
 public class ProfileLanguageFragment extends BaseFragment {
@@ -16,11 +16,8 @@ public class ProfileLanguageFragment extends BaseFragment {
 	public static final String TAG_NAME = "Profile Language";
 
 	private View mRootView;
-	private SlidingTabLayout mSlidingTab;
+	private SlidingTabLayout mSlidingTabLayout;
 	private ViewPager mViewPager;
-
-	private Integer[] tabIds = new Integer[] { R.string.content_language,
-			R.string.menu_language };
 
 	@Override
 	public String getCustomTag() {
@@ -32,14 +29,22 @@ public class ProfileLanguageFragment extends BaseFragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(
 				R.layout.fragment_profile_language_selection, container, false);
+
 		mViewPager = (ViewPager) mRootView
 				.findViewById(R.id.profile_language_select_pager);
+		mSlidingTabLayout = (SlidingTabLayout) mRootView
+				.findViewById(R.id.profile_language_select_slide);
+
 		mViewPager.setAdapter(new ProfileLanguageFragmentPagerAdapter(
 				mParentActivity.getSupportFragmentManager(), mParentActivity));
+		mSlidingTabLayout.setCustomTabView(R.layout.layout_header_tab_white, 0);
+		mSlidingTabLayout.setViewPager(mViewPager);
 
-		mSlidingTab = (SlidingTabLayout) mRootView
-				.findViewById(R.id.profile_language_select_slide);
-		mSlidingTab.setViewPager(mViewPager);
+		Bundle bundle = getArguments();
+		if (bundle != null) {
+			int menuType = bundle.getInt("MENU_TYPE", 0);
+			mViewPager.setCurrentItem(menuType);
+		}
 
 		return mRootView;
 	}

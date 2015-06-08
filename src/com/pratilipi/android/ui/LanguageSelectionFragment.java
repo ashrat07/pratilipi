@@ -58,6 +58,8 @@ public class LanguageSelectionFragment extends BaseFragment {
 							.toString());
 					mParentActivity.mApp.setLanguageId(mLanguageSelected
 							.getId());
+					mParentActivity.mApp.setLanguageHashCode(mLanguageSelected
+							.getHashCode());
 
 					if (mLanguageSelected.equals(PConstants.LANGUAGE.GUJARATI)) {
 						PUtils.setLocale(mParentActivity, "gu");

@@ -9,6 +9,7 @@ public class AppState {
 
 	private static final String LANGUAGE = "LANGUAGE";
 	private static final String LANGUAGE_ID = "LANGUAGE_ID";
+	private static final String LANGUAGE_HASH_CODE = "LANGUAGE_HASH_CODE";
 
 	private static AppState instance;
 
@@ -46,14 +47,24 @@ public class AppState {
 		return mConf.getString(LANGUAGE, "regular");
 	}
 
-	public Boolean setLanguageId(String languageId) {
+	public Boolean setLanguageId(int languageId) {
 		SharedPreferences.Editor ed = mConf.edit();
-		ed.putString(LANGUAGE_ID, languageId);
+		ed.putInt(LANGUAGE_ID, languageId);
 		return ed.commit();
 	}
 
-	public String getLanguageId() {
-		return mConf.getString(LANGUAGE_ID, "");
+	public int getLanguageId() {
+		return mConf.getInt(LANGUAGE_ID, 0);
+	}
+
+	public Boolean setLanguageHashCode(String languageHashCode) {
+		SharedPreferences.Editor ed = mConf.edit();
+		ed.putString(LANGUAGE_HASH_CODE, languageHashCode);
+		return ed.commit();
+	}
+
+	public String getLanguageHashCode() {
+		return mConf.getString(LANGUAGE_HASH_CODE, "");
 	}
 
 }

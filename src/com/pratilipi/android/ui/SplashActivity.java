@@ -51,7 +51,7 @@ public class SplashActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(null);
 		FontManager.initialize(getApplicationContext());
 
 		AppState.init(getApplicationContext());
@@ -77,7 +77,7 @@ public class SplashActivity extends FragmentActivity {
 
 		mImageLoader = new ImageLoader(this);
 
-		if (TextUtils.isEmpty(mApp.getLanguageId())) {
+		if (TextUtils.isEmpty(mApp.getLanguageHashCode())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
 			showNextView(new HomeFragment());
@@ -102,6 +102,16 @@ public class SplashActivity extends FragmentActivity {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						showNextView(new ProfileFragment());
+						return false;
+					}
+				});
+
+		menu.findItem(R.id.shelf).setOnMenuItemClickListener(
+				new MenuItem.OnMenuItemClickListener() {
+
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						showNextView(new ShelfFragment());
 						return false;
 					}
 				});
@@ -167,19 +177,15 @@ public class SplashActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (mStack.getCount() > 1) {
+		if (mStack.getCount() <= 1) {
+			finish();
+		} else {
 			BaseFragment fragment = (BaseFragment) mStack.getTopFragment();
 			if (fragment != null) {
 				fragment.onBackPressed();
 			}
 
-			doTransaction(new Runnable() {
-
-				@Override
-				public void run() {
-					mStack.pop();
-				}
-			});
+			mStack.pop();
 		}
 	}
 

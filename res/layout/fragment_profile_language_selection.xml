@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_xdark_red"
+    android:background="@color/background_red"
     android:orientation="vertical" >
 
     <com.pratilipi.android.widget.SlidingTabLayout
@@ -15,6 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/background_gray" />
+        android:background="@android:color/white" />
 
 </LinearLayout>
