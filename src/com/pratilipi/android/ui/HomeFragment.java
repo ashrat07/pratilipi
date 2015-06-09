@@ -31,8 +31,8 @@ public class HomeFragment extends BaseFragment {
 		mRootView = inflater.inflate(R.layout.fragment_home, container, false);
 
 		mViewPager = (ViewPager) mRootView.findViewById(R.id.view_pager);
-		mPagerAdapter = new HomeFragmentPagerAdapter(
-				mParentActivity.getSupportFragmentManager(), mParentActivity);
+		mPagerAdapter = new HomeFragmentPagerAdapter(getChildFragmentManager(),
+				mParentActivity);
 		mViewPager.setAdapter(mPagerAdapter);
 
 		mSlidingTabLayout = (SlidingTabLayout) mRootView

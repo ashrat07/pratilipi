@@ -20,6 +20,7 @@ public class CategoryFragment extends BaseFragment {
 
 	private View mRootView;
 	private ListView mListView;
+	private CategoryAdapter mAdapter;
 
 	@Override
 	public String getCustomTag() {
@@ -33,9 +34,10 @@ public class CategoryFragment extends BaseFragment {
 				false);
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
 
-		CategoryAdapter adapter = new CategoryAdapter(mParentActivity,
+		mAdapter = new CategoryAdapter(mParentActivity,
 				R.layout.layout_categories_list_view_item, categories);
-		mListView.setAdapter(adapter);
+		mListView.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
 
 		return mRootView;
 	}

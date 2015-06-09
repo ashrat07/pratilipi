@@ -28,6 +28,7 @@ public class StoreFragment extends BaseFragment {
 
 	private View mRootView;
 	private ListView mListView;
+	private View mProgressBar;
 	private StoreAdapter mAdapter;
 	private List<StoreListing> storeListings;
 
@@ -42,6 +43,8 @@ public class StoreFragment extends BaseFragment {
 		mRootView = inflater.inflate(R.layout.fragment_store, container, false);
 
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
+		mProgressBar = mRootView.findViewById(R.id.progress_bar);
+
 		if (storeListings == null) {
 			storeListings = new ArrayList<>();
 		} else {
@@ -50,7 +53,9 @@ public class StoreFragment extends BaseFragment {
 		mAdapter = new StoreAdapter(mParentActivity,
 				R.layout.layout_store_list_view_item, storeListings);
 		mListView.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
 
+		mProgressBar.setVisibility(View.VISIBLE);
 		requestFeatured();
 
 		return mRootView;
@@ -104,6 +109,7 @@ public class StoreFragment extends BaseFragment {
 							}
 						}
 					}
+					mProgressBar.setVisibility(View.GONE);
 					mAdapter.notifyDataSetChanged();
 				} catch (JSONException e) {
 					e.printStackTrace();

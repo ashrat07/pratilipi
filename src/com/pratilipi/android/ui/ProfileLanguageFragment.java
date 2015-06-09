@@ -36,7 +36,7 @@ public class ProfileLanguageFragment extends BaseFragment {
 				.findViewById(R.id.profile_language_select_slide);
 
 		mViewPager.setAdapter(new ProfileLanguageFragmentPagerAdapter(
-				mParentActivity.getSupportFragmentManager(), mParentActivity));
+				getChildFragmentManager(), mParentActivity));
 		mSlidingTabLayout.setCustomTabView(R.layout.layout_header_tab_white, 0);
 		mSlidingTabLayout.setViewPager(mViewPager);
 

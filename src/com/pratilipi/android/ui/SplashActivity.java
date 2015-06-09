@@ -1,28 +1,20 @@
 package com.pratilipi.android.ui;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Vector;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.util.AppState;
@@ -34,12 +26,10 @@ import com.pratilipi.android.util.PThreadPool;
 import com.pratilipi.android.util.PUtils;
 import com.pratilipi.android.util.PopupErrorRunner;
 
-public class SplashActivity extends FragmentActivity {
+public class SplashActivity extends FragmentActivity implements
+		OnBackStackChangedListener {
 
 	public View mProgressBarParent;
-	private Menu menu;
-	private List<String> items = Arrays.asList("One", "Two", "Two and a half",
-			"Three", "Four");
 
 	public AppState mApp;
 	private Handler mUIHandler;
@@ -68,12 +58,12 @@ public class SplashActivity extends FragmentActivity {
 
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
-
 		mStack = new PStack(getSupportFragmentManager());
 
 		setContentView(R.layout.activity_splash);
-
 		mProgressBarParent = findViewById(R.id.progress_bar_parent);
+		getSupportFragmentManager().addOnBackStackChangedListener(this);
+		shouldDisplayHomeUp();
 
 		mImageLoader = new ImageLoader(this);
 
@@ -85,9 +75,18 @@ public class SplashActivity extends FragmentActivity {
 	}
 
 	@Override
+	public void onBackStackChanged() {
+		shouldDisplayHomeUp();
+	}
+
+	public void shouldDisplayHomeUp() {
+		// Enable Up button only if there are entries in the back stack
+		this.getActionBar().setDisplayHomeAsUpEnabled(mStack.getCount() > 1);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
-		this.menu = menu;
 
 		// Associate searchable configuration with the SearchView
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -96,83 +95,27 @@ public class SplashActivity extends FragmentActivity {
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
 
-		menu.findItem(R.id.profile).setOnMenuItemClickListener(
-				new MenuItem.OnMenuItemClickListener() {
-
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						showNextView(new ProfileFragment());
-						return false;
-					}
-				});
-
-		menu.findItem(R.id.shelf).setOnMenuItemClickListener(
-				new MenuItem.OnMenuItemClickListener() {
-
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						showNextView(new ShelfFragment());
-						return false;
-					}
-				});
-
 		return true;
 	}
 
-	private void loadHistory(String query) {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.onBackPressed();
+			return true;
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		case R.id.profile:
+			this.showNextView(new ProfileFragment());
+			return true;
 
-			// Cursor
-			String[] columns = new String[] { "_id", "text" };
-			Object[] temp = new Object[] { 0, "default" };
+		case R.id.shelf:
+			this.showNextView(new ShelfFragment());
+			return true;
 
-			MatrixCursor cursor = new MatrixCursor(columns);
-
-			for (int i = 0; i < items.size(); i++) {
-				temp[0] = i;
-				temp[1] = items.get(i);
-				cursor.addRow(temp);
-			}
-
-			// SearchView
-			SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-			final SearchView search = (SearchView) menu.findItem(R.id.search)
-					.getActionView();
-			search.setSearchableInfo(manager
-					.getSearchableInfo(getComponentName()));
-
-			search.setSuggestionsAdapter(new ExampleAdapter(this, cursor, items));
-
+		default:
+			return false;
 		}
-
-	}
-
-	public class ExampleAdapter extends CursorAdapter {
-
-		private List<String> items;
-		private TextView text;
-
-		public ExampleAdapter(Context context, Cursor cursor, List<String> items) {
-			super(context, cursor, false);
-			this.items = items;
-		}
-
-		@Override
-		public void bindView(View view, Context context, Cursor cursor) {
-			text.setText(items.get(cursor.getPosition()));
-		}
-
-		@Override
-		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = inflater.inflate(R.layout.item, parent, false);
-			text = (TextView) view.findViewById(R.id.text);
-			return view;
-		}
-
 	}
 
 	@Override
