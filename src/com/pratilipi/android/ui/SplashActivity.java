@@ -4,8 +4,10 @@ import java.util.Vector;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.SearchView;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.provider.PSuggestionProvider;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.ImageLoader;
@@ -29,7 +32,8 @@ import com.pratilipi.android.util.PopupErrorRunner;
 public class SplashActivity extends FragmentActivity implements
 		OnBackStackChangedListener {
 
-	public View mProgressBarParent;
+	private View mProgressBarParent;
+	private Menu mMenu;
 
 	public AppState mApp;
 	private Handler mUIHandler;
@@ -67,10 +71,33 @@ public class SplashActivity extends FragmentActivity implements
 
 		mImageLoader = new ImageLoader(this);
 
+		handleSearchIntent(getIntent());
+
 		if (TextUtils.isEmpty(mApp.getLanguageHashCode())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
-			showNextView(new HomeFragment());
+			showNextView(new StoreFragment());
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleSearchIntent(intent);
+	}
+
+	private void handleSearchIntent(Intent intent) {
+
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this, PSuggestionProvider.AUTHORITY,
+					PSuggestionProvider.MODE);
+			suggestions.saveRecentQuery(query, null);
+
+			Bundle bundle = new Bundle();
+			bundle.putString("QUERY", query);
+			showNextView(new SearchFragment(), bundle);
 		}
 	}
 
@@ -87,6 +114,7 @@ public class SplashActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
+		mMenu = menu;
 
 		// Associate searchable configuration with the SearchView
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -123,11 +151,16 @@ public class SplashActivity extends FragmentActivity implements
 		if (mStack.getCount() <= 1) {
 			finish();
 		} else {
+
+			if (mStack.getCount() == 2
+					&& mMenu.findItem(R.id.search).isActionViewExpanded()) {
+				mMenu.findItem(R.id.search).collapseActionView();
+			}
+
 			BaseFragment fragment = (BaseFragment) mStack.getTopFragment();
 			if (fragment != null) {
 				fragment.onBackPressed();
 			}
-
 			mStack.pop();
 		}
 	}

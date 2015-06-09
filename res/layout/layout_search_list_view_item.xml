@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:baselineAligned="false"
-    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="10dp" >
 
@@ -71,6 +70,46 @@
                 android:textColor="#5544FF"
                 android:textSize="@dimen/text_xsmall"
                 app:textStyle="regular" />
+        </LinearLayout>
+
+        <com.pratilipi.android.widget.PTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/background_green"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/free"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_large"
+            app:textStyle="regular" />
+
+        <LinearLayout
+            android:id="@+id/price_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <com.pratilipi.android.widget.PTextView
+                android:id="@+id/mrp_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_small"
+                app:textStyle="rupee" />
+
+            <com.pratilipi.android.widget.PTextView
+                android:id="@+id/selling_price_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_red"
+                android:textSize="@dimen/text_large"
+                app:textStyle="rupee" />
         </LinearLayout>
     </LinearLayout>
 

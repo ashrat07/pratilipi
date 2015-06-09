@@ -37,8 +37,9 @@ public class HttpGet extends
 		mRef = callRef;
 	}
 
+	@SafeVarargs
 	@Override
-	protected JSONObject doInBackground(HashMap<String, String>... params) {
+	protected final JSONObject doInBackground(HashMap<String, String>... params) {
 
 		JSONObject finalResult = null;
 		URL url = null;
@@ -151,14 +152,15 @@ public class HttpGet extends
 	}
 
 	@Override
-	protected void onPostExecute(JSONObject finalResult) {
+	protected final void onPostExecute(JSONObject finalResult) {
 		super.onPostExecute(finalResult);
 		if (mListener != null) {
 			mListener.setGetStatus(finalResult, mRef, mResponseCode);
 		}
 	}
 
-	public void run(HashMap<String, String>... params) {
+	@SafeVarargs
+	public final void run(HashMap<String, String>... params) {
 		if (Build.VERSION.SDK_INT >= 11) {
 			executeOnExecutor(PThreadPool.get().getExecutor(), params);
 		} else {

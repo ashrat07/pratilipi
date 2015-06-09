@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.pratilipi.android.R;
-import com.pratilipi.android.adapter.CategoryAdapter;
+import com.pratilipi.android.adapter.StoreCategoryAdapter;
 
-public class CategoryFragment extends BaseFragment {
+public class StoreCategoryFragment extends BaseFragment {
 
-	public static final String TAG_NAME = "Category";
+	public static final String TAG_NAME = "Store Category";
 
 	private Integer categories[] = new Integer[] { R.string.classics,
 			R.string.horror, R.string.poems, R.string.romance,
@@ -20,7 +20,7 @@ public class CategoryFragment extends BaseFragment {
 
 	private View mRootView;
 	private ListView mListView;
-	private CategoryAdapter mAdapter;
+	private StoreCategoryAdapter mAdapter;
 
 	@Override
 	public String getCustomTag() {
@@ -30,11 +30,11 @@ public class CategoryFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		mRootView = inflater.inflate(R.layout.fragment_category, container,
-				false);
+		mRootView = inflater.inflate(R.layout.fragment_store_category,
+				container, false);
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
 
-		mAdapter = new CategoryAdapter(mParentActivity,
+		mAdapter = new StoreCategoryAdapter(mParentActivity,
 				R.layout.layout_categories_list_view_item, categories);
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();

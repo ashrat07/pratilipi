@@ -23,8 +23,8 @@ public class PConstants {
 	public static final String PLACEHOLDER_LANGUAGE_ID = "{language_id}";
 	public static final String PLACEHOLDER_PRATILIPI_ID = "{pratilipi_id}";
 
-	public static final String HOME_LISTING_URL = HOST
-			+ "/mobileinit?languageId={language_id}";
+	public static final String STORE_HOME_LISTINGS_URL = HOST + "/mobileinit";
+	public static final String SEARCH_URL = HOST + "/search";
 	public static final String COVER_IMAGE_URL = HOST
 			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=200";
 

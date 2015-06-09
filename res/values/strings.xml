@@ -35,5 +35,6 @@
     <string name="add_photo">ADD PHOTO</string>
     <string name="content_language">CONTENT LANGUAGE</string>
     <string name="menu_language">MENU LANGUAGE</string>
+    <string name="filter">FILTER</string>
 
 </resources>

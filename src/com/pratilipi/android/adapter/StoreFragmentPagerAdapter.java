@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.pratilipi.android.R;
-import com.pratilipi.android.ui.CategoryFragment;
-import com.pratilipi.android.ui.StoreFragment;
+import com.pratilipi.android.ui.StoreCategoryFragment;
+import com.pratilipi.android.ui.StoreHomeFragment;
 
-public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
+public class StoreFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	private final int PAGE_COUNT = 2;
 	private final int tabTitles[] = new int[] { R.string.home,
@@ -17,7 +17,7 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	private Context context;
 
-	public HomeFragmentPagerAdapter(FragmentManager fm, Context context) {
+	public StoreFragmentPagerAdapter(FragmentManager fm, Context context) {
 		super(fm);
 		this.context = context;
 	}
@@ -27,15 +27,15 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
 		Fragment fragment;
 		switch (position) {
 		case 0:
-			fragment = new StoreFragment();
+			fragment = new StoreHomeFragment();
 			break;
 
 		case 1:
-			fragment = new CategoryFragment();
+			fragment = new StoreCategoryFragment();
 			break;
 
 		default:
-			fragment = new CategoryFragment();
+			fragment = new StoreCategoryFragment();
 			break;
 		}
 		return fragment;
