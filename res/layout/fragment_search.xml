@@ -5,11 +5,29 @@
     android:background="@color/background_xlight_gray"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/list_view"
+    <RelativeLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="2.5dp" />
+        android:visibility="invisible" >
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="1dp" />
+
+        <com.pratilipi.android.widget.PTextView
+            android:id="@+id/empty_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="50dp"
+            android:text="@string/empty_message"
+            android:textColor="@color/text_gray"
+            android:textSize="@dimen/text_medium"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </LinearLayout>

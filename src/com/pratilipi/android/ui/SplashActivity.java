@@ -16,13 +16,16 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.pratilipi.android.R;
 import com.pratilipi.android.provider.PSuggestionProvider;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.ImageLoader;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
@@ -69,7 +72,14 @@ public class SplashActivity extends FragmentActivity implements
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 		shouldDisplayHomeUp();
 
-		mImageLoader = new ImageLoader(this);
+		DisplayImageOptions opt = new DisplayImageOptions.Builder()
+				.cacheInMemory(true).cacheOnDisk(true)
+				.resetViewBeforeLoading(true).build();
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				getApplicationContext()).defaultDisplayImageOptions(opt)
+				.build();
+		ImageLoader.getInstance().init(config);
+		mImageLoader = ImageLoader.getInstance();
 
 		handleSearchIntent(getIntent());
 
@@ -95,9 +105,22 @@ public class SplashActivity extends FragmentActivity implements
 					PSuggestionProvider.MODE);
 			suggestions.saveRecentQuery(query, null);
 
-			Bundle bundle = new Bundle();
-			bundle.putString("QUERY", query);
-			showNextView(new SearchFragment(), bundle);
+			SearchView searchView = (SearchView) mMenu.findItem(R.id.search)
+					.getActionView();
+			searchView.setQuery(query, false);
+			searchView.clearFocus();
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+			if (SearchFragment.TAG_NAME.equals(mStack.getTopFragmentName())) {
+				SearchFragment fragment = (SearchFragment) mStack
+						.getTopFragment();
+				fragment.refresh(query);
+			} else {
+				Bundle bundle = new Bundle();
+				bundle.putString("QUERY", query);
+				showNextView(new SearchFragment(), bundle);
+			}
 		}
 	}
 

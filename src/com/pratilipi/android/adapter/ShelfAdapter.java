@@ -49,7 +49,7 @@ public class ShelfAdapter extends ArrayAdapter<String> {
 		}
 		String item = getItem(position);
 		String url = "http://lorempixel.com/400/400/sports/" + (position % 10);
-		activity.mImageLoader.displayFullImage(url, viewHolder.imageView);
+		activity.mImageLoader.displayImage(url, viewHolder.imageView);
 		viewHolder.titleTextView.setText(item);
 		viewHolder.titleEnTextView.setText(item);
 		return convertView;

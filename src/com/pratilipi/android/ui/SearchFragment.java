@@ -8,27 +8,37 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.SearchAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Book;
 import com.pratilipi.android.util.PConstants;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-
 public class SearchFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Search";
 
 	private View mRootView;
+	private View mLayout;
 	private ListView mListView;
+	private View mHeaderView;
+	private View mFooterView;
 	private SearchAdapter mAdapter;
 	private List<Book> mSearchList;
+	private String mQuery;
+	private String mCursor;
+	private boolean mLoadNext = false;
 
 	@Override
 	public String getCustomTag() {
@@ -40,7 +50,12 @@ public class SearchFragment extends BaseFragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater
 				.inflate(R.layout.fragment_search, container, false);
+		mLayout = mRootView.findViewById(R.id.layout);
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
+		mHeaderView = inflater.inflate(R.layout.layout_search_list_view_header,
+				new LinearLayout(mParentActivity));
+		mFooterView = inflater.inflate(R.layout.layout_search_list_view_footer,
+				new LinearLayout(mParentActivity));
 
 		if (mSearchList == null) {
 			mSearchList = new ArrayList<>();
@@ -51,26 +66,60 @@ public class SearchFragment extends BaseFragment {
 				R.layout.layout_search_list_view_item, mSearchList);
 		mListView.setAdapter(mAdapter);
 
-		View headerView = inflater.inflate(
-				R.layout.layout_search_list_view_header, container, false);
-		mListView.addHeaderView(headerView);
+		View emptyView = mRootView.findViewById(R.id.empty_text_view);
+		mListView.setEmptyView(emptyView);
 
-		mParentActivity.showProgressBar();
+		mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				int lastInScreen = firstVisibleItem + visibleItemCount;
+				if ((lastInScreen == totalItemCount) && mLoadNext) {
+					mLoadNext = false;
+					requestSearch();
+				}
+			}
+		});
+
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-			String query = bundle.getString("QUERY");
-			requestSearch(query);
+			refresh(bundle.getString("QUERY"));
 		}
 
 		return mRootView;
 	}
 
-	private void requestSearch(String query) {
+	public void refresh(String query) {
+		Log.e("refresh", query);
+		mQuery = query;
+		mCursor = null;
+		mSearchList.clear();
+		if (mListView.getHeaderViewsCount() == 0) {
+			mListView.addHeaderView(mHeaderView);
+		}
+		if (mListView.getFooterViewsCount() == 0) {
+			mListView.addFooterView(mFooterView);
+		}
+		mAdapter.notifyDataSetChanged();
+		mParentActivity.showProgressBar();
+		mLayout.setVisibility(View.INVISIBLE);
+		requestSearch();
+	}
+
+	private void requestSearch() {
 		HttpGet searchRequest = new HttpGet(this, PConstants.SEARCH_URL);
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.SEARCH_URL);
-		requestHashMap.put("query", query);
+		requestHashMap.put("query", mQuery);
+		if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
+			requestHashMap.put("cursor", mCursor);
+		}
 		requestHashMap.put("resultCount", "10");
 
 		searchRequest.run(requestHashMap);
@@ -80,6 +129,8 @@ public class SearchFragment extends BaseFragment {
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
 		if (PConstants.SEARCH_URL.equals(getUrl)) {
+			mParentActivity.hideProgressBar();
+			mLayout.setVisibility(View.VISIBLE);
 			if (finalResult != null) {
 				try {
 					JSONArray dataArray = finalResult
@@ -90,8 +141,16 @@ public class SearchFragment extends BaseFragment {
 							Book book = new Book(dataObj);
 							mSearchList.add(book);
 						}
-						mParentActivity.hideProgressBar();
 						mAdapter.notifyDataSetChanged();
+					}
+					if (finalResult.has("cursor")) {
+						mLoadNext = true;
+						mCursor = finalResult.getString("cursor");
+					} else {
+						mLoadNext = false;
+						mCursor = null;
+						Log.e("setGetStatus", "removeFooterView");
+						mListView.removeFooterView(mFooterView);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
