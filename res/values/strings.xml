@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Pratilipi</string>
+    <string name="english">ENGLISH</string>
     <string name="hindi_en">HINDI</string>
     <string name="hindi">हिंदी</string>
     <string name="tamil_en">TAMIL</string>

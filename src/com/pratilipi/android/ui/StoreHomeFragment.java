@@ -68,7 +68,7 @@ public class StoreHomeFragment extends BaseFragment {
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.STORE_HOME_LISTINGS_URL);
 		requestHashMap.put("languageId",
-				mParentActivity.mApp.getLanguageHashCode());
+				mParentActivity.mApp.getContentLanguageHashCode());
 
 		storeHomeListingsRequest.run(requestHashMap);
 	}

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="home">ઘર</string>
+    <string name="categories">શ્રેણીઓ</string>
     <string name="new_releases">ન્યૂ સલાહ</string>
     <string name="classics">ઉત્તમ નમૂનાના</string>
     <string name="horror">હૉરર</string>
@@ -8,5 +10,9 @@
     <string name="romance">રોમાંચક</string>
     <string name="stories">વાર્તાઓ</string>
     <string name="ghazals">ગઝલ</string>
-   
+    <string name="reset_content">રીસેટ સામગ્રી</string>
+    <string name="reset_menu">રીસેટ મેનુ</string>
+    <string name="about">Pratilipi વિશે</string>
+    <string name="view_all">જુઓ બધા>></string>
+
 </resources>

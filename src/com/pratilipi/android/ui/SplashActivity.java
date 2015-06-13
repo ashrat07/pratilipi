@@ -53,16 +53,7 @@ public class SplashActivity extends FragmentActivity implements
 
 		AppState.init(getApplicationContext());
 		mApp = AppState.getInstance();
-		if (mApp.getLanguage().equals(PConstants.LANGUAGE.GUJARATI.toString())) {
-			PUtils.setLocale(this, "gu");
-		} else if (mApp.getLanguage().equals(
-				PConstants.LANGUAGE.TAMIL.toString())) {
-			PUtils.setLocale(this, "ta");
-		} else if (mApp.getLanguage().equals(
-				PConstants.LANGUAGE.HINDI.toString())) {
-			PUtils.setLocale(this, "hi");
-		}
-
+		
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
 		mStack = new PStack(getSupportFragmentManager());
@@ -83,7 +74,7 @@ public class SplashActivity extends FragmentActivity implements
 
 		handleSearchIntent(getIntent());
 
-		if (TextUtils.isEmpty(mApp.getLanguageHashCode())) {
+		if (TextUtils.isEmpty(mApp.getContentLanguageHashCode())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
 			showNextView(new StoreFragment());

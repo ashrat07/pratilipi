@@ -28,6 +28,11 @@ public class PConstants {
 	public static final String COVER_IMAGE_URL = HOST
 			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=200";
 
+	public static final String LOCALE_HINDI="hi";
+	public static final String LOCALE_TAMIL="ta";
+	public static final String LOCALE_GUJURATI="gu";
+	
+	
 	public enum LANGUAGE {
 
 		HINDI("hindi", 0, "5130467284090880"), TAMIL("tamil", 1,

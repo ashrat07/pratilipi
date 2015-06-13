@@ -17,8 +17,8 @@ public class ProfileFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Profile";
 
-	private Integer[] profileItemsList = new Integer[] { R.string.reset_menu,
-			R.string.reset_content, R.string.about };
+	private Integer[] profileItemsList = new Integer[] { R.string.reset_content,
+			R.string.reset_menu, R.string.about };
 
 	private View mRootView;
 	private ListView mListView;

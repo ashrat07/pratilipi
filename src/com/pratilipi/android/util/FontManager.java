@@ -47,7 +47,7 @@ public class FontManager {
 		Typeface type = mTypefaceCache.get(style);
 
 		if (type == null) {
-			type = mTypefaceCache.get(AppState.getInstance().getLanguage());
+			type = mTypefaceCache.get(AppState.getInstance().getContentLanguage());
 		}
 
 		return type;
