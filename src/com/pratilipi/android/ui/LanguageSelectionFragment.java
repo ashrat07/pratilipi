@@ -54,25 +54,15 @@ public class LanguageSelectionFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				if (mLanguageSelected != null) {
-					mParentActivity.mApp.setLanguage(mLanguageSelected
+					mParentActivity.mApp.setContentLanguage(mLanguageSelected
 							.toString());
-					mParentActivity.mApp.setLanguageId(mLanguageSelected
+					mParentActivity.mApp.setContentLanguageId(mLanguageSelected
 							.getId());
-					mParentActivity.mApp.setLanguageHashCode(mLanguageSelected
+					mParentActivity.mApp.setContentLanguageHashCode(mLanguageSelected
 							.getHashCode());
 
-					if (mLanguageSelected.equals(PConstants.LANGUAGE.GUJARATI)) {
-						PUtils.setLocale(mParentActivity, "gu");
-					} else if (mLanguageSelected
-							.equals(PConstants.LANGUAGE.TAMIL)) {
-						PUtils.setLocale(mParentActivity, "ta");
-					} else if (mLanguageSelected
-							.equals(PConstants.LANGUAGE.HINDI)) {
-						PUtils.setLocale(mParentActivity, "hi");
-					}
-
 					mParentActivity.mStack.popAll();
-					mParentActivity.showNextView(new HomeFragment());
+					mParentActivity.showNextView(new StoreFragment());
 				} else {
 					mParentActivity.showError("Please select some language.");
 				}

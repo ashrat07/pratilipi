@@ -13,21 +13,21 @@ import android.widget.TextView;
 public class ContentMenuLanguageAdapter extends ArrayAdapter<Integer> {
 
 	private Context context;
-	private int layoutResourceId;
+	private int resource;
 	private int selectedItem;
 
 	public ContentMenuLanguageAdapter(Context context, int resource,
 			Integer[] objects) {
 		super(context, resource, objects);
 		this.context = context;
-		this.layoutResourceId = resource;
+		this.resource = resource;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(
-					layoutResourceId, parent, false);
+			convertView = LayoutInflater.from(context).inflate(resource,
+					parent, false);
 		}
 
 		int item = getItem(position);
@@ -42,8 +42,9 @@ public class ContentMenuLanguageAdapter extends ArrayAdapter<Integer> {
 			((TextView) convertView).setCompoundDrawablesWithIntrinsicBounds(
 					null, null, null, null);
 		}
-		((TextView) convertView).setTypeface(FontManager.getInstance().get("regular"));
-		
+		((TextView) convertView).setTypeface(FontManager.getInstance().get(
+				"regular"));
+
 		return convertView;
 	}
 

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
-import com.pratilipi.android.util.ImageLoader;
 
 public class BookSummaryFragment extends BaseFragment {
 
@@ -45,7 +44,7 @@ public class BookSummaryFragment extends BaseFragment {
 		if (bundle != null) {
 			Book book = bundle.getParcelable("BOOK");
 			if (book != null) {
-				new ImageLoader(getActivity()).displayImage(book.coverImageUrl,
+				mParentActivity.mImageLoader.displayImage(book.coverImageUrl,
 						mImageView);
 				mNameTextView.setText(book.title);
 				mArtistTextView.setText(book.author.fullName);

@@ -36,5 +36,8 @@
     <string name="add_photo">ADD PHOTO</string>
     <string name="content_language">CONTENT LANGUAGE</string>
     <string name="menu_language">MENU LANGUAGE</string>
+    <string name="filter">FILTER</string>
+    <string name="empty_message">OOPS! There are no result for the search query</string>
+    <string name="loading">Loading...</string>
 
 </resources>

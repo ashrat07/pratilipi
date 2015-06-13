@@ -10,6 +10,8 @@ import android.widget.ListView;
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.ContentMenuLanguageAdapter;
 import com.pratilipi.android.util.AppState;
+import com.pratilipi.android.util.PConstants;
+import com.pratilipi.android.util.PUtils;
 
 public class MenuLanguageFragment extends BaseFragment{
 
@@ -36,7 +38,7 @@ public class MenuLanguageFragment extends BaseFragment{
 		mAdapter = new ContentMenuLanguageAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, _languageList);
 		listView.setAdapter(mAdapter);
-		mAdapter.setSelectedItem(AppState.getInstance().getLanguageId());
+		mAdapter.setSelectedItem(AppState.getInstance().getContentLanguageId());
 
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -45,6 +47,15 @@ public class MenuLanguageFragment extends BaseFragment{
 					int position, long id) {
 				mAdapter.setSelectedItem(position);
 				mAdapter.notifyDataSetChanged();
+				
+				if (position == 3) {
+					PUtils.setLocale(mParentActivity, PConstants.LOCALE_GUJURATI);
+				} else if (position ==2) {
+					PUtils.setLocale(mParentActivity, PConstants.LOCALE_TAMIL);
+				} else if (position == 1) {
+					PUtils.setLocale(mParentActivity, PConstants.LOCALE_HINDI);
+				}
+
 			}
 		});
 		return mRootView;

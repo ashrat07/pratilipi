@@ -1,7 +1,6 @@
 package com.pratilipi.android.adapter;
 
-import com.pratilipi.android.R;
-import com.pratilipi.android.ui.SplashActivity;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ShelfAdapter extends ArrayAdapter<String> {
+import com.pratilipi.android.R;
+import com.pratilipi.android.model.Book;
+import com.pratilipi.android.ui.SplashActivity;
+
+public class SearchAdapter extends ArrayAdapter<Book> {
 
 	SplashActivity activity;
 	int resource;
@@ -22,7 +25,7 @@ public class ShelfAdapter extends ArrayAdapter<String> {
 		TextView titleEnTextView;
 	}
 
-	public ShelfAdapter(Context context, int resource, String[] list) {
+	public SearchAdapter(Context context, int resource, List<Book> list) {
 		super(context, resource, list);
 		this.activity = (SplashActivity) context;
 		this.resource = resource;
@@ -47,11 +50,13 @@ public class ShelfAdapter extends ArrayAdapter<String> {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		String item = getItem(position);
-		String url = "http://lorempixel.com/400/400/sports/" + (position % 10);
-		activity.mImageLoader.displayImage(url, viewHolder.imageView);
-		viewHolder.titleTextView.setText(item);
-		viewHolder.titleEnTextView.setText(item);
+
+		Book book = getItem(position);
+		activity.mImageLoader.displayImage(book.coverImageUrl,
+				viewHolder.imageView);
+		viewHolder.titleTextView.setText(book.title);
+		viewHolder.titleEnTextView.setText(book.titleEn);
+
 		return convertView;
 	}
 

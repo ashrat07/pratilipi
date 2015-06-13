@@ -46,7 +46,7 @@ public class ProfileFragment extends BaseFragment {
 		userName.setText("DEMO USER");
 		memberSince.setText("Member Since");
 		userShelfCount.setText("17 Books in shelf");
-		mParentActivity.mImageLoader.displayFullImage(
+		mParentActivity.mImageLoader.displayImage(
 				"http://lorempixel.com/200/200/people/", userImageView);
 
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,

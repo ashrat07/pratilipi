@@ -15,7 +15,7 @@ public class Book implements Parcelable {
 	private static final String HAS_TYPE = "hasType";
 	private static final String PAGE_URL = "pageUrl";
 	private static final String PAGE_URL_ALIAS = "pageUrlAlias";
-	private static final String COVER_IMAGE_URL = "coverImageUrl";
+	// private static final String COVER_IMAGE_URL = "coverImageUrl";
 	private static final String READER_PAGE_URL = "readerPageUrl";
 	private static final String WRITER_PAGE_URL = "writerPageUrl";
 	private static final String TITLE = "title";
@@ -89,7 +89,6 @@ public class Book implements Parcelable {
 			this.hasType = obj.getBoolean(HAS_TYPE);
 			this.pageUrl = obj.getString(PAGE_URL);
 			this.pageUrlAlias = obj.getString(PAGE_URL_ALIAS);
-			// this.coverImageUrl = obj.getString(COVER_IMAGE_URL);
 			this.coverImageUrl = PConstants.COVER_IMAGE_URL.replace(
 					PConstants.PLACEHOLDER_PRATILIPI_ID, "" + this.id);
 			this.readerPageUrl = obj.getString(READER_PAGE_URL);
@@ -100,10 +99,20 @@ public class Book implements Parcelable {
 			this.hasTitleEn = obj.getBoolean(HAS_TITLE_EN);
 			this.languageId = obj.getLong(LANGUAGE_ID);
 			this.hasLanguageId = obj.getBoolean(HAS_LANGUAGE_ID);
-			this.language = new Language(obj.getJSONObject(LANGUAGE));
+
+			JSONObject languageObj = obj.getJSONObject(LANGUAGE);
+			if (languageObj != null) {
+				this.language = new Language(languageObj);
+			}
+
 			this.authorId = obj.getLong(AUTHOR_ID);
 			this.hasAuthorId = obj.getBoolean(HAS_AUTHOR_ID);
-			this.author = new Author(obj.getJSONObject(AUTHOR));
+
+			JSONObject authorObj = obj.getJSONObject(AUTHOR);
+			if (authorObj != null) {
+				this.author = new Author(authorObj);
+			}
+
 			this.hasPublicationYear = obj.getBoolean(HAS_PUBLICATION_YEAR);
 			this.listingDate = obj.getString(LISTING_DATE);
 			this.lastUpdated = obj.getString(LAST_UPDATED);

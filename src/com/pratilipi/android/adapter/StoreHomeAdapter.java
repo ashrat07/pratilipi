@@ -20,18 +20,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class StoreAdapter extends ArrayAdapter<StoreListing> {
+public class StoreHomeAdapter extends ArrayAdapter<StoreListing> {
 
 	SplashActivity activity;
 	int resource;
 
 	static class ViewHolder {
-		private TextView headerTextView;
-		private View viewAllTextView;
-		private LinearLayout contentScrollLayout;
+		TextView headerTextView;
+		View viewAllTextView;
+		LinearLayout contentScrollLayout;
 	}
 
-	public StoreAdapter(Context context, int resource, List<StoreListing> list) {
+	public StoreHomeAdapter(Context context, int resource,
+			List<StoreListing> list) {
 		super(context, resource, list);
 		this.activity = (SplashActivity) context;
 		this.resource = resource;

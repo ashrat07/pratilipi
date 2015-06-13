@@ -37,9 +37,6 @@ public class ShelfFragment extends BaseFragment {
 				R.layout.layout_shelf_list_view_item, list);
 		mListView.setAdapter(mAdapter);
 
-		View headerView = inflater.inflate(R.layout.layout_shelf_header, null);
-		mListView.addHeaderView(headerView);
-
 		return mRootView;
 	}
 }

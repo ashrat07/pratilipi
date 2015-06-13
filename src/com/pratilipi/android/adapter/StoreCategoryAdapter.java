@@ -7,22 +7,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class CategoryAdapter extends ArrayAdapter<Integer> {
+public class StoreCategoryAdapter extends ArrayAdapter<Integer> {
 
 	Context context;
-	int layoutResourceId;
+	int resource;
 
-	public CategoryAdapter(Context context, int layoutResourceId, Integer[] list) {
-		super(context, layoutResourceId, list);
+	public StoreCategoryAdapter(Context context, int resource, Integer[] list) {
+		super(context, resource, list);
 		this.context = context;
-		this.layoutResourceId = layoutResourceId;
+		this.resource = resource;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(
-					layoutResourceId, parent, false);
+			convertView = LayoutInflater.from(context).inflate(resource,
+					parent, false);
 		}
 		int item = getItem(position);
 		((TextView) convertView)

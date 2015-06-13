@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.TextUtils;
 
 public class FontManager {
 
@@ -32,17 +31,15 @@ public class FontManager {
 		type = Typeface.createFromAsset(context.getAssets(),
 				"fonts/Rupee_Foradian.ttf");
 		mTypefaceCache.put("rupee", type);
-		
+
 		type = Typeface.createFromAsset(context.getAssets(),
 				"fonts/Gujarati.ttf");
 		mTypefaceCache.put("gujarati", type);
-		
-		type = Typeface.createFromAsset(context.getAssets(),
-				"fonts/Hindi.ttf");
+
+		type = Typeface.createFromAsset(context.getAssets(), "fonts/Hindi.ttf");
 		mTypefaceCache.put("hindi", type);
-		
-		type = Typeface.createFromAsset(context.getAssets(),
-				"fonts/Tamil.TTF");
+
+		type = Typeface.createFromAsset(context.getAssets(), "fonts/Tamil.TTF");
 		mTypefaceCache.put("tamil", type);
 	}
 
@@ -50,7 +47,7 @@ public class FontManager {
 		Typeface type = mTypefaceCache.get(style);
 
 		if (type == null) {
-			type = mTypefaceCache.get(AppState.getInstance().getLanguage());
+			type = mTypefaceCache.get(AppState.getInstance().getContentLanguage());
 		}
 
 		return type;

@@ -13,7 +13,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 public class PopupErrorRunner implements Runnable {
-	
+
 	private Activity mActivity;
 	private PopupWindow mPopup;
 	private SpannableString mBody;

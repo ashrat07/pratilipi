@@ -4,8 +4,10 @@ import java.util.Vector;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
@@ -14,12 +16,16 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.pratilipi.android.R;
+import com.pratilipi.android.provider.PSuggestionProvider;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.ImageLoader;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
@@ -29,7 +35,8 @@ import com.pratilipi.android.util.PopupErrorRunner;
 public class SplashActivity extends FragmentActivity implements
 		OnBackStackChangedListener {
 
-	public View mProgressBarParent;
+	private View mProgressBarParent;
+	private Menu mMenu;
 
 	public AppState mApp;
 	private Handler mUIHandler;
@@ -46,16 +53,7 @@ public class SplashActivity extends FragmentActivity implements
 
 		AppState.init(getApplicationContext());
 		mApp = AppState.getInstance();
-		if (mApp.getLanguage().equals(PConstants.LANGUAGE.GUJARATI.toString())) {
-			PUtils.setLocale(this, "gu");
-		} else if (mApp.getLanguage().equals(
-				PConstants.LANGUAGE.TAMIL.toString())) {
-			PUtils.setLocale(this, "ta");
-		} else if (mApp.getLanguage().equals(
-				PConstants.LANGUAGE.HINDI.toString())) {
-			PUtils.setLocale(this, "hi");
-		}
-
+		
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
 		mStack = new PStack(getSupportFragmentManager());
@@ -65,12 +63,55 @@ public class SplashActivity extends FragmentActivity implements
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 		shouldDisplayHomeUp();
 
-		mImageLoader = new ImageLoader(this);
+		DisplayImageOptions opt = new DisplayImageOptions.Builder()
+				.cacheInMemory(true).cacheOnDisk(true)
+				.resetViewBeforeLoading(true).build();
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				getApplicationContext()).defaultDisplayImageOptions(opt)
+				.build();
+		ImageLoader.getInstance().init(config);
+		mImageLoader = ImageLoader.getInstance();
 
-		if (TextUtils.isEmpty(mApp.getLanguageHashCode())) {
+		handleSearchIntent(getIntent());
+
+		if (TextUtils.isEmpty(mApp.getContentLanguageHashCode())) {
 			showNextView(new LanguageSelectionFragment());
 		} else {
-			showNextView(new HomeFragment());
+			showNextView(new StoreFragment());
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleSearchIntent(intent);
+	}
+
+	private void handleSearchIntent(Intent intent) {
+
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this, PSuggestionProvider.AUTHORITY,
+					PSuggestionProvider.MODE);
+			suggestions.saveRecentQuery(query, null);
+
+			SearchView searchView = (SearchView) mMenu.findItem(R.id.search)
+					.getActionView();
+			searchView.setQuery(query, false);
+			searchView.clearFocus();
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+			if (SearchFragment.TAG_NAME.equals(mStack.getTopFragmentName())) {
+				SearchFragment fragment = (SearchFragment) mStack
+						.getTopFragment();
+				fragment.refresh(query);
+			} else {
+				Bundle bundle = new Bundle();
+				bundle.putString("QUERY", query);
+				showNextView(new SearchFragment(), bundle);
+			}
 		}
 	}
 
@@ -87,6 +128,7 @@ public class SplashActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
+		mMenu = menu;
 
 		// Associate searchable configuration with the SearchView
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -123,11 +165,16 @@ public class SplashActivity extends FragmentActivity implements
 		if (mStack.getCount() <= 1) {
 			finish();
 		} else {
+
+			if (mStack.getCount() == 2
+					&& mMenu.findItem(R.id.search).isActionViewExpanded()) {
+				mMenu.findItem(R.id.search).collapseActionView();
+			}
+
 			BaseFragment fragment = (BaseFragment) mStack.getTopFragment();
 			if (fragment != null) {
 				fragment.onBackPressed();
 			}
-
 			mStack.pop();
 		}
 	}
