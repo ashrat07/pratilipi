@@ -1,5 +1,6 @@
 package com.pratilipi.android.ui;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -7,10 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
+import com.pratilipi.android.util.FontManager;
+import com.pratilipi.android.util.PConstants;
 
 public class BookSummaryFragment extends BaseFragment {
 
@@ -18,8 +23,20 @@ public class BookSummaryFragment extends BaseFragment {
 
 	private View mRootView;
 	private ImageView mImageView;
-	private TextView mNameTextView;
-	private TextView mArtistTextView;
+	private TextView mTitleTextView;
+	private TextView mTitleEnTextView;
+	private TextView mAuthorNameTextView;
+	private RatingBar mRatingBar;
+	private TextView mStarCountTextView;
+	private LinearLayout mGenreLayout;
+	private TextView mFreeTextView;
+	private View mPriceLayout;
+	private TextView mMrpTextView;
+	private TextView mSellingPriceTextView;
+	private TextView mReadTextView;
+	private TextView mBuyNowTextView;
+	private TextView mReadSampleTextView;
+	private TextView mReviewTextView;
 	private TextView mSummaryTextView;
 
 	@Override
@@ -34,9 +51,28 @@ public class BookSummaryFragment extends BaseFragment {
 				false);
 
 		mImageView = (ImageView) mRootView.findViewById(R.id.image_view);
-		mNameTextView = (TextView) mRootView.findViewById(R.id.name_text_view);
-		mArtistTextView = (TextView) mRootView
-				.findViewById(R.id.artist_text_view);
+		mTitleTextView = (TextView) mRootView
+				.findViewById(R.id.title_text_view);
+		mTitleEnTextView = (TextView) mRootView
+				.findViewById(R.id.title_en_text_view);
+		mAuthorNameTextView = (TextView) mRootView
+				.findViewById(R.id.author_name_text_view);
+		mRatingBar = (RatingBar) mRootView.findViewById(R.id.rating_bar);
+		mStarCountTextView = (TextView) mRootView
+				.findViewById(R.id.star_count_text_view);
+		mGenreLayout = (LinearLayout) mRootView.findViewById(R.id.genre_layout);
+		mFreeTextView = (TextView) mRootView.findViewById(R.id.free_text_view);
+		mPriceLayout = mRootView.findViewById(R.id.price_layout);
+		mMrpTextView = (TextView) mRootView.findViewById(R.id.mrp_text_view);
+		mSellingPriceTextView = (TextView) mRootView
+				.findViewById(R.id.selling_price_text_view);
+		mReadTextView = (TextView) mRootView.findViewById(R.id.read_text_view);
+		mBuyNowTextView = (TextView) mRootView
+				.findViewById(R.id.buy_now_text_view);
+		mReadSampleTextView = (TextView) mRootView
+				.findViewById(R.id.read_sample_text_view);
+		mReviewTextView = (TextView) mRootView
+				.findViewById(R.id.review_text_view);
 		mSummaryTextView = (TextView) mRootView
 				.findViewById(R.id.summary_text_view);
 
@@ -44,12 +80,54 @@ public class BookSummaryFragment extends BaseFragment {
 		if (bundle != null) {
 			Book book = bundle.getParcelable("BOOK");
 			if (book != null) {
-				mParentActivity.mImageLoader.displayImage(book.coverImageUrl,
+				String coverImageUrl = PConstants.COVER_IMAGE_URL.replace(
+						PConstants.PLACEHOLDER_PRATILIPI_ID, "" + book.id);
+				mParentActivity.mImageLoader.displayImage(coverImageUrl,
 						mImageView);
-				mNameTextView.setText(book.title);
-				mArtistTextView.setText(book.author.fullName);
+				mTitleTextView.setText(book.title);
+				mTitleEnTextView.setText(book.titleEn);
+				mAuthorNameTextView.setText(book.author.nameEn);
+				mRatingBar.setRating(book.ratingCount);
+				mStarCountTextView.setText("(" + book.starCount + ")");
+				mGenreLayout.removeAllViews();
+				for (String genre : book.genreNameList) {
+					View genreView = inflater.inflate(R.layout.layout_genre,
+							null);
+					((TextView) genreView).setText(genre);
+					mGenreLayout.addView(genreView);
+				}
+				if (Math.random() < 0.5) {
+					mFreeTextView.setVisibility(View.VISIBLE);
+					mPriceLayout.setVisibility(View.GONE);
+					mReadTextView.setVisibility(View.VISIBLE);
+					mBuyNowTextView.setVisibility(View.GONE);
+				} else {
+					mFreeTextView.setVisibility(View.GONE);
+					mPriceLayout.setVisibility(View.VISIBLE);
+					mMrpTextView.setText("`999");
+					mMrpTextView.setPaintFlags(mMrpTextView.getPaintFlags()
+							| Paint.STRIKE_THRU_TEXT_FLAG);
+					mSellingPriceTextView.setText("`499");
+					mReadTextView.setVisibility(View.GONE);
+					mBuyNowTextView.setVisibility(View.VISIBLE);
+				}
+				mReadSampleTextView
+						.setOnClickListener(new View.OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+							}
+						});
+				mReviewTextView.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+					}
+				});
 				if (!TextUtils.isEmpty(book.summary)) {
 					mSummaryTextView.setText(Html.fromHtml(book.summary));
+					mSummaryTextView.setTypeface(FontManager.getInstance().get(
+							mParentActivity.mApp.getContentLanguage()));
 				}
 			}
 		}

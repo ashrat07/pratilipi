@@ -13,7 +13,6 @@ public class FontManager {
 		return FontManager.InstanceHolder.INSTANCE;
 	}
 
-	// Parse the resId and initialize the parser.
 	public static void initialize(Context context) {
 
 		Typeface type = Typeface.createFromAsset(context.getAssets(),
@@ -47,7 +46,8 @@ public class FontManager {
 		Typeface type = mTypefaceCache.get(style);
 
 		if (type == null) {
-			type = mTypefaceCache.get(AppState.getInstance().getContentLanguage());
+			type = mTypefaceCache.get(AppState.getInstance()
+					.getContentLanguage());
 		}
 
 		return type;

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="english">अंग्रेजी</string>
+    <string name="hindi">हिन्दी</string>
+    <string name="tamil">तमिल</string>
+    <string name="gujarati">गुजराती</string>
     <string name="home">घर</string>
     <string name="categories">श्रेणियों</string>
     <string name="new_releases">नया प्रदर्शन</string>
@@ -10,9 +14,11 @@
     <string name="romance">रोमांस</string>
     <string name="stories">कहानियां</string>
     <string name="ghazals">गजल</string>
-    <string name="reset_content">रीसेट सामग्री</string>
-    <string name="reset_menu">रीसेट मेनू</string>
-    <string name="about">प्रतिलिपि के बारे में</string>
     <string name="view_all">सभी को देखें>></string>
+    <string name="content_language">प्रकरण भाषा</string>
+    <string name="menu_language">मेन्यू भाषा</string>
+    <string name="reset_content_language">रीसेट सामग्री भाषा</string>
+    <string name="reset_menu_language">रीसेट मेनू भाषा</string>
+    <string name="about">प्रतिलिपि के बारे में</string>
 
 </resources>

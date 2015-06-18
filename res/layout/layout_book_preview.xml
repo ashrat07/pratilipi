@@ -34,6 +34,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -46,15 +48,16 @@
             android:rating="3.2" />
 
         <com.pratilipi.android.widget.PTextView
+            android:id="@+id/star_count_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(382)"
-            android:textColor="#5544FF"
+            android:textColor="@color/text_blue"
             android:textSize="@dimen/text_xsmall"
             app:textStyle="regular" />
     </LinearLayout>
 
     <com.pratilipi.android.widget.PTextView
+        android:id="@+id/free_text_view"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@color/background_green"

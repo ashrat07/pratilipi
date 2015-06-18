@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pratilipi.android.widget.PTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/header_tab_text_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:background="@drawable/background_genre"
+    android:ellipsize="marquee"
+    android:gravity="center"
+    android:paddingBottom="5dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="5dp"
+    android:singleLine="true"
+    android:textColor="@color/text_gray"
+    android:textSize="@dimen/text_small"
+    app:textStyle="regular" />

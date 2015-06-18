@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.ProfileLanguageFragmentPagerAdapter;
+import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.widget.SlidingTabLayout;
 
 public class ProfileLanguageFragment extends BaseFragment {
@@ -37,7 +38,22 @@ public class ProfileLanguageFragment extends BaseFragment {
 
 		mViewPager.setAdapter(new ProfileLanguageFragmentPagerAdapter(
 				getChildFragmentManager(), mParentActivity));
-		mSlidingTabLayout.setCustomTabView(R.layout.layout_header_tab_white, 0);
+		if (mParentActivity.mApp.getMenuLanguageLocale().equals(
+				PConstants.MENU_LANGUAGE.HINDI.locale)) {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white_hindi, 0);
+		} else if (mParentActivity.mApp.getMenuLanguageLocale().equals(
+				PConstants.MENU_LANGUAGE.TAMIL.locale)) {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white_tamil, 0);
+		} else if (mParentActivity.mApp.getMenuLanguageLocale().equals(
+				PConstants.MENU_LANGUAGE.GUJARATI.locale)) {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white_gujarati, 0);
+		} else {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white, 0);
+		}
 		mSlidingTabLayout.setViewPager(mViewPager);
 
 		Bundle bundle = getArguments();

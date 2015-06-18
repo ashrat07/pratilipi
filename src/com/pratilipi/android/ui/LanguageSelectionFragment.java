@@ -8,7 +8,6 @@ import android.widget.Button;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.util.PConstants;
-import com.pratilipi.android.util.PUtils;
 
 public class LanguageSelectionFragment extends BaseFragment {
 
@@ -20,7 +19,7 @@ public class LanguageSelectionFragment extends BaseFragment {
 	private Button mGujaratiButton;
 	private View mGoButton;
 
-	private PConstants.LANGUAGE mLanguageSelected;
+	private PConstants.CONTENT_LANGUAGE mLanguageSelected;
 
 	@Override
 	public String getCustomTag() {
@@ -40,13 +39,13 @@ public class LanguageSelectionFragment extends BaseFragment {
 
 		mLanguageSelected = null;
 
-		mHindiButton.setTag(PConstants.LANGUAGE.HINDI);
+		mHindiButton.setTag(PConstants.CONTENT_LANGUAGE.HINDI);
 		mHindiButton.setOnClickListener(mLanguageSelectionListener);
 
-		mTamilButton.setTag(PConstants.LANGUAGE.TAMIL);
+		mTamilButton.setTag(PConstants.CONTENT_LANGUAGE.TAMIL);
 		mTamilButton.setOnClickListener(mLanguageSelectionListener);
 
-		mGujaratiButton.setTag(PConstants.LANGUAGE.GUJARATI);
+		mGujaratiButton.setTag(PConstants.CONTENT_LANGUAGE.GUJARATI);
 		mGujaratiButton.setOnClickListener(mLanguageSelectionListener);
 
 		mGoButton.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +57,9 @@ public class LanguageSelectionFragment extends BaseFragment {
 							.toString());
 					mParentActivity.mApp.setContentLanguageId(mLanguageSelected
 							.getId());
-					mParentActivity.mApp.setContentLanguageHashCode(mLanguageSelected
-							.getHashCode());
+					mParentActivity.mApp
+							.setContentLanguageHashCode(mLanguageSelected
+									.getHashCode());
 
 					mParentActivity.mStack.popAll();
 					mParentActivity.showNextView(new StoreFragment());
@@ -85,7 +85,7 @@ public class LanguageSelectionFragment extends BaseFragment {
 						previousSelection.setSelected(false);
 					}
 				}
-				mLanguageSelected = (PConstants.LANGUAGE) v.getTag();
+				mLanguageSelected = (PConstants.CONTENT_LANGUAGE) v.getTag();
 				v.setSelected(true);
 			}
 		}

@@ -23,17 +23,15 @@ public class PConstants {
 	public static final String PLACEHOLDER_LANGUAGE_ID = "{language_id}";
 	public static final String PLACEHOLDER_PRATILIPI_ID = "{pratilipi_id}";
 
-	public static final String STORE_HOME_LISTINGS_URL = HOST + "/mobileinit";
+	public static final String STORE_TOP_CONTENT_URL = HOST + "/mobileinit";
+	public static final String TOP_CONTENT_URL = HOST + "/pratilipi/list";
+	public static final String STORE_CATEGORY_URL = HOST + "/category";
+	public static final String CATEGORY_URL = HOST + "/category/pratilipilist";
 	public static final String SEARCH_URL = HOST + "/search";
 	public static final String COVER_IMAGE_URL = HOST
 			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=200";
 
-	public static final String LOCALE_HINDI="hi";
-	public static final String LOCALE_TAMIL="ta";
-	public static final String LOCALE_GUJURATI="gu";
-	
-	
-	public enum LANGUAGE {
+	public enum CONTENT_LANGUAGE {
 
 		HINDI("hindi", 0, "5130467284090880"), TAMIL("tamil", 1,
 				"6319546696728576"), GUJARATI("gujarati", 2, "5965057007550464");
@@ -42,7 +40,7 @@ public class PConstants {
 		private final int id;
 		private final String hashCode;
 
-		private LANGUAGE(String language, int id, String hashCode) {
+		private CONTENT_LANGUAGE(String language, int id, String hashCode) {
 			this.language = language;
 			this.id = id;
 			this.hashCode = hashCode;
@@ -60,6 +58,35 @@ public class PConstants {
 		public String getHashCode() {
 			return hashCode;
 		}
+	}
+
+	public enum MENU_LANGUAGE {
+
+		ENGLISH(0, "regular", "en"), HINDI(1, "hindi", "hi"), TAMIL(2, "tamil",
+				"ta"), GUJARATI(3, "gujarati", "gu");
+
+		public final int id;
+		public final String typeface;
+		public final String locale;
+
+		private MENU_LANGUAGE(int id, String typeface, String locale) {
+			this.id = id;
+			this.typeface = typeface;
+			this.locale = locale;
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public String getTypeface() {
+			return typeface;
+		}
+
+		public String getLocale() {
+			return locale;
+		}
+
 	}
 
 }

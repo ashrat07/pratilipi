@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="english">ஆங்கிலம்</string>
+    <string name="hindi">இந்தி</string>
+    <string name="tamil">தமிழ்</string>
+    <string name="gujarati">குஜராத்தி</string>
     <string name="home">முகப்பு</string>
     <string name="categories">பிரிவுகள்</string>
     <string name="new_releases">புதிய வெளியீடுகள்</string>
@@ -10,9 +14,11 @@
     <string name="romance">காதல்</string>
     <string name="stories">செய்திகள்</string>
     <string name="ghazals">கஜல்ஸ்</string>
-    <string name="reset_content">மீட்டமை உள்ளடக்க</string>
-    <string name="reset_menu">மீட்டமை பட்டி</string>
-    <string name="about">Pratilipi பற்றி</string>
+    <string name="content_language">திருப்தி பண்ணு மொழி</string>
+    <string name="menu_language">மெனு மொழி</string>
+    <string name="reset_content_language">மீட்டமை உள்ளடக்க மொழி</string>
+    <string name="reset_menu_language">மீட்டமை பட்டி மொழி</string>
+    <string name="about">நகல் பற்றி</string>
     <string name="view_all">எல்லாம் பாருங்கள்>></string>
 
 </resources>

@@ -13,15 +13,17 @@ import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PUtils;
 
-public class MenuLanguageFragment extends BaseFragment{
+public class MenuLanguageFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "MenuLanguage";
+
 	private Integer[] _languageList = new Integer[] { R.string.english,
-			R.string.hindi_en, R.string.tamil_en, R.string.gujarati_en };
+			R.string.hindi, R.string.tamil, R.string.gujarati };
 
 	private View mRootView;
 	private ListView listView;
-	ContentMenuLanguageAdapter mAdapter;
+	private ContentMenuLanguageAdapter mAdapter;
+	private PConstants.MENU_LANGUAGE mLanguageSelected;
 
 	@Override
 	public String getCustomTag() {
@@ -38,7 +40,7 @@ public class MenuLanguageFragment extends BaseFragment{
 		mAdapter = new ContentMenuLanguageAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, _languageList);
 		listView.setAdapter(mAdapter);
-		mAdapter.setSelectedItem(AppState.getInstance().getContentLanguageId());
+		mAdapter.setSelectedItem(AppState.getInstance().getMenuLanguageId());
 
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -46,16 +48,28 @@ public class MenuLanguageFragment extends BaseFragment{
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long id) {
 				mAdapter.setSelectedItem(position);
-				mAdapter.notifyDataSetChanged();
-				
-				if (position == 3) {
-					PUtils.setLocale(mParentActivity, PConstants.LOCALE_GUJURATI);
-				} else if (position ==2) {
-					PUtils.setLocale(mParentActivity, PConstants.LOCALE_TAMIL);
-				} else if (position == 1) {
-					PUtils.setLocale(mParentActivity, PConstants.LOCALE_HINDI);
+
+				if (position == PConstants.MENU_LANGUAGE.ENGLISH.getId()) {
+					mLanguageSelected = PConstants.MENU_LANGUAGE.ENGLISH;
+				} else if (position == PConstants.MENU_LANGUAGE.HINDI.getId()) {
+					mLanguageSelected = PConstants.MENU_LANGUAGE.HINDI;
+				} else if (position == PConstants.MENU_LANGUAGE.TAMIL.getId()) {
+					mLanguageSelected = PConstants.MENU_LANGUAGE.TAMIL;
+				} else if (position == PConstants.MENU_LANGUAGE.GUJARATI
+						.getId()) {
+					mLanguageSelected = PConstants.MENU_LANGUAGE.GUJARATI;
+				} else {
+					mLanguageSelected = PConstants.MENU_LANGUAGE.ENGLISH;
 				}
 
+				mParentActivity.mApp.setMenuLanguageId(mLanguageSelected.id);
+				mParentActivity.mApp
+						.setMenuLanguageTypeface(mLanguageSelected.typeface);
+				mParentActivity.mApp
+						.setMenuLanguageLocale(mLanguageSelected.locale);
+				PUtils.setLocale(mParentActivity, mLanguageSelected.locale);
+
+				mAdapter.notifyDataSetChanged();
 			}
 		});
 		return mRootView;

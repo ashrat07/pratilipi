@@ -14,8 +14,8 @@ public class ProfileLanguageFragmentPagerAdapter extends FragmentPagerAdapter {
 	private Context context;
 
 	private static final int PAGE_COUNT = 2;
-	private Integer[] tabTitles = new Integer[] {R.string.content_language, R.string.menu_language
-			 };
+	private Integer[] tabTitles = new Integer[] { R.string.content_language,
+			R.string.menu_language };
 
 	public ProfileLanguageFragmentPagerAdapter(FragmentManager fm,
 			Context context) {
@@ -25,11 +25,12 @@ public class ProfileLanguageFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Fragment fragment =null;
-		if(position==0)
-		 fragment = new ContentLanguageFragment();
-		else if(position == 1)
-			 fragment = new MenuLanguageFragment();
+		Fragment fragment = null;
+		if (position == 0) {
+			fragment = new ContentLanguageFragment();
+		} else if (position == 1) {
+			fragment = new MenuLanguageFragment();
+		}
 		return fragment;
 	}
 

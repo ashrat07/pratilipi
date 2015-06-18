@@ -10,10 +10,10 @@ public class AppState {
 	private static final String LANGUAGE_CONTENT = "LANGUAGE_CONTENT";
 	private static final String LANGUAGE_CONTENT_ID = "LANGUAGE_CONTENT_ID";
 	private static final String LANGUAGE_CONTENT_HASH_CODE = "LANGUAGE_CONTENT_HASH_CODE";
-	
-	private static final String LANGUAGE_MENU = "LANGUAGE_MENU";
+
 	private static final String LANGUAGE_MENU_ID = "LANGUAGE_MENU_ID";
-	private static final String LANGUAGE_MENU_HASH_CODE = "LANGUAGE_MENU_HASH_CODE";
+	private static final String LANGUAGE_MENU_TYPEFACE = "LANGUAGE_MENU_TYPEFACE";
+	private static final String LANGUAGE_MENU_LOCALE = "LANGUAGE_MENU_LOCALE";
 
 	private static AppState instance;
 
@@ -71,16 +71,6 @@ public class AppState {
 		return mConf.getString(LANGUAGE_CONTENT_HASH_CODE, "");
 	}
 
-	public Boolean setMenuLanguage(String language) {
-		SharedPreferences.Editor ed = mConf.edit();
-		ed.putString(LANGUAGE_MENU, language);
-		return ed.commit();
-	}
-
-	public String getMenuLanguage() {
-		return mConf.getString(LANGUAGE_MENU, "regular");
-	}
-
 	public Boolean setMenuLanguageId(int languageId) {
 		SharedPreferences.Editor ed = mConf.edit();
 		ed.putInt(LANGUAGE_MENU_ID, languageId);
@@ -91,13 +81,24 @@ public class AppState {
 		return mConf.getInt(LANGUAGE_MENU_ID, 0);
 	}
 
-	public Boolean setMenuLanguageHashCode(String languageHashCode) {
+	public Boolean setMenuLanguageTypeface(String languageTypeface) {
 		SharedPreferences.Editor ed = mConf.edit();
-		ed.putString(LANGUAGE_MENU_HASH_CODE, languageHashCode);
+		ed.putString(LANGUAGE_MENU_TYPEFACE, languageTypeface);
 		return ed.commit();
 	}
 
-	public String getMenuLanguageHashCode() {
-		return mConf.getString(LANGUAGE_MENU_HASH_CODE, "");
+	public String getMenuLanguageTypeface() {
+		return mConf.getString(LANGUAGE_MENU_TYPEFACE, "regular");
 	}
+
+	public Boolean setMenuLanguageLocale(String languageLocale) {
+		SharedPreferences.Editor ed = mConf.edit();
+		ed.putString(LANGUAGE_MENU_LOCALE, languageLocale);
+		return ed.commit();
+	}
+
+	public String getMenuLanguageLocale() {
+		return mConf.getString(LANGUAGE_MENU_LOCALE, "en");
+	}
+
 }

@@ -75,7 +75,7 @@ public abstract class BaseFragment extends Fragment implements
 	public void onBackPressed() {
 	}
 
-	public void activateUserInput() {
+	public void refreshView() {
 	}
 
 	public void onContinueClick() {

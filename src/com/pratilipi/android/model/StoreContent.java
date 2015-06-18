@@ -6,19 +6,19 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class StoreListing implements Parcelable {
+public class StoreContent implements Parcelable {
 
 	public String id;
 	public String name;
 	public List<Book> content;
 
-	public StoreListing(String id, String name, List<Book> content) {
+	public StoreContent(String id, String name, List<Book> content) {
 		this.id = id;
 		this.name = name;
 		this.content = content;
 	}
 
-	protected StoreListing(Parcel in) {
+	protected StoreContent(Parcel in) {
 		id = in.readString();
 		name = in.readString();
 		if (in.readByte() == 0x01) {
@@ -46,15 +46,15 @@ public class StoreListing implements Parcelable {
 		}
 	}
 
-	public static final Parcelable.Creator<StoreListing> CREATOR = new Parcelable.Creator<StoreListing>() {
+	public static final Parcelable.Creator<StoreContent> CREATOR = new Parcelable.Creator<StoreContent>() {
 		@Override
-		public StoreListing createFromParcel(Parcel in) {
-			return new StoreListing(in);
+		public StoreContent createFromParcel(Parcel in) {
+			return new StoreContent(in);
 		}
 
 		@Override
-		public StoreListing[] newArray(int size) {
-			return new StoreListing[size];
+		public StoreContent[] newArray(int size) {
+			return new StoreContent[size];
 		}
 	};
 }

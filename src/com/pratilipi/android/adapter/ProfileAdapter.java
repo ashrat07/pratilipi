@@ -1,5 +1,6 @@
 package com.pratilipi.android.adapter;
 
+import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
 
 import android.content.Context;
@@ -29,7 +30,7 @@ public class ProfileAdapter extends ArrayAdapter<Integer> {
 		((TextView) convertView)
 				.setText(context.getResources().getString(item));
 		((TextView) convertView).setTypeface(FontManager.getInstance().get(
-				"regular"));
+				AppState.getInstance().getMenuLanguageTypeface()));
 		return convertView;
 	}
 }

@@ -30,7 +30,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/button_selector_red"
-            android:text="@string/hindi"
+            android:text="@string/hindi_locale"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_large"
             app:textStyle="hindi" />
@@ -44,7 +44,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/button_selector_red"
-            android:text="@string/tamil"
+            android:text="@string/tamil_locale"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_large"
             app:textStyle="tamil" />
@@ -58,7 +58,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/button_selector_red"
-            android:text="@string/gujarati"
+            android:text="@string/gujarati_locale"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_large"
             app:textStyle="gujarati" />

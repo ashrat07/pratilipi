@@ -3,12 +3,12 @@
 
     <string name="app_name">Pratilipi</string>
     <string name="english">ENGLISH</string>
-    <string name="hindi_en">HINDI</string>
-    <string name="hindi">हिंदी</string>
-    <string name="tamil_en">TAMIL</string>
-    <string name="tamil">தமிழ்</string>
-    <string name="gujarati_en">GUJARATI</string>
-    <string name="gujarati">ગુજરાતી</string>
+    <string name="hindi">HINDI</string>
+    <string name="hindi_locale">हिन्दी</string>
+    <string name="tamil">TAMIL</string>
+    <string name="tamil_locale">தமிழ்</string>
+    <string name="gujarati">GUJARATI</string>
+    <string name="gujarati_locale">ગુજરાતી</string>
     <string name="blank"></string>
     <string name="error_system_issue">Something went wrong and we are sorry for that. Please try again later</string>
     <string name="choose_language">Choose Language</string>
@@ -25,8 +25,10 @@
     <string name="romance">Romance</string>
     <string name="stories">Stories</string>
     <string name="ghazals">Ghazals</string>
-    <string name="reset_content">Reset Content</string>
-    <string name="reset_menu">Reset Menu</string>
+    <string name="content_language">CONTENT LANGUAGE</string>
+    <string name="menu_language">MENU LANGUAGE</string>
+    <string name="reset_content_language">Reset Content Language</string>
+    <string name="reset_menu_language">Reset Menu Language</string>
     <string name="about">About Pratilipi</string>
     <string name="search">Search</string>
     <string name="search_hint">Title/ Author</string>
@@ -34,10 +36,12 @@
     <string name="profile">Profile</string>
     <string name="free">FREE!</string>
     <string name="add_photo">ADD PHOTO</string>
-    <string name="content_language">CONTENT LANGUAGE</string>
-    <string name="menu_language">MENU LANGUAGE</string>
     <string name="filter">FILTER</string>
     <string name="empty_message">OOPS! There are no result for the search query</string>
     <string name="loading">Loading...</string>
+    <string name="read">READ</string>
+    <string name="buy_now">BUY NOW</string>
+    <string name="read_sample">READ SAMPLE</string>
+    <string name="review">REVIEW</string>
 
 </resources>

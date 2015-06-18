@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,8 +16,9 @@ public class ProfileFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Profile";
 
-	private Integer[] profileItemsList = new Integer[] { R.string.reset_content,
-			R.string.reset_menu, R.string.about };
+	private Integer[] profileItemsList = new Integer[] {
+			R.string.reset_content_language, R.string.reset_menu_language,
+			R.string.about };
 
 	private View mRootView;
 	private ListView mListView;
@@ -52,7 +52,7 @@ public class ProfileFragment extends BaseFragment {
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, profileItemsList);
 		mListView.setAdapter(adapter);
-		mListView.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,

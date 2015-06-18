@@ -18,7 +18,7 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.StoreHomeAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Book;
-import com.pratilipi.android.model.StoreListing;
+import com.pratilipi.android.model.StoreContent;
 import com.pratilipi.android.util.PConstants;
 
 public class StoreHomeFragment extends BaseFragment {
@@ -29,7 +29,7 @@ public class StoreHomeFragment extends BaseFragment {
 	private ListView mListView;
 	private View mProgressBar;
 	private StoreHomeAdapter mAdapter;
-	private List<StoreListing> storeListings;
+	private List<StoreContent> mTopContentList;
 
 	@Override
 	public String getCustomTag() {
@@ -45,28 +45,28 @@ public class StoreHomeFragment extends BaseFragment {
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
 		mProgressBar = mRootView.findViewById(R.id.progress_bar);
 
-		if (storeListings == null) {
-			storeListings = new ArrayList<>();
+		if (mTopContentList == null) {
+			mTopContentList = new ArrayList<>();
 		} else {
-			storeListings.clear();
+			mTopContentList.clear();
 		}
 		mAdapter = new StoreHomeAdapter(mParentActivity,
-				R.layout.layout_store_list_view_item, storeListings);
+				R.layout.layout_store_home_list_view_item, mTopContentList);
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();
 
 		mProgressBar.setVisibility(View.VISIBLE);
-		requestStoreHomeListings();
+		requestStoreHomeTopContent();
 
 		return mRootView;
 	}
 
-	private void requestStoreHomeListings() {
+	private void requestStoreHomeTopContent() {
 		HttpGet storeHomeListingsRequest = new HttpGet(this,
-				PConstants.STORE_HOME_LISTINGS_URL);
+				PConstants.STORE_TOP_CONTENT_URL);
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
-		requestHashMap.put(PConstants.URL, PConstants.STORE_HOME_LISTINGS_URL);
+		requestHashMap.put(PConstants.URL, PConstants.STORE_TOP_CONTENT_URL);
 		requestHashMap.put("languageId",
 				mParentActivity.mApp.getContentLanguageHashCode());
 
@@ -82,7 +82,7 @@ public class StoreHomeFragment extends BaseFragment {
 	@Override
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
-		if (getUrl.equals(PConstants.STORE_HOME_LISTINGS_URL)) {
+		if (PConstants.STORE_TOP_CONTENT_URL.equals(getUrl)) {
 			if (finalResult != null) {
 				try {
 					JSONObject responseObject = finalResult
@@ -104,9 +104,9 @@ public class StoreHomeFragment extends BaseFragment {
 											contentArray.getJSONObject(j));
 									content.add(book);
 								}
-								StoreListing storeListing = new StoreListing(
+								StoreContent storeListing = new StoreContent(
 										id, name, content);
-								storeListings.add(storeListing);
+								mTopContentList.add(storeListing);
 							}
 						}
 					}

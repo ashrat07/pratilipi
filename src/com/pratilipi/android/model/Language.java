@@ -11,19 +11,22 @@ public class Language implements Parcelable {
 	private static final String ID = "id";
 	private static final String NAME = "name";
 	private static final String NAME_EN = "nameEn";
-	private static final String CREATION_DATE = "creationDate";
 
 	public long id;
 	public String name;
 	public String nameEn;
-	public String creationDate;
 
 	public Language(JSONObject obj) {
 		try {
-			this.id = obj.getLong(ID);
-			this.name = obj.getString(NAME);
-			this.nameEn = obj.getString(NAME_EN);
-			this.creationDate = obj.getString(CREATION_DATE);
+			if (obj.has(ID)) {
+				this.id = obj.getLong(ID);
+			}
+			if (obj.has(NAME)) {
+				this.name = obj.getString(NAME);
+			}
+			if (obj.has(NAME_EN)) {
+				this.nameEn = obj.getString(NAME_EN);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -33,7 +36,6 @@ public class Language implements Parcelable {
 		id = in.readLong();
 		name = in.readString();
 		nameEn = in.readString();
-		creationDate = in.readString();
 	}
 
 	@Override
@@ -46,7 +48,6 @@ public class Language implements Parcelable {
 		dest.writeLong(id);
 		dest.writeString(name);
 		dest.writeString(nameEn);
-		dest.writeString(creationDate);
 	}
 
 	public static final Parcelable.Creator<Language> CREATOR = new Parcelable.Creator<Language>() {

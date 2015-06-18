@@ -26,10 +26,8 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.provider.PSuggestionProvider;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
-import com.pratilipi.android.util.PUtils;
 import com.pratilipi.android.util.PopupErrorRunner;
 
 public class SplashActivity extends FragmentActivity implements
@@ -53,7 +51,7 @@ public class SplashActivity extends FragmentActivity implements
 
 		AppState.init(getApplicationContext());
 		mApp = AppState.getInstance();
-		
+
 		mUIHandler = new Handler();
 		PThreadPool.init(mUIHandler);
 		mStack = new PStack(getSupportFragmentManager());
@@ -181,6 +179,10 @@ public class SplashActivity extends FragmentActivity implements
 
 	public void setLayoutBackgroundColor(int color) {
 		findViewById(R.id.base).setBackgroundColor(color);
+	}
+
+	public void setActionBarTitle(String title) {
+		setTitle(title);
 	}
 
 	public void showProgressBar() {

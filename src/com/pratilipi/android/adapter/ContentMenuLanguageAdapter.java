@@ -1,14 +1,15 @@
 package com.pratilipi.android.adapter;
 
-import com.pratilipi.android.R;
-import com.pratilipi.android.util.FontManager;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.pratilipi.android.R;
+import com.pratilipi.android.util.AppState;
+import com.pratilipi.android.util.FontManager;
 
 public class ContentMenuLanguageAdapter extends ArrayAdapter<Integer> {
 
@@ -43,7 +44,7 @@ public class ContentMenuLanguageAdapter extends ArrayAdapter<Integer> {
 					null, null, null, null);
 		}
 		((TextView) convertView).setTypeface(FontManager.getInstance().get(
-				"regular"));
+				AppState.getInstance().getMenuLanguageTypeface()));
 
 		return convertView;
 	}

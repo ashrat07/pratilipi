@@ -11,11 +11,11 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -30,8 +30,8 @@ public class SearchFragment extends BaseFragment {
 	public static final String TAG_NAME = "Search";
 
 	private View mRootView;
-	private View mLayout;
 	private ListView mListView;
+	private View mEmptyMessageView;
 	private View mHeaderView;
 	private View mFooterView;
 	private SearchAdapter mAdapter;
@@ -50,8 +50,8 @@ public class SearchFragment extends BaseFragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater
 				.inflate(R.layout.fragment_search, container, false);
-		mLayout = mRootView.findViewById(R.id.layout);
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
+		mEmptyMessageView = mRootView.findViewById(R.id.empty_message_view);
 		mHeaderView = inflater.inflate(R.layout.layout_search_list_view_header,
 				new LinearLayout(mParentActivity));
 		mFooterView = inflater.inflate(R.layout.layout_search_list_view_footer,
@@ -65,10 +65,17 @@ public class SearchFragment extends BaseFragment {
 		mAdapter = new SearchAdapter(mParentActivity,
 				R.layout.layout_search_list_view_item, mSearchList);
 		mListView.setAdapter(mAdapter);
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-		View emptyView = mRootView.findViewById(R.id.empty_text_view);
-		mListView.setEmptyView(emptyView);
-
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view,
+					int position, long id) {
+				Book book = mSearchList.get(position - 1);
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("BOOK", book);
+				mParentActivity.showNextView(new BookSummaryFragment(), bundle);
+			}
+		});
 		mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
 			@Override
@@ -95,7 +102,6 @@ public class SearchFragment extends BaseFragment {
 	}
 
 	public void refresh(String query) {
-		Log.e("refresh", query);
 		mQuery = query;
 		mCursor = null;
 		mSearchList.clear();
@@ -107,7 +113,8 @@ public class SearchFragment extends BaseFragment {
 		}
 		mAdapter.notifyDataSetChanged();
 		mParentActivity.showProgressBar();
-		mLayout.setVisibility(View.INVISIBLE);
+		mListView.setVisibility(View.GONE);
+		mEmptyMessageView.setVisibility(View.GONE);
 		requestSearch();
 	}
 
@@ -117,10 +124,10 @@ public class SearchFragment extends BaseFragment {
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.SEARCH_URL);
 		requestHashMap.put("query", mQuery);
+		requestHashMap.put("resultCount", "10");
 		if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
 			requestHashMap.put("cursor", mCursor);
 		}
-		requestHashMap.put("resultCount", "10");
 
 		searchRequest.run(requestHashMap);
 	}
@@ -130,7 +137,6 @@ public class SearchFragment extends BaseFragment {
 			int responseCode) {
 		if (PConstants.SEARCH_URL.equals(getUrl)) {
 			mParentActivity.hideProgressBar();
-			mLayout.setVisibility(View.VISIBLE);
 			if (finalResult != null) {
 				try {
 					JSONArray dataArray = finalResult
@@ -141,6 +147,13 @@ public class SearchFragment extends BaseFragment {
 							Book book = new Book(dataObj);
 							mSearchList.add(book);
 						}
+						if (mSearchList.size() > 0) {
+							mListView.setVisibility(View.VISIBLE);
+							mEmptyMessageView.setVisibility(View.GONE);
+						} else {
+							mListView.setVisibility(View.GONE);
+							mEmptyMessageView.setVisibility(View.VISIBLE);
+						}
 						mAdapter.notifyDataSetChanged();
 					}
 					if (finalResult.has("cursor")) {
@@ -149,7 +162,6 @@ public class SearchFragment extends BaseFragment {
 					} else {
 						mLoadNext = false;
 						mCursor = null;
-						Log.e("setGetStatus", "removeFooterView");
 						mListView.removeFooterView(mFooterView);
 					}
 				} catch (JSONException e) {

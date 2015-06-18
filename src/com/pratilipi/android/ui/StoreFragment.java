@@ -2,6 +2,7 @@ package com.pratilipi.android.ui;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.StoreFragmentPagerAdapter;
+import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.widget.SlidingTabLayout;
 
 import android.os.Bundle;
@@ -37,7 +38,22 @@ public class StoreFragment extends BaseFragment {
 
 		mSlidingTabLayout = (SlidingTabLayout) mRootView
 				.findViewById(R.id.sliding_tab_layout);
-		mSlidingTabLayout.setCustomTabView(R.layout.layout_header_tab_white, 0);
+		if (mParentActivity.mApp.getMenuLanguageTypeface().equals(
+				PConstants.MENU_LANGUAGE.HINDI.typeface)) {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white_hindi, 0);
+		} else if (mParentActivity.mApp.getMenuLanguageTypeface().equals(
+				PConstants.MENU_LANGUAGE.TAMIL.typeface)) {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white_tamil, 0);
+		} else if (mParentActivity.mApp.getMenuLanguageTypeface().equals(
+				PConstants.MENU_LANGUAGE.GUJARATI.typeface)) {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white_gujarati, 0);
+		} else {
+			mSlidingTabLayout.setCustomTabView(
+					R.layout.layout_header_tab_white, 0);
+		}
 		mSlidingTabLayout.setDistributeEvenly(true);
 		mSlidingTabLayout.setViewPager(mViewPager);
 		mSlidingTabLayout

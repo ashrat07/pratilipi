@@ -13,14 +13,16 @@ import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
 
 public class ContentLanguageFragment extends BaseFragment {
+
 	public static final String TAG_NAME = "ContentLanguage";
-	private Integer[] _languageList = new Integer[] { R.string.hindi_en,
-			R.string.tamil_en, R.string.gujarati_en };
+
+	private Integer[] _languageList = new Integer[] { R.string.hindi,
+			R.string.tamil, R.string.gujarati };
 
 	private View mRootView;
-	private ListView listView;
-	ContentMenuLanguageAdapter mAdapter;
-	private PConstants.LANGUAGE mLanguageSelected;
+	private ListView mListView;
+	private ContentMenuLanguageAdapter mAdapter;
+	private PConstants.CONTENT_LANGUAGE mLanguageSelected;
 
 	@Override
 	public String getCustomTag() {
@@ -32,14 +34,15 @@ public class ContentLanguageFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_content_language,
 				container, false);
-		listView = (ListView) mRootView
+
+		mListView = (ListView) mRootView
 				.findViewById(R.id.content_language_list_view);
 		mAdapter = new ContentMenuLanguageAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, _languageList);
-		listView.setAdapter(mAdapter);
+		mListView.setAdapter(mAdapter);
 		mAdapter.setSelectedItem(AppState.getInstance().getContentLanguageId());
 
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,
@@ -47,12 +50,18 @@ public class ContentLanguageFragment extends BaseFragment {
 				mAdapter.setSelectedItem(position);
 				mAdapter.notifyDataSetChanged();
 
-				if (position == 0)
-					mLanguageSelected = PConstants.LANGUAGE.HINDI;
-				else if (position == 1)
-					mLanguageSelected = PConstants.LANGUAGE.TAMIL;
-				else if (position == 2)
-					mLanguageSelected = PConstants.LANGUAGE.GUJARATI;
+				if (position == PConstants.CONTENT_LANGUAGE.HINDI.getId()) {
+					mLanguageSelected = PConstants.CONTENT_LANGUAGE.HINDI;
+				} else if (position == PConstants.CONTENT_LANGUAGE.TAMIL
+						.getId()) {
+					mLanguageSelected = PConstants.CONTENT_LANGUAGE.TAMIL;
+				} else if (position == PConstants.CONTENT_LANGUAGE.GUJARATI
+						.getId()) {
+					mLanguageSelected = PConstants.CONTENT_LANGUAGE.GUJARATI;
+				} else {
+					mLanguageSelected = PConstants.CONTENT_LANGUAGE.HINDI;
+				}
+
 				mParentActivity.mApp.setContentLanguage(mLanguageSelected
 						.toString());
 				mParentActivity.mApp.setContentLanguageId(mLanguageSelected
@@ -63,7 +72,6 @@ public class ContentLanguageFragment extends BaseFragment {
 			}
 		});
 		return mRootView;
-
 	}
 
 }

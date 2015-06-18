@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape>
+            <padding
+                android:bottom="0dp"
+                android:left="3dp"
+                android:right="3dp"
+                android:top="0dp" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/background_xlight_gray" />
+
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+
+</layer-list>
