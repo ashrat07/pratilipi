@@ -41,18 +41,18 @@ public class ProfileLanguageFragment extends BaseFragment {
 		if (mParentActivity.mApp.getMenuLanguageLocale().equals(
 				PConstants.MENU_LANGUAGE.HINDI.locale)) {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white_hindi, 0);
+					R.layout.layout_header_tab_red_hindi, 0);
 		} else if (mParentActivity.mApp.getMenuLanguageLocale().equals(
 				PConstants.MENU_LANGUAGE.TAMIL.locale)) {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white_tamil, 0);
+					R.layout.layout_header_tab_red_tamil, 0);
 		} else if (mParentActivity.mApp.getMenuLanguageLocale().equals(
 				PConstants.MENU_LANGUAGE.GUJARATI.locale)) {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white_gujarati, 0);
+					R.layout.layout_header_tab_red_gujarati, 0);
 		} else {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white, 0);
+					R.layout.layout_header_tab_red, 0);
 		}
 		mSlidingTabLayout.setViewPager(mViewPager);
 

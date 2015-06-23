@@ -75,7 +75,8 @@ public class Book implements Parcelable {
 				this.pageUrlAlias = obj.getString(PAGE_URL_ALIAS);
 			}
 			if (obj.has(COVER_IMAGE_URL)) {
-				this.coverImageUrl = obj.getString(COVER_IMAGE_URL);
+				String url = obj.getString(COVER_IMAGE_URL);
+				this.coverImageUrl = url.replace("//", "http://");
 			}
 			if (obj.has(READER_PAGE_URL)) {
 				this.readerPageUrl = obj.getString(READER_PAGE_URL);

@@ -3,48 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/background_transparent_gray" >
+        android:padding="10dp" >
 
         <com.pratilipi.android.widget.PTextView
             android:id="@+id/header_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:text="@string/featured_books"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/text_small" />
+            android:textColor="@color/text_red"
+            android:textSize="@dimen/text_large" />
 
         <com.pratilipi.android.widget.PTextView
             android:id="@+id/view_all_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:drawableEnd="@drawable/arrow_right"
-            android:drawableRight="@drawable/arrow_right"
+            android:background="@drawable/layout_corner_radius_red"
             android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text="@string/view_all"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_small" />
     </RelativeLayout>
 
-    <HorizontalScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true" >
-
-        <LinearLayout
-            android:id="@+id/content_scroll_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp" />
-    </HorizontalScrollView>
+        android:layout_height="250dp"
+        android:scrollbars="horizontal" />
 
 </LinearLayout>

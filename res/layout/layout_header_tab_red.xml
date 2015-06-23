@@ -4,11 +4,10 @@
     android:id="@+id/header_tab_text_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/text_selector_white"
     android:ellipsize="marquee"
     android:gravity="center"
     android:padding="15dp"
     android:singleLine="true"
-    android:textColor="@android:color/white"
+    android:textColor="@color/text_red"
     android:textSize="@dimen/text_medium"
-    app:textStyle="tamil" />
+    app:textStyle="regular" />

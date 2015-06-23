@@ -41,18 +41,18 @@ public class StoreFragment extends BaseFragment {
 		if (mParentActivity.mApp.getMenuLanguageTypeface().equals(
 				PConstants.MENU_LANGUAGE.HINDI.typeface)) {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white_hindi, 0);
+					R.layout.layout_header_tab_red_hindi, 0);
 		} else if (mParentActivity.mApp.getMenuLanguageTypeface().equals(
 				PConstants.MENU_LANGUAGE.TAMIL.typeface)) {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white_tamil, 0);
+					R.layout.layout_header_tab_red_tamil, 0);
 		} else if (mParentActivity.mApp.getMenuLanguageTypeface().equals(
 				PConstants.MENU_LANGUAGE.GUJARATI.typeface)) {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white_gujarati, 0);
+					R.layout.layout_header_tab_red_gujarati, 0);
 		} else {
 			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_white, 0);
+					R.layout.layout_header_tab_red, 0);
 		}
 		mSlidingTabLayout.setDistributeEvenly(true);
 		mSlidingTabLayout.setViewPager(mViewPager);
@@ -61,7 +61,7 @@ public class StoreFragment extends BaseFragment {
 
 					@Override
 					public int getIndicatorColor(int position) {
-						return getResources().getColor(android.R.color.white);
+						return getResources().getColor(R.color.text_red);
 					}
 				});
 		return mRootView;
