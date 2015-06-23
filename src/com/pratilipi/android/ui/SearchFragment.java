@@ -28,6 +28,7 @@ import com.pratilipi.android.util.PConstants;
 public class SearchFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Search";
+	private static List<Book> mList = new ArrayList<>();
 
 	private View mRootView;
 	private ListView mListView;
@@ -35,7 +36,6 @@ public class SearchFragment extends BaseFragment {
 	private View mHeaderView;
 	private View mFooterView;
 	private SearchAdapter mAdapter;
-	private List<Book> mSearchList;
 	private String mQuery;
 	private String mCursor;
 	private boolean mLoadNext = false;
@@ -57,20 +57,17 @@ public class SearchFragment extends BaseFragment {
 		mFooterView = inflater.inflate(R.layout.layout_search_list_view_footer,
 				new LinearLayout(mParentActivity));
 
-		if (mSearchList == null) {
-			mSearchList = new ArrayList<>();
-		} else {
-			mSearchList.clear();
-		}
+		mListView.addHeaderView(mHeaderView);
+		mListView.addFooterView(mFooterView);
 		mAdapter = new SearchAdapter(mParentActivity,
-				R.layout.layout_search_list_view_item, mSearchList);
+				R.layout.layout_search_list_view_item, mList);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long id) {
-				Book book = mSearchList.get(position - 1);
+				Book book = mList.get(position - 1);
 				Bundle bundle = new Bundle();
 				bundle.putParcelable("BOOK", book);
 				mParentActivity.showNextView(new BookSummaryFragment(), bundle);
@@ -95,7 +92,17 @@ public class SearchFragment extends BaseFragment {
 
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-			refresh(bundle.getString("QUERY"));
+			String query = bundle.getString("QUERY");
+			if (!TextUtils.isEmpty(query) && !query.equals(mQuery)) {
+				refresh(query);
+			} else {
+				mListView.setVisibility(View.VISIBLE);
+				if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
+					mFooterView.setVisibility(View.VISIBLE);
+				} else {
+					mFooterView.setVisibility(View.GONE);
+				}
+			}
 		}
 
 		return mRootView;
@@ -104,13 +111,8 @@ public class SearchFragment extends BaseFragment {
 	public void refresh(String query) {
 		mQuery = query;
 		mCursor = null;
-		mSearchList.clear();
-		if (mListView.getHeaderViewsCount() == 0) {
-			mListView.addHeaderView(mHeaderView);
-		}
-		if (mListView.getFooterViewsCount() == 0) {
-			mListView.addFooterView(mFooterView);
-		}
+		mList.clear();
+		mFooterView.setVisibility(View.VISIBLE);
 		mAdapter.notifyDataSetChanged();
 		mParentActivity.showProgressBar();
 		mListView.setVisibility(View.GONE);
@@ -145,9 +147,9 @@ public class SearchFragment extends BaseFragment {
 						for (int i = 0; i < dataArray.length(); i++) {
 							JSONObject dataObj = dataArray.getJSONObject(i);
 							Book book = new Book(dataObj);
-							mSearchList.add(book);
+							mList.add(book);
 						}
-						if (mSearchList.size() > 0) {
+						if (mList.size() > 0) {
 							mListView.setVisibility(View.VISIBLE);
 							mEmptyMessageView.setVisibility(View.GONE);
 						} else {
@@ -162,7 +164,7 @@ public class SearchFragment extends BaseFragment {
 					} else {
 						mLoadNext = false;
 						mCursor = null;
-						mListView.removeFooterView(mFooterView);
+						mFooterView.setVisibility(View.GONE);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -170,6 +172,14 @@ public class SearchFragment extends BaseFragment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (mList != null && mList.size() > 0) {
+			mList.clear();
+		}
+		super.onDestroy();
 	}
 
 }

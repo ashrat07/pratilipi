@@ -51,10 +51,19 @@ public class ProfileLanguageFragment extends BaseFragment {
 			mSlidingTabLayout.setCustomTabView(
 					R.layout.layout_header_tab_red_gujarati, 0);
 		} else {
-			mSlidingTabLayout.setCustomTabView(
-					R.layout.layout_header_tab_red, 0);
+			mSlidingTabLayout.setCustomTabView(R.layout.layout_header_tab_red,
+					0);
 		}
+		mSlidingTabLayout.setDistributeEvenly(true);
 		mSlidingTabLayout.setViewPager(mViewPager);
+		mSlidingTabLayout
+				.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+
+					@Override
+					public int getIndicatorColor(int position) {
+						return getResources().getColor(R.color.background_red);
+					}
+				});
 
 		Bundle bundle = getArguments();
 		if (bundle != null) {

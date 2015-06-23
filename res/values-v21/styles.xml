@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="PTheme" parent="@android:style/Theme.Material">
+    <style name="PTheme" parent="@android:style/Theme.Material.Light">
         <item name="android:colorPrimary">@android:color/white</item>
         <item name="android:colorPrimaryDark">@android:color/black</item>
         <item name="android:colorAccent">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
 </resources>

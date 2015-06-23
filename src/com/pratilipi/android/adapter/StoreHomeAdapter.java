@@ -87,55 +87,6 @@ public class StoreHomeAdapter extends ArrayAdapter<StoreContent> {
 		viewHolder.contentRecyclerView
 				.setAdapter(viewHolder.contentRecyclerViewAdapter);
 
-		// for (final Book book : storeContent.content) {
-		// View view = View.inflate(activity, R.layout.layout_book_preview,
-		// null);
-		// ImageView imageView = (ImageView) view
-		// .findViewById(R.id.image_view);
-		// TextView titleTextView = (TextView) view
-		// .findViewById(R.id.title_text_view);
-		// RatingBar ratingBar = (RatingBar) view
-		// .findViewById(R.id.rating_bar);
-		// TextView starCountTextView = (TextView) view
-		// .findViewById(R.id.star_count_text_view);
-		// TextView freeTextView = (TextView) view
-		// .findViewById(R.id.free_text_view);
-		// View priceLayout = view.findViewById(R.id.price_layout);
-		// TextView mrpTextView = (TextView) view
-		// .findViewById(R.id.mrp_text_view);
-		// TextView sellingPriceTextView = (TextView) view
-		// .findViewById(R.id.selling_price_text_view);
-		//
-		// activity.mImageLoader.displayImage(book.coverImageUrl, imageView);
-		// titleTextView.setText(book.title);
-		// titleTextView.setTypeface(FontManager.getInstance().get(
-		// AppState.getInstance().getContentLanguage()));
-		// ratingBar.setRating(book.ratingCount);
-		// starCountTextView.setText("(" + book.starCount + ")");
-		// if (Math.random() > 0.5) {
-		// freeTextView.setVisibility(View.VISIBLE);
-		// priceLayout.setVisibility(View.GONE);
-		// } else {
-		// freeTextView.setVisibility(View.GONE);
-		// priceLayout.setVisibility(View.VISIBLE);
-		// mrpTextView.setText("`999");
-		// mrpTextView.setPaintFlags(mrpTextView.getPaintFlags()
-		// | Paint.STRIKE_THRU_TEXT_FLAG);
-		// sellingPriceTextView.setText("`499");
-		// }
-		//
-		// view.setOnClickListener(new View.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// Bundle bundle = new Bundle();
-		// bundle.putParcelable("BOOK", book);
-		// activity.showNextView(new BookSummaryFragment(), bundle);
-		// }
-		// });
-		// viewHolder.contentScrollLayout.addView(view);
-		// }
-
 		return convertView;
 	}
 

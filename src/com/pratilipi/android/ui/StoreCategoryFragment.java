@@ -14,10 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.StoreCategoryAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Category;
 import com.pratilipi.android.util.PConstants;
@@ -25,12 +25,11 @@ import com.pratilipi.android.util.PConstants;
 public class StoreCategoryFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Store Category";
+	private static List<Category> mList = new ArrayList<>();
 
 	private View mRootView;
 	private ListView mListView;
-	private ArrayAdapter<String> mAdapter;
-	private List<String> mList;
-	private List<Category> mCategoryList;
+	private StoreCategoryAdapter mAdapter;
 
 	@Override
 	public String getCustomTag() {
@@ -44,17 +43,7 @@ public class StoreCategoryFragment extends BaseFragment {
 				container, false);
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
 
-		if (mList == null) {
-			mList = new ArrayList<>();
-		} else {
-			mList.clear();
-		}
-		if (mCategoryList == null) {
-			mCategoryList = new ArrayList<>();
-		} else {
-			mCategoryList.clear();
-		}
-		mAdapter = new ArrayAdapter<String>(mParentActivity,
+		mAdapter = new StoreCategoryAdapter(mParentActivity,
 				R.layout.layout_store_category_list_view_item, mList);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,12 +52,14 @@ public class StoreCategoryFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long id) {
 				Bundle bundle = new Bundle();
-				bundle.putLong("CATEGORY_ID", mCategoryList.get(position).id);
+				bundle.putLong("CATEGORY_ID", mList.get(position).id);
 				mParentActivity.showNextView(new CategoryFragment(), bundle);
 			}
 		});
 
-		requestStoreCategory();
+		if (mList.size() == 0) {
+			requestStoreCategory();
+		}
 
 		return mRootView;
 	}
@@ -95,8 +86,7 @@ public class StoreCategoryFragment extends BaseFragment {
 						for (int i = 0; i < categoryArray.length(); i++) {
 							JSONObject obj = categoryArray.getJSONObject(i);
 							Category category = new Category(obj);
-							mList.add(category.name);
-							mCategoryList.add(category);
+							mList.add(category);
 						}
 						mAdapter.notifyDataSetChanged();
 					}
@@ -106,6 +96,14 @@ public class StoreCategoryFragment extends BaseFragment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (mList != null && mList.size() > 0) {
+			mList.clear();
+		}
+		super.onDestroy();
 	}
 
 }

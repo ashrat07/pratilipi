@@ -29,6 +29,7 @@ import android.widget.ListView;
 public class TopContentFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Store Listing";
+	private static List<Book> mList = new ArrayList<>();
 
 	private View mRootView;
 	private ListView mListView;
@@ -36,7 +37,6 @@ public class TopContentFragment extends BaseFragment {
 	private View mHeaderView;
 	private View mFooterView;
 	private TopContentAdapter mAdapter;
-	private List<Book> mList;
 	private String mCategory;
 	private String mCursor;
 	private boolean mLoadNext = false;
@@ -61,16 +61,11 @@ public class TopContentFragment extends BaseFragment {
 				R.layout.layout_top_content_list_view_footer, new LinearLayout(
 						mParentActivity));
 
-		if (mList == null) {
-			mList = new ArrayList<>();
-		} else {
-			mList.clear();
-		}
+		mListView.addHeaderView(mHeaderView);
+		mListView.addFooterView(mFooterView);
 		mAdapter = new TopContentAdapter(mParentActivity,
 				R.layout.layout_top_content_list_view_item, mList);
 		mListView.setAdapter(mAdapter);
-		mListView.addHeaderView(mHeaderView);
-		mListView.addFooterView(mFooterView);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -103,8 +98,17 @@ public class TopContentFragment extends BaseFragment {
 		if (bundle != null) {
 			String category = bundle.getString("CATEGORY", "");
 			mCategory = category;
-			mParentActivity.showProgressBar();
-			requestTopContent();
+			if (mList.size() == 0) {
+				mParentActivity.showProgressBar();
+				requestTopContent();
+			} else {
+				mListView.setVisibility(View.VISIBLE);
+				if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
+					mFooterView.setVisibility(View.VISIBLE);
+				} else {
+					mFooterView.setVisibility(View.GONE);
+				}
+			}
 		}
 
 		return mRootView;
@@ -158,7 +162,7 @@ public class TopContentFragment extends BaseFragment {
 					} else {
 						mLoadNext = false;
 						mCursor = null;
-						mListView.removeFooterView(mFooterView);
+						mFooterView.setVisibility(View.GONE);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -166,6 +170,14 @@ public class TopContentFragment extends BaseFragment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (mList != null && mList.size() > 0) {
+			mList.clear();
+		}
+		super.onDestroy();
 	}
 
 }

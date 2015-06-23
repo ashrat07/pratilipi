@@ -24,12 +24,12 @@ import com.pratilipi.android.util.PConstants;
 public class StoreHomeFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Store Home";
+	private static List<StoreContent> mList = new ArrayList<>();
 
 	private View mRootView;
 	private ListView mListView;
 	private View mProgressBar;
 	private StoreHomeAdapter mAdapter;
-	private List<StoreContent> mTopContentList;
 
 	@Override
 	public String getCustomTag() {
@@ -45,18 +45,17 @@ public class StoreHomeFragment extends BaseFragment {
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
 		mProgressBar = mRootView.findViewById(R.id.progress_bar);
 
-		if (mTopContentList == null) {
-			mTopContentList = new ArrayList<>();
-		} else {
-			mTopContentList.clear();
-		}
 		mAdapter = new StoreHomeAdapter(mParentActivity,
-				R.layout.layout_store_home_list_view_item, mTopContentList);
+				R.layout.layout_store_home_list_view_item, mList);
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();
 
-		mProgressBar.setVisibility(View.VISIBLE);
-		requestStoreHomeTopContent();
+		if (mList.size() == 0) {
+			mProgressBar.setVisibility(View.VISIBLE);
+			requestStoreHomeTopContent();
+		} else {
+			mListView.setVisibility(View.VISIBLE);
+		}
 
 		return mRootView;
 	}
@@ -106,7 +105,7 @@ public class StoreHomeFragment extends BaseFragment {
 								}
 								StoreContent storeListing = new StoreContent(
 										id, name, content);
-								mTopContentList.add(storeListing);
+								mList.add(storeListing);
 							}
 						}
 					}
@@ -118,6 +117,14 @@ public class StoreHomeFragment extends BaseFragment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (mList != null && mList.size() > 0) {
+			mList.clear();
+		}
+		super.onDestroy();
 	}
 
 }

@@ -6,6 +6,7 @@
     <color name="text_light_gray">#AAAAAA</color>
     <color name="text_xlight_gray">#EEEEEE</color>
     <color name="text_blue">#5544FF</color>
+    <color name="text_green">#009688</color>
     <color name="background_xlight_red">#D82626</color>
     <color name="background_light_red">#E28386</color>
     <color name="background_red">#FD4B4B</color>
@@ -18,5 +19,6 @@
     <color name="background_gray">#999999</color>
     <color name="background_dark_gray">#666666</color>
     <color name="background_transparent_gray">#99999999</color>
+    <color name="background_transparent_white">#C8FFFFFF</color>
 
 </resources>

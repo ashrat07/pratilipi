@@ -31,15 +31,17 @@ public class FontManager {
 				"fonts/Rupee_Foradian.ttf");
 		mTypefaceCache.put("rupee", type);
 
+		type = Typeface
+				.createFromAsset(context.getAssets(), "fonts/Mangal.ttf");
+		mTypefaceCache.put("hindi", type);
+
+		type = Typeface.createFromAsset(context.getAssets(), "fonts/Tamil.ttf");
+		mTypefaceCache.put("tamil", type);
+
 		type = Typeface.createFromAsset(context.getAssets(),
 				"fonts/Gujarati.ttf");
 		mTypefaceCache.put("gujarati", type);
 
-		type = Typeface.createFromAsset(context.getAssets(), "fonts/Hindi.ttf");
-		mTypefaceCache.put("hindi", type);
-
-		type = Typeface.createFromAsset(context.getAssets(), "fonts/Tamil.TTF");
-		mTypefaceCache.put("tamil", type);
 	}
 
 	public Typeface get(String style) {

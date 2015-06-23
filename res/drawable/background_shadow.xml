@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape>
+            <padding
+                android:bottom="1dp"
+                android:left="0.5dp"
+                android:right="1dp"
+                android:top="0.5dp" />
+
+            <solid android:color="#00666666" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="1dp"
+                android:left="0.5dp"
+                android:right="1dp"
+                android:top="0.5dp" />
+
+            <solid android:color="#10666666" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="1dp"
+                android:left="0.5dp"
+                android:right="1dp"
+                android:top="0.5dp" />
+
+            <solid android:color="#20666666" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding
+                android:bottom="1dp"
+                android:left="0.5dp"
+                android:right="1dp"
+                android:top="0.5dp" />
+
+            <solid android:color="#30666666" />
+        </shape>
+    </item>
+
+    <!-- Background -->
+    <item>
+        <shape>
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+
+</layer-list>

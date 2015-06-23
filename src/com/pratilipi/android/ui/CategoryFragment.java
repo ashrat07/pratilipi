@@ -28,6 +28,7 @@ import com.pratilipi.android.util.PConstants;
 public class CategoryFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Category";
+	private static List<Book> mList = new ArrayList<>();
 
 	private View mRootView;
 	private ListView mListView;
@@ -35,7 +36,6 @@ public class CategoryFragment extends BaseFragment {
 	private View mHeaderView;
 	private View mFooterView;
 	private CategoryAdapter mAdapter;
-	private List<Book> mList;
 	private Long mCategoryId;
 	private String mCursor;
 	private boolean mLoadNext = false;
@@ -60,16 +60,11 @@ public class CategoryFragment extends BaseFragment {
 				R.layout.layout_top_content_list_view_footer, new LinearLayout(
 						mParentActivity));
 
-		if (mList == null) {
-			mList = new ArrayList<>();
-		} else {
-			mList.clear();
-		}
+		mListView.addHeaderView(mHeaderView);
+		mListView.addFooterView(mFooterView);
 		mAdapter = new CategoryAdapter(mParentActivity,
 				R.layout.layout_category_list_view_item, mList);
 		mListView.setAdapter(mAdapter);
-		mListView.addHeaderView(mHeaderView);
-		mListView.addFooterView(mFooterView);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -102,8 +97,17 @@ public class CategoryFragment extends BaseFragment {
 		if (bundle != null) {
 			Long categoryId = bundle.getLong("CATEGORY_ID");
 			mCategoryId = categoryId;
-			mParentActivity.showProgressBar();
-			requestCategory();
+			if (mList.size() == 0) {
+				mParentActivity.showProgressBar();
+				requestCategory();
+			} else {
+				mListView.setVisibility(View.VISIBLE);
+				if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
+					mFooterView.setVisibility(View.VISIBLE);
+				} else {
+					mFooterView.setVisibility(View.GONE);
+				}
+			}
 		}
 
 		return mRootView;
@@ -155,7 +159,7 @@ public class CategoryFragment extends BaseFragment {
 					} else {
 						mLoadNext = false;
 						mCursor = null;
-						mListView.removeFooterView(mFooterView);
+						mFooterView.setVisibility(View.GONE);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -163,6 +167,14 @@ public class CategoryFragment extends BaseFragment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (mList != null && mList.size() > 0) {
+			mList.clear();
+		}
+		super.onDestroy();
 	}
 
 }
