@@ -43,5 +43,6 @@
     <string name="buy_now">BUY NOW</string>
     <string name="read_sample">READ SAMPLE</string>
     <string name="review">REVIEW</string>
+    <string name="reader">Reader</string>
 
 </resources>

@@ -105,11 +105,13 @@ public class TopContentAdapter extends ArrayAdapter<Book> {
 			viewHolder.sellingPriceTextView.setText("`499");
 		}
 		viewHolder.genreLayout.removeAllViews();
-		for (String genre : book.genreNameList) {
-			View genreView = LayoutInflater.from(activity).inflate(
-					R.layout.layout_genre, null);
-			((TextView) genreView).setText(genre);
-			viewHolder.genreLayout.addView(genreView);
+		if (book.genreNameList != null) {
+			for (String genre : book.genreNameList) {
+				View genreView = LayoutInflater.from(activity).inflate(
+						R.layout.layout_genre, null);
+				((TextView) genreView).setText(genre);
+				viewHolder.genreLayout.addView(genreView);
+			}
 		}
 
 		return convertView;

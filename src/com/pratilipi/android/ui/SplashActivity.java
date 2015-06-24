@@ -125,7 +125,7 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.options_menu, menu);
+		getMenuInflater().inflate(R.menu.splash_menu, menu);
 		mMenu = menu;
 
 		// Associate searchable configuration with the SearchView

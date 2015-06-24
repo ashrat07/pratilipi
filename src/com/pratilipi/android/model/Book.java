@@ -26,6 +26,7 @@ public class Book implements Parcelable {
 	private static final String AUTHOR_ID = "authorId";
 	private static final String AUTHOR = "author";
 	private static final String SUMMARY = "summary";
+	private static final String INDEX = "index";
 	private static final String PAGE_COUNT = "pageCount";
 	private static final String CONTENT_TYPE = "contentType";
 	private static final String STATE = "state";
@@ -50,6 +51,7 @@ public class Book implements Parcelable {
 	public long authorId;
 	public Author author;
 	public String summary;
+	public List<Chapter> index;
 	public int pageCount;
 	public String contentType;
 	public String state;
@@ -105,6 +107,15 @@ public class Book implements Parcelable {
 			if (obj.has(SUMMARY)) {
 				this.summary = obj.getString(SUMMARY);
 			}
+			if (obj.has(INDEX)) {
+				JSONArray array = obj.getJSONArray(INDEX);
+				if (array != null) {
+					this.index = new ArrayList<>();
+					for (int i = 0; i < array.length(); i++) {
+						this.index.add(new Chapter(obj));
+					}
+				}
+			}
 			if (obj.has(PAGE_COUNT)) {
 				this.pageCount = obj.getInt(PAGE_COUNT);
 			}
@@ -116,16 +127,20 @@ public class Book implements Parcelable {
 			}
 			if (obj.has(GENRE_ID_LIST)) {
 				JSONArray array = obj.getJSONArray(GENRE_ID_LIST);
-				this.genreIdList = new ArrayList<>();
-				for (int i = 0; i < array.length(); i++) {
-					this.genreIdList.add(array.getLong(i));
+				if (array != null) {
+					this.genreIdList = new ArrayList<>();
+					for (int i = 0; i < array.length(); i++) {
+						this.genreIdList.add(array.getLong(i));
+					}
 				}
 			}
 			if (obj.has(GENRE_NAME_LIST)) {
 				JSONArray array = obj.getJSONArray(GENRE_NAME_LIST);
-				this.genreNameList = new ArrayList<>();
-				for (int i = 0; i < array.length(); i++) {
-					this.genreNameList.add(array.getString(i));
+				if (array != null) {
+					this.genreNameList = new ArrayList<>();
+					for (int i = 0; i < array.length(); i++) {
+						this.genreNameList.add(array.getString(i));
+					}
 				}
 			}
 			if (obj.has(READ_COUNT)) {
@@ -160,6 +175,12 @@ public class Book implements Parcelable {
 		authorId = in.readLong();
 		author = (Author) in.readValue(Author.class.getClassLoader());
 		summary = in.readString();
+		if (in.readByte() == 0x01) {
+			index = new ArrayList<Chapter>();
+			in.readList(index, Chapter.class.getClassLoader());
+		} else {
+			index = null;
+		}
 		pageCount = in.readInt();
 		contentType = in.readString();
 		state = in.readString();
@@ -202,6 +223,12 @@ public class Book implements Parcelable {
 		dest.writeLong(authorId);
 		dest.writeValue(author);
 		dest.writeString(summary);
+		if (index == null) {
+			dest.writeByte((byte) (0x00));
+		} else {
+			dest.writeByte((byte) (0x01));
+			dest.writeList(index);
+		}
 		dest.writeInt(pageCount);
 		dest.writeString(contentType);
 		dest.writeString(state);
