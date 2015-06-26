@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.http.HttpGet;
@@ -48,7 +49,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	/**
 	 * The flags to pass to {@link SystemUiHider#getInstance}.
 	 */
-	private static final int HIDER_FLAGS = SystemUiHider.FLAG_FULLSCREEN;
+	private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
 
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
@@ -56,13 +57,13 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	private SystemUiHider mSystemUiHider;
 
 	private WebView mWebView;
+	private View mProgressBarLayout;
 
 	private Shelf mShelf;
-
 	private float mDownX;
 	private float mDownY;
 	private Boolean isOnClick;
-	private float SCROLL_THRESHOLD = 30;
+	private float SCROLL_THRESHOLD = 20;
 
 	// private static final int MAX_CLICK_DURATION = 200;
 	// private long startClickTime;
@@ -75,11 +76,13 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		mWebView = (WebView) findViewById(R.id.web_view);
+		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
 		mSystemUiHider = SystemUiHider.getInstance(this, mWebView, HIDER_FLAGS);
 		mSystemUiHider.setup();
+		mSystemUiHider.hide();
 		mSystemUiHider
 				.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
 					// Cached values.
@@ -187,11 +190,19 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		// }
 		// });
 
+		mWebView.setWebViewClient(new WebViewClient() {
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				mProgressBarLayout.setVisibility(View.GONE);
+			}
+		});
+
 		// Upon interacting with UI controls, delay any scheduled hide()
 		// operations to prevent the jarring behavior of controls going away
 		// while interacting with the UI.
-		findViewById(R.id.dummy_button).setOnTouchListener(
-				mDelayHideTouchListener);
+		// findViewById(R.id.dummy_button).setOnTouchListener(
+		// mDelayHideTouchListener);
 
 		if (getIntent().getExtras() != null) {
 			Shelf shelf = (Shelf) getIntent().getExtras()
