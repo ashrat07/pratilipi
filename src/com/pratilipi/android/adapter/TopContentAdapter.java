@@ -18,7 +18,6 @@ import com.pratilipi.android.model.Book;
 import com.pratilipi.android.ui.SplashActivity;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.PConstants;
 
 public class TopContentAdapter extends ArrayAdapter<Book> {
 
@@ -85,9 +84,8 @@ public class TopContentAdapter extends ArrayAdapter<Book> {
 
 		Book book = getItem(position);
 
-		String coverImageUrl = PConstants.COVER_IMAGE_URL.replace(
-				PConstants.PLACEHOLDER_PRATILIPI_ID, "" + book.id);
-		activity.mImageLoader.displayImage(coverImageUrl, viewHolder.imageView);
+		activity.mImageLoader.displayImage(book.coverImageUrl,
+				viewHolder.imageView);
 		viewHolder.titleTextView.setText(book.title);
 		viewHolder.titleEnTextView.setText(book.titleEn);
 		viewHolder.authorNameTextView.setText(book.author.nameEn);

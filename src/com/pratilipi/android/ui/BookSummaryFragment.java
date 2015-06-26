@@ -1,5 +1,6 @@
 package com.pratilipi.android.ui;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,11 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
+import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.PConstants;
+import com.pratilipi.android.util.ShelfDataSource;
 
 public class BookSummaryFragment extends BaseFragment {
 
@@ -38,6 +42,8 @@ public class BookSummaryFragment extends BaseFragment {
 	private TextView mReadSampleTextView;
 	private TextView mReviewTextView;
 	private TextView mSummaryTextView;
+
+	private ShelfDataSource mDataSource;
 
 	@Override
 	public String getCustomTag() {
@@ -78,11 +84,9 @@ public class BookSummaryFragment extends BaseFragment {
 
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-			Book book = bundle.getParcelable("BOOK");
+			final Book book = bundle.getParcelable("BOOK");
 			if (book != null) {
-				String coverImageUrl = PConstants.COVER_IMAGE_URL.replace(
-						PConstants.PLACEHOLDER_PRATILIPI_ID, "" + book.id);
-				mParentActivity.mImageLoader.displayImage(coverImageUrl,
+				mParentActivity.mImageLoader.displayImage(book.coverImageUrl,
 						mImageView);
 				mTitleTextView.setText(book.title);
 				mTitleEnTextView.setText(book.titleEn);
@@ -90,17 +94,42 @@ public class BookSummaryFragment extends BaseFragment {
 				mRatingBar.setRating(book.ratingCount);
 				mStarCountTextView.setText("(" + book.starCount + ")");
 				mGenreLayout.removeAllViews();
-				for (String genre : book.genreNameList) {
-					View genreView = inflater.inflate(R.layout.layout_genre,
-							null);
-					((TextView) genreView).setText(genre);
-					mGenreLayout.addView(genreView);
+				if (book.genreNameList != null) {
+					for (String genre : book.genreNameList) {
+						View genreView = inflater.inflate(
+								R.layout.layout_genre, null);
+						((TextView) genreView).setText(genre);
+						mGenreLayout.addView(genreView);
+					}
 				}
 				if (Math.random() < 0.5) {
 					mFreeTextView.setVisibility(View.VISIBLE);
 					mPriceLayout.setVisibility(View.GONE);
 					mReadTextView.setVisibility(View.VISIBLE);
 					mBuyNowTextView.setVisibility(View.GONE);
+					mReadTextView
+							.setOnClickListener(new View.OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									Gson gson = new Gson();
+									mDataSource = new ShelfDataSource(
+											mParentActivity);
+									mDataSource.open();
+									Shelf shelf = new Shelf(0, book.id, gson
+											.toJson(book), mParentActivity.mApp
+											.getContentLanguage());
+									mDataSource.createShelfContent(shelf);
+									Toast.makeText(mParentActivity,
+											"Added to Shelf",
+											Toast.LENGTH_SHORT).show();
+
+									Intent i = new Intent(mParentActivity,
+											ReaderActivity.class);
+									i.putExtra("SHELF", shelf);
+									startActivity(i);
+								}
+							});
 				} else {
 					mFreeTextView.setVisibility(View.GONE);
 					mPriceLayout.setVisibility(View.VISIBLE);
@@ -133,6 +162,22 @@ public class BookSummaryFragment extends BaseFragment {
 		}
 
 		return mRootView;
+	}
+
+	@Override
+	public void onResume() {
+		if (mDataSource != null) {
+			mDataSource.open();
+		}
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		if (mDataSource != null) {
+			mDataSource.close();
+		}
+		super.onPause();
 	}
 
 }

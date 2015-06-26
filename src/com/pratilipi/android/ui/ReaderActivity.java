@@ -1,23 +1,25 @@
 package com.pratilipi.android.ui;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.util.SystemUiHider;
 
-public class ReaderActivity extends Activity {
+public class ReaderActivity extends FragmentActivity {
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
 	 */
-	private static final boolean AUTO_HIDE = true;
+	private static final boolean AUTO_HIDE = false;
 
 	/**
 	 * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -48,7 +50,7 @@ public class ReaderActivity extends Activity {
 		setContentView(R.layout.activity_reader);
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		final View contentView = findViewById(R.id.fullscreen_content);
+		final View contentView = findViewById(R.id.fullscreen_container);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
@@ -88,10 +90,10 @@ public class ReaderActivity extends Activity {
 									: View.GONE);
 						}
 
-						if (visible && AUTO_HIDE) {
-							// Schedule a hide().
-							delayedHide(AUTO_HIDE_DELAY_MILLIS);
-						}
+						// if (visible && AUTO_HIDE) {
+						// // Schedule a hide().
+						// delayedHide(AUTO_HIDE_DELAY_MILLIS);
+						// }
 					}
 				});
 
@@ -112,6 +114,24 @@ public class ReaderActivity extends Activity {
 		// while interacting with the UI.
 		findViewById(R.id.dummy_button).setOnTouchListener(
 				mDelayHideTouchListener);
+
+		if (getIntent().getExtras() != null) {
+			Shelf shelf = (Shelf) getIntent().getExtras()
+					.getParcelable("SHELF");
+			if (shelf != null) {
+				ReaderWebViewFragment fragment = new ReaderWebViewFragment();
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("SHELF", shelf);
+				fragment.setArguments(bundle);
+				FragmentTransaction trans = getSupportFragmentManager()
+						.beginTransaction();
+				trans.replace(R.id.fullscreen_container, fragment,
+						fragment.getCustomTag());
+				trans.addToBackStack(fragment.getCustomTag())
+						.commitAllowingStateLoss();
+				getFragmentManager().executePendingTransactions();
+			}
+		}
 	}
 
 	@Override

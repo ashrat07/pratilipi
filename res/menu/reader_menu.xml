@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/shelf"
-        android:icon="@drawable/shelf"
+        android:id="@+id/change_font"
+        android:icon="@drawable/change_font"
         android:showAsAction="ifRoom"
-        android:title="@string/shelf"/>
+        android:title="@string/change_font"/>
     <item
-        android:id="@+id/profile"
-        android:icon="@drawable/profile"
+        android:id="@+id/bookmark"
+        android:icon="@drawable/bookmark"
         android:showAsAction="ifRoom"
-        android:title="@string/profile"/>
+        android:title="@string/bookmark"/>
 
 </menu>

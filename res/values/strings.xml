@@ -44,5 +44,9 @@
     <string name="read_sample">READ SAMPLE</string>
     <string name="review">REVIEW</string>
     <string name="reader">Reader</string>
+    <string name="add_to_shelf">Add to shelf</string>
+    <string name="change_font">Change font</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="oops_no_books_found">OOPS!!\nNo books found.\nAdd more books to find them here.</string>
 
 </resources>
