@@ -38,7 +38,7 @@
         <activity
             android:name=".ui.ReaderActivity"
             android:label="@string/reader"
-            android:theme="@style/PFullscreenTheme" />
+            android:theme="@style/PTheme" />
 
         <provider
             android:name=".provider.PSuggestionProvider"
