@@ -6,22 +6,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
-import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.SystemUiHelper;
 
@@ -29,14 +32,18 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 	private SystemUiHelper mHelper;
 
-	private TextView mTextView;
+	private ViewFlipper mViewFlipper;
 	private View mProgressBarLayout;
+	private View mControlView;
+	private TextView mChapterTextView;
+	private SeekBar mSeekBar;
 
 	private Shelf mShelf;
 
-	private float mDownX;
-	private float mDownY;
 	private Boolean isOnClick;
+	private int totalPages;
+	private int currentPage;
+	private float mDownX;
 	private float SCROLL_THRESHOLD = 20;
 
 	@Override
@@ -49,9 +56,11 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 		setContentView(R.layout.activity_reader);
 
-		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		mTextView = (TextView) findViewById(R.id.text_view);
+		mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
 		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
+		mControlView = findViewById(R.id.control_view);
+		mChapterTextView = (TextView) findViewById(R.id.chapter_text_view);
+		mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
 		mHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0,
 				new SystemUiHelper.OnVisibilityChangeListener() {
@@ -68,13 +77,13 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 							// in-layout UI controls at the bottom of the
 							// screen.
 							if (mControlsHeight == 0) {
-								mControlsHeight = controlsView.getHeight();
+								mControlsHeight = mControlView.getHeight();
 							}
 							if (mShortAnimTime == 0) {
 								mShortAnimTime = getResources().getInteger(
 										android.R.integer.config_shortAnimTime);
 							}
-							controlsView
+							mControlView
 									.animate()
 									.translationY(visible ? 0 : mControlsHeight)
 									.setDuration(mShortAnimTime);
@@ -82,48 +91,11 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 							// If the ViewPropertyAnimator APIs aren't
 							// available, simply show or hide the in-layout UI
 							// controls.
-							controlsView.setVisibility(visible ? View.VISIBLE
+							mControlView.setVisibility(visible ? View.VISIBLE
 									: View.GONE);
 						}
 					}
 				});
-
-		mTextView.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				switch (motionEvent.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					mDownX = motionEvent.getX();
-					mDownY = motionEvent.getY();
-					isOnClick = true;
-					break;
-
-				case MotionEvent.ACTION_CANCEL:
-				case MotionEvent.ACTION_UP:
-					if (isOnClick) {
-						if (mHelper.isShowing()) {
-							mHelper.hide();
-						} else {
-							mHelper.show();
-						}
-					}
-					break;
-
-				case MotionEvent.ACTION_MOVE:
-					if (isOnClick
-							&& (Math.abs(mDownX - motionEvent.getX()) > SCROLL_THRESHOLD || Math
-									.abs(mDownY - motionEvent.getY()) > SCROLL_THRESHOLD)) {
-						isOnClick = false;
-					}
-					break;
-
-				default:
-					break;
-				}
-				return false;
-			}
-		});
 
 		if (getIntent().getExtras() != null) {
 			Shelf shelf = (Shelf) getIntent().getExtras()
@@ -187,11 +159,59 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 				try {
 					String pageContent = finalResult.getString("pageContent");
 					if (pageContent != null) {
-						mTextView.setText(Html.fromHtml(pageContent));
-						mTextView.setTypeface(FontManager.getInstance().get(
-								mShelf.language));
-						mTextView
-								.setMovementMethod(new ScrollingMovementMethod());
+
+						DisplayMetrics dm = new DisplayMetrics();
+						getWindowManager().getDefaultDisplay().getMetrics(dm);
+						int screenWidth = dm.widthPixels;
+						int screenHeight = dm.heightPixels;
+
+						while (pageContent != null && pageContent.length() != 0) {
+							totalPages++;
+
+							// creating new textviews for every page
+							TextView contentTextView = new TextView(this);
+							contentTextView
+									.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+							contentTextView
+									.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+							contentTextView.setMaxHeight(screenHeight);
+							contentTextView.setMaxWidth(screenWidth);
+							contentTextView.setPadding(20, 20, 20, 20);
+
+							float textSize = contentTextView.getTextSize();
+							Paint paint = new Paint();
+							paint.setTextSize(textSize);
+
+							int numChars = 0;
+							int lineCount = 0;
+							int maxLineCount = screenHeight
+									/ contentTextView.getLineHeight();
+							contentTextView.setLines(maxLineCount);
+
+							while ((lineCount < maxLineCount)
+									&& (numChars < pageContent.length())) {
+								numChars = numChars
+										+ paint.breakText(
+												pageContent.substring(numChars),
+												true, screenWidth, null);
+								lineCount++;
+							}
+
+							// retrieve the String to be displayed in the
+							// current textbox
+							String toBeDisplayed = pageContent.substring(0,
+									numChars);
+							pageContent = pageContent.substring(numChars);
+							contentTextView.setText(Html
+									.fromHtml(toBeDisplayed));
+							mViewFlipper.addView(contentTextView, 0);
+
+							numChars = 0;
+							lineCount = 0;
+						}
+
+						currentPage = 0;
+						mSeekBar.setMax(totalPages);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -199,6 +219,68 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		switch (event.getAction()) {
+		// when user first touches the screen to swap
+		case MotionEvent.ACTION_DOWN: {
+			mDownX = event.getX();
+			isOnClick = true;
+			break;
+		}
+
+		case MotionEvent.ACTION_CANCEL:
+		case MotionEvent.ACTION_UP:
+			if (isOnClick) {
+				if (mHelper.isShowing()) {
+					mHelper.hide();
+				} else {
+					mHelper.show();
+				}
+			}
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+			float currentX = event.getX();
+			if (isOnClick && Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
+				isOnClick = false;
+				if (mDownX < currentX) {
+					// If no more View/Child to flip
+					if (mViewFlipper.getDisplayedChild() == 0)
+						break;
+
+					// set the required Animation type to ViewFlipper
+					// The Next screen will come in form Left and current Screen
+					// will go OUT from Right
+					mViewFlipper.setInAnimation(this, R.anim.in_from_left);
+					mViewFlipper.setOutAnimation(this, R.anim.out_to_right);
+					// Show the next Screen
+					mViewFlipper.showNext();
+
+					mChapterTextView.setText("Page " + --currentPage);
+				}
+
+				// if right to left swipe on screen
+				if (mDownX > currentX) {
+					if (mViewFlipper.getDisplayedChild() == 1)
+						break;
+					// set the required Animation type to ViewFlipper
+					// The Next screen will come in form Right and current
+					// Screen
+					// will go OUT from Left
+					mViewFlipper.setInAnimation(this, R.anim.in_from_right);
+					mViewFlipper.setOutAnimation(this, R.anim.out_to_left);
+					// Show The Previous Screen
+					mViewFlipper.showPrevious();
+
+					mChapterTextView.setText("Page " + ++currentPage);
+				}
+			}
+			break;
+		}
+		return false;
 	}
 
 	@Override
