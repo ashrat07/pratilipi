@@ -1,28 +1,27 @@
 package com.pratilipi.android.ui;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
+import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.SystemUiHelper;
 
@@ -30,7 +29,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 	private SystemUiHelper mHelper;
 
-	private WebView mWebView;
+	private TextView mTextView;
 	private View mProgressBarLayout;
 
 	private Shelf mShelf;
@@ -51,7 +50,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		setContentView(R.layout.activity_reader);
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		mWebView = (WebView) findViewById(R.id.web_view);
+		mTextView = (TextView) findViewById(R.id.text_view);
 		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
 
 		mHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0,
@@ -89,7 +88,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 					}
 				});
 
-		mWebView.setOnTouchListener(new View.OnTouchListener() {
+		mTextView.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -123,13 +122,6 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 					break;
 				}
 				return false;
-			}
-		});
-		mWebView.setWebViewClient(new WebViewClient() {
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				mProgressBarLayout.setVisibility(View.GONE);
 			}
 		});
 
@@ -190,64 +182,23 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
 		if (PConstants.CONTENT_URL.equals(getUrl)) {
-			try {
-				String pageContent = finalResult.getString("pageContent");
-				String font;
-				if (PConstants.CONTENT_LANGUAGE.HINDI.toString().equals(
-						mShelf.language)) {
-					font = "Mangal.ttf";
-				} else if (PConstants.CONTENT_LANGUAGE.TAMIL.toString().equals(
-						mShelf.language)) {
-					font = "Tamil.ttf";
-				} else if (PConstants.CONTENT_LANGUAGE.GUJARATI.toString()
-						.equals(mShelf.language)) {
-					font = "Gujarati.ttf";
-				} else {
-					font = "Montserrat-Regular.ttf";
+			mProgressBarLayout.setVisibility(View.GONE);
+			if (finalResult != null) {
+				try {
+					String pageContent = finalResult.getString("pageContent");
+					if (pageContent != null) {
+						mTextView.setText(Html.fromHtml(pageContent));
+						mTextView.setTypeface(FontManager.getInstance().get(
+								mShelf.language));
+						mTextView
+								.setMovementMethod(new ScrollingMovementMethod());
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-
-				this.copyFile(this, font);
-				mWebView.loadDataWithBaseURL(null,
-						getHtmlData(this, font, pageContent), "text/html",
-						"utf-8", "about:blank");
-			} catch (JSONException e) {
-				e.printStackTrace();
 			}
 		}
 		return null;
-	}
-
-	private boolean copyFile(Context context, String font) {
-		boolean status = false;
-		try {
-			FileOutputStream out = context.openFileOutput(font,
-					Context.MODE_PRIVATE);
-			InputStream in = context.getAssets().open("fonts/" + font);
-			// Transfer bytes from the input file to the output file
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			// Close the streams
-			out.close();
-			in.close();
-			status = true;
-		} catch (Exception e) {
-			status = false;
-			e.printStackTrace();
-		}
-		return status;
-	}
-
-	private String getHtmlData(Context context, String font, String data) {
-		String head = "<head><style>@font-face { font-family: 'customFont'; src: url('file://"
-				+ context.getFilesDir().getAbsolutePath()
-				+ "/"
-				+ font
-				+ "');}body {font-family: 'customFont';}</style></head>";
-		String htmlData = "<html>" + head + "<body>" + data + "</body></html>";
-		return htmlData;
 	}
 
 	@Override
