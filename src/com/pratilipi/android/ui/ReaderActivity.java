@@ -12,10 +12,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,6 +25,7 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
+import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.SystemUiHelper;
 
@@ -97,6 +98,25 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 					}
 				});
 
+		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (progress < mViewFlipper.getChildCount()) {
+					mViewFlipper.setDisplayedChild(progress);
+				}
+			}
+		});
+
 		if (getIntent().getExtras() != null) {
 			Shelf shelf = (Shelf) getIntent().getExtras()
 					.getParcelable("SHELF");
@@ -146,6 +166,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.CONTENT_URL);
 		requestHashMap.put("pratilipiId", "" + mShelf.pratilipiId);
+		requestHashMap.put("pageNo", "4");
 
 		contentRequest.run(requestHashMap);
 	}
@@ -165,18 +186,16 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 						int screenWidth = dm.widthPixels;
 						int screenHeight = dm.heightPixels;
 
+						LayoutInflater inflater = LayoutInflater.from(this);
 						while (pageContent != null && pageContent.length() != 0) {
 							totalPages++;
 
-							// creating new textviews for every page
-							TextView contentTextView = new TextView(this);
-							contentTextView
-									.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-							contentTextView
-									.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-							contentTextView.setMaxHeight(screenHeight);
-							contentTextView.setMaxWidth(screenWidth);
-							contentTextView.setPadding(20, 20, 20, 20);
+							View view = inflater.inflate(
+									R.layout.layout_reader_page, null);
+							TextView contentTextView = (TextView) view
+									.findViewById(R.id.content_text_view);
+							contentTextView.setTypeface(FontManager
+									.getInstance().get(mShelf.language));
 
 							float textSize = contentTextView.getTextSize();
 							Paint paint = new Paint();
@@ -204,14 +223,18 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 							pageContent = pageContent.substring(numChars);
 							contentTextView.setText(Html
 									.fromHtml(toBeDisplayed));
-							mViewFlipper.addView(contentTextView, 0);
+
+							mViewFlipper.addView(view);
 
 							numChars = 0;
 							lineCount = 0;
 						}
 
 						currentPage = 0;
-						mSeekBar.setMax(totalPages);
+						mChapterTextView.setText("Page " + (currentPage + 1)
+								+ " of " + totalPages);
+						mSeekBar.setMax(totalPages - 1);
+						mSeekBar.setProgress(currentPage);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -254,29 +277,34 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 					// set the required Animation type to ViewFlipper
 					// The Next screen will come in form Left and current Screen
 					// will go OUT from Right
-					mViewFlipper.setInAnimation(this, R.anim.in_from_left);
-					mViewFlipper.setOutAnimation(this, R.anim.out_to_right);
+					mViewFlipper
+							.setInAnimation(this, R.anim.slide_in_from_left);
+					mViewFlipper.setOutAnimation(this,
+							R.anim.slide_out_to_right);
 					// Show the next Screen
-					mViewFlipper.showNext();
-
-					mChapterTextView.setText("Page " + --currentPage);
+					mViewFlipper.showPrevious();
+					--currentPage;
 				}
 
 				// if right to left swipe on screen
 				if (mDownX > currentX) {
-					if (mViewFlipper.getDisplayedChild() == 1)
+					if (mViewFlipper.getDisplayedChild() == totalPages - 1)
 						break;
 					// set the required Animation type to ViewFlipper
 					// The Next screen will come in form Right and current
 					// Screen
 					// will go OUT from Left
-					mViewFlipper.setInAnimation(this, R.anim.in_from_right);
-					mViewFlipper.setOutAnimation(this, R.anim.out_to_left);
+					mViewFlipper.setInAnimation(this,
+							R.anim.slide_in_from_right);
+					mViewFlipper
+							.setOutAnimation(this, R.anim.slide_out_to_left);
 					// Show The Previous Screen
-					mViewFlipper.showPrevious();
-
-					mChapterTextView.setText("Page " + ++currentPage);
+					mViewFlipper.showNext();
+					++currentPage;
 				}
+				mChapterTextView.setText("Page " + (currentPage + 1) + " of "
+						+ totalPages);
+				mSeekBar.setProgress(currentPage);
 			}
 			break;
 		}
