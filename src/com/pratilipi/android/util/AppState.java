@@ -3,6 +3,8 @@ package com.pratilipi.android.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.pratilipi.android.model.Login;
+
 public class AppState {
 
 	SharedPreferences mConf;
@@ -14,6 +16,11 @@ public class AppState {
 	private static final String LANGUAGE_MENU_ID = "LANGUAGE_MENU_ID";
 	private static final String LANGUAGE_MENU_TYPEFACE = "LANGUAGE_MENU_TYPEFACE";
 	private static final String LANGUAGE_MENU_LOCALE = "LANGUAGE_MENU_LOCALE";
+	private static final String USER_NAME = "USER_NAME";
+	private static final String PASSWORD = "PASSWORD";
+	private static final String LOGIN_TYPE = "LOGIN_TYPE";
+	
+	private static String ACCESS_TOKEN = null;
 
 	private static AppState instance;
 
@@ -101,4 +108,25 @@ public class AppState {
 		return mConf.getString(LANGUAGE_MENU_LOCALE, "en");
 	}
 
+	public String getAccessToken() {
+		return ACCESS_TOKEN;
+	}
+
+	public void setAccessToken(String accessToken) {
+		ACCESS_TOKEN = accessToken;
+	}
+	
+	public void setUserCredentials(Login userCredentials)
+	{
+		SharedPreferences.Editor ed= mConf.edit();
+		ed.putString(USER_NAME, userCredentials.loginName);
+		ed.putString(PASSWORD, userCredentials.loginPassword);
+		ed.putString(LOGIN_TYPE, userCredentials.loginType);
+		ed.commit();
+	}
+	public Login getUserCredentials()
+	{
+		Login login= new Login(mConf.getString(USER_NAME,null),mConf.getString(PASSWORD,null),mConf.getString(LOGIN_TYPE,null));
+		return login;
+	}
 }
