@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -180,11 +179,10 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 				try {
 					String pageContent = finalResult.getString("pageContent");
 					if (pageContent != null) {
-
-						DisplayMetrics dm = new DisplayMetrics();
-						getWindowManager().getDefaultDisplay().getMetrics(dm);
-						int screenWidth = dm.widthPixels;
-						int screenHeight = dm.heightPixels;
+						pageContent = pageContent.replaceAll("&nbsp;", " ")
+								.toString();
+						int screenWidth = mViewFlipper.getWidth();
+						int screenHeight = mViewFlipper.getHeight();
 
 						LayoutInflater inflater = LayoutInflater.from(this);
 						while (pageContent != null && pageContent.length() != 0) {
@@ -205,7 +203,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 							int lineCount = 0;
 							int maxLineCount = screenHeight
 									/ contentTextView.getLineHeight();
-							contentTextView.setLines(maxLineCount);
+							// contentTextView.setLines(maxLineCount);
 
 							while ((lineCount < maxLineCount)
 									&& (numChars < pageContent.length())) {
