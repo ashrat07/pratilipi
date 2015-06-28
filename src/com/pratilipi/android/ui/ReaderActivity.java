@@ -1,48 +1,49 @@
 package com.pratilipi.android.ui;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.view.LayoutInflater;
+import android.text.TextPaint;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.TextPagerAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
+import com.pratilipi.android.util.PageSplitter;
 import com.pratilipi.android.util.SystemUiHelper;
 
-public class ReaderActivity extends Activity implements HttpResponseListener {
+public class ReaderActivity extends FragmentActivity implements
+		HttpResponseListener {
 
 	private SystemUiHelper mHelper;
 
-	private ViewFlipper mViewFlipper;
+	private ViewPager mViewPager;
 	private View mProgressBarLayout;
 	private View mControlView;
 	private TextView mChapterTextView;
 	private SeekBar mSeekBar;
 
 	private Shelf mShelf;
-
+	private List<CharSequence> mPages;
 	private Boolean isOnClick;
-	private int totalPages;
-	private int currentPage;
 	private float mDownX;
 	private float SCROLL_THRESHOLD = 20;
 
@@ -56,7 +57,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 		setContentView(R.layout.activity_reader);
 
-		mViewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
+		mViewPager = (ViewPager) findViewById(R.id.view_pager);
 		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
 		mControlView = findViewById(R.id.control_view);
 		mChapterTextView = (TextView) findViewById(R.id.chapter_text_view);
@@ -65,7 +66,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		mHelper = new SystemUiHelper(this, SystemUiHelper.LEVEL_IMMERSIVE, 0,
 				new SystemUiHelper.OnVisibilityChangeListener() {
 
-					// // Cached values.
+					// Cached values.
 					int mControlsHeight;
 					int mShortAnimTime;
 
@@ -97,6 +98,60 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 					}
 				});
 
+		mViewPager.setPageTransformer(true, new DepthPageTransformer());
+		mViewPager.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View view, MotionEvent event) {
+				switch (event.getAction()) {
+				// when user first touches the screen to swap
+				case MotionEvent.ACTION_DOWN: {
+					mDownX = event.getX();
+					isOnClick = true;
+					break;
+				}
+
+				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_UP:
+					if (isOnClick) {
+						if (mHelper.isShowing()) {
+							mHelper.hide();
+						} else {
+							mHelper.show();
+						}
+					}
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+					float currentX = event.getX();
+					if (isOnClick
+							&& Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
+						isOnClick = false;
+					}
+					break;
+				}
+				return false;
+			}
+		});
+		mViewPager
+				.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+					@Override
+					public void onPageSelected(int position) {
+						mChapterTextView.setText("Page " + (position + 1)
+								+ " of " + mPages.size());
+						mSeekBar.setProgress(position);
+					}
+
+					@Override
+					public void onPageScrolled(int position,
+							float positionOffset, int positionOffsetPixels) {
+					}
+
+					@Override
+					public void onPageScrollStateChanged(int state) {
+					}
+				});
 		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
 			@Override
@@ -110,8 +165,8 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				if (progress < mViewFlipper.getChildCount()) {
-					mViewFlipper.setDisplayedChild(progress);
+				if (progress < mPages.size()) {
+					mViewPager.setCurrentItem(progress, true);
 				}
 			}
 		});
@@ -179,60 +234,26 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 				try {
 					String pageContent = finalResult.getString("pageContent");
 					if (pageContent != null) {
-						pageContent = pageContent.replaceAll("&nbsp;", " ")
-								.toString();
-						int screenWidth = mViewFlipper.getWidth();
-						int screenHeight = mViewFlipper.getHeight();
 
-						LayoutInflater inflater = LayoutInflater.from(this);
-						while (pageContent != null && pageContent.length() != 0) {
-							totalPages++;
+						PageSplitter pageSplitter = new PageSplitter(
+								mViewPager.getWidth(), mViewPager.getHeight(),
+								1, 0);
 
-							View view = inflater.inflate(
-									R.layout.layout_reader_page, null);
-							TextView contentTextView = (TextView) view
-									.findViewById(R.id.content_text_view);
-							contentTextView.setTypeface(FontManager
-									.getInstance().get(mShelf.language));
+						TextPaint textPaint = new TextPaint();
+						textPaint.setTypeface(FontManager.getInstance().get(
+								mShelf.language));
+						textPaint.setTextSize(getResources().getDimension(
+								R.dimen.text_small));
 
-							float textSize = contentTextView.getTextSize();
-							Paint paint = new Paint();
-							paint.setTextSize(textSize);
+						pageSplitter.append(Html.fromHtml(pageContent)
+								.toString(), textPaint);
 
-							int numChars = 0;
-							int lineCount = 0;
-							int maxLineCount = screenHeight
-									/ contentTextView.getLineHeight();
-							// contentTextView.setLines(maxLineCount);
+						mPages = pageSplitter.getPages();
+						mViewPager.setAdapter(new TextPagerAdapter(
+								getSupportFragmentManager(), mPages));
 
-							while ((lineCount < maxLineCount)
-									&& (numChars < pageContent.length())) {
-								numChars = numChars
-										+ paint.breakText(
-												pageContent.substring(numChars),
-												true, screenWidth, null);
-								lineCount++;
-							}
-
-							// retrieve the String to be displayed in the
-							// current textbox
-							String toBeDisplayed = pageContent.substring(0,
-									numChars);
-							pageContent = pageContent.substring(numChars);
-							contentTextView.setText(Html
-									.fromHtml(toBeDisplayed));
-
-							mViewFlipper.addView(view);
-
-							numChars = 0;
-							lineCount = 0;
-						}
-
-						currentPage = 0;
-						mChapterTextView.setText("Page " + (currentPage + 1)
-								+ " of " + totalPages);
-						mSeekBar.setMax(totalPages - 1);
-						mSeekBar.setProgress(currentPage);
+						mChapterTextView.setText("Page 1 of " + mPages.size());
+						mSeekBar.setMax(mPages.size() - 1);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -243,76 +264,86 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getAction()) {
-		// when user first touches the screen to swap
-		case MotionEvent.ACTION_DOWN: {
-			mDownX = event.getX();
-			isOnClick = true;
-			break;
-		}
-
-		case MotionEvent.ACTION_CANCEL:
-		case MotionEvent.ACTION_UP:
-			if (isOnClick) {
-				if (mHelper.isShowing()) {
-					mHelper.hide();
-				} else {
-					mHelper.show();
-				}
-			}
-			break;
-
-		case MotionEvent.ACTION_MOVE:
-			float currentX = event.getX();
-			if (isOnClick && Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
-				isOnClick = false;
-				if (mDownX < currentX) {
-					// If no more View/Child to flip
-					if (mViewFlipper.getDisplayedChild() == 0)
-						break;
-
-					// set the required Animation type to ViewFlipper
-					// The Next screen will come in form Left and current Screen
-					// will go OUT from Right
-					mViewFlipper
-							.setInAnimation(this, R.anim.slide_in_from_left);
-					mViewFlipper.setOutAnimation(this,
-							R.anim.slide_out_to_right);
-					// Show the next Screen
-					mViewFlipper.showPrevious();
-					--currentPage;
-				}
-
-				// if right to left swipe on screen
-				if (mDownX > currentX) {
-					if (mViewFlipper.getDisplayedChild() == totalPages - 1)
-						break;
-					// set the required Animation type to ViewFlipper
-					// The Next screen will come in form Right and current
-					// Screen
-					// will go OUT from Left
-					mViewFlipper.setInAnimation(this,
-							R.anim.slide_in_from_right);
-					mViewFlipper
-							.setOutAnimation(this, R.anim.slide_out_to_left);
-					// Show The Previous Screen
-					mViewFlipper.showNext();
-					++currentPage;
-				}
-				mChapterTextView.setText("Page " + (currentPage + 1) + " of "
-						+ totalPages);
-				mSeekBar.setProgress(currentPage);
-			}
-			break;
-		}
-		return false;
-	}
-
-	@Override
 	public Boolean setPostStatus(JSONObject finalResult, String postUrl,
 			int responseCode) {
 		return null;
 	}
 
+}
+
+class ZoomOutPageTransformer implements ViewPager.PageTransformer {
+
+	private static final float MIN_SCALE = 0.85f;
+	private static final float MIN_ALPHA = 0.5f;
+
+	public void transformPage(View view, float position) {
+		int pageWidth = view.getWidth();
+		int pageHeight = view.getHeight();
+
+		if (position < -1) { // [-Infinity,-1)
+			// This page is way off-screen to the left.
+			view.setAlpha(0);
+
+		} else if (position <= 1) { // [-1,1]
+			// Modify the default slide transition to shrink the page as well
+			float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
+			float vertMargin = pageHeight * (1 - scaleFactor) / 2;
+			float horzMargin = pageWidth * (1 - scaleFactor) / 2;
+			if (position < 0) {
+				view.setTranslationX(horzMargin - vertMargin / 2);
+			} else {
+				view.setTranslationX(-horzMargin + vertMargin / 2);
+			}
+
+			// Scale the page down (between MIN_SCALE and 1)
+			view.setScaleX(scaleFactor);
+			view.setScaleY(scaleFactor);
+
+			// Fade the page relative to its size.
+			view.setAlpha(MIN_ALPHA + (scaleFactor - MIN_SCALE)
+					/ (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+
+		} else { // (1,+Infinity]
+			// This page is way off-screen to the right.
+			view.setAlpha(0);
+		}
+	}
+}
+
+class DepthPageTransformer implements ViewPager.PageTransformer {
+
+	private static final float MIN_SCALE = 0.75f;
+
+	public void transformPage(View view, float position) {
+		int pageWidth = view.getWidth();
+
+		if (position < -1) { // [-Infinity,-1)
+			// This page is way off-screen to the left.
+			view.setAlpha(0);
+
+		} else if (position <= 0) { // [-1,0]
+			// Use the default slide transition when moving to the left page
+			view.setAlpha(1);
+			view.setTranslationX(0);
+			view.setScaleX(1);
+			view.setScaleY(1);
+
+		} else if (position <= 1) { // (0,1]
+			// Fade the page out.
+			view.setAlpha(1 - position);
+
+			// Counteract the default slide transition
+			view.setTranslationX(pageWidth * -position);
+
+			// Scale the page down (between MIN_SCALE and 1)
+			float scaleFactor = MIN_SCALE + (1 - MIN_SCALE)
+					* (1 - Math.abs(position));
+			view.setScaleX(scaleFactor);
+			view.setScaleY(scaleFactor);
+
+		} else { // (1,+Infinity]
+			// This page is way off-screen to the right.
+			view.setAlpha(0);
+		}
+	}
 }

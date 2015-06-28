@@ -32,6 +32,7 @@ public class ShelfDataSource {
 	}
 
 	public Shelf createShelfContent(Shelf shelf) {
+		Shelf newShelf = null;
 		ContentValues values = new ContentValues();
 		values.put(ShelfSQLiteHelper.COLUMN_PRATILIPI_ID, shelf.pratilipiId);
 		values.put(ShelfSQLiteHelper.COLUMN_CONTENT, shelf.content);
@@ -41,8 +42,9 @@ public class ShelfDataSource {
 		Cursor cursor = database.query(ShelfSQLiteHelper.TABLE_SHELF,
 				allColumns, ShelfSQLiteHelper.COLUMN_ID + " = " + insertId,
 				null, null, null, null);
-		cursor.moveToFirst();
-		Shelf newShelf = cursorToShelf(cursor);
+		if (cursor.moveToFirst()) {
+			newShelf = cursorToShelf(cursor);
+		}
 		cursor.close();
 		return newShelf;
 	}
