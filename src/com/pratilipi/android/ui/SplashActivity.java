@@ -26,10 +26,11 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.provider.PSuggestionProvider;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.LoginManager;
+import com.pratilipi.android.util.LoginManagerListner;
 import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
 import com.pratilipi.android.util.PopupErrorRunner;
+import com.pratilipi.android.util.RegisterManagerListner;
 
 public class SplashActivity extends FragmentActivity implements
 		OnBackStackChangedListener {
@@ -42,7 +43,8 @@ public class SplashActivity extends FragmentActivity implements
 	public PStack mStack;
 	private Vector<Runnable> runners = new Vector<>();
 	private Boolean isUISaved = false;
-	public LoginManager mLoginManager= new LoginManager();
+	public LoginManagerListner mLoginManager= new LoginManagerListner();
+	public RegisterManagerListner mRegisterManager= new RegisterManagerListner();
 	
 	public ImageLoader mImageLoader;
 

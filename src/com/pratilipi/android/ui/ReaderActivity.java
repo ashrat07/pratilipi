@@ -256,4 +256,11 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		return null;
 	}
 
+	@Override
+	public Boolean setPutStatus(JSONObject finalResult, String putUrl,
+			int responseCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

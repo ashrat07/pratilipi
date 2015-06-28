@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,6 +50,17 @@ public class ProfileFragment extends BaseFragment {
 		mParentActivity.mImageLoader.displayImage(
 				"http://lorempixel.com/200/200/people/", userImageView);
 
+		//Login fragment test
+		Button loginBtn= (Button)mRootView.findViewById(R.id.progile_login_btn);
+		loginBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mParentActivity.showNextView(new LoginFragment());
+				
+			}
+		});
+		
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, profileItemsList);
 		mListView.setAdapter(adapter);

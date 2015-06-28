@@ -8,5 +8,7 @@ public interface HttpResponseListener {
 			int responseCode);
 
 	Boolean setGetStatus(JSONObject finalResult, String getUrl, int responseCode);
+	
+	Boolean setPutStatus(JSONObject finalResult, String putUrl, int responseCode);
 
 }
