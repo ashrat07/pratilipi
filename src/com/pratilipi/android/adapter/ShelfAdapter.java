@@ -1,7 +1,14 @@
 package com.pratilipi.android.adapter;
 
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pratilipi.android.R;
+import com.pratilipi.android.model.Book;
+import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.ui.SplashActivity;
+import com.pratilipi.android.util.FontManager;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ShelfAdapter extends ArrayAdapter<String> {
+public class ShelfAdapter extends ArrayAdapter<Shelf> {
 
 	SplashActivity activity;
 	int resource;
@@ -22,7 +29,7 @@ public class ShelfAdapter extends ArrayAdapter<String> {
 		TextView titleEnTextView;
 	}
 
-	public ShelfAdapter(Context context, int resource, String[] list) {
+	public ShelfAdapter(Context context, int resource, List<Shelf> list) {
 		super(context, resource, list);
 		this.activity = (SplashActivity) context;
 		this.resource = resource;
@@ -47,11 +54,16 @@ public class ShelfAdapter extends ArrayAdapter<String> {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		String item = getItem(position);
-		String url = "http://lorempixel.com/400/400/sports/" + (position % 10);
-		activity.mImageLoader.displayImage(url, viewHolder.imageView);
-		viewHolder.titleTextView.setText(item);
-		viewHolder.titleEnTextView.setText(item);
+		Shelf shelf = getItem(position);
+		Gson gson = new Gson();
+		Book book = gson.fromJson(shelf.content, new TypeToken<Book>() {
+		}.getType());
+		activity.mImageLoader.displayImage(book.coverImageUrl,
+				viewHolder.imageView);
+		viewHolder.titleTextView.setText(book.title);
+		viewHolder.titleTextView.setTypeface(FontManager.getInstance().get(
+				shelf.language));
+		viewHolder.titleEnTextView.setText(book.titleEn);
 		return convertView;
 	}
 

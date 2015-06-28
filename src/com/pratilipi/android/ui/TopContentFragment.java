@@ -8,13 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.pratilipi.android.R;
-import com.pratilipi.android.adapter.TopContentAdapter;
-import com.pratilipi.android.http.HttpGet;
-import com.pratilipi.android.model.Book;
-import com.pratilipi.android.util.AppState;
-import com.pratilipi.android.util.PConstants;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -25,6 +18,13 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.TopContentAdapter;
+import com.pratilipi.android.http.HttpGet;
+import com.pratilipi.android.model.Book;
+import com.pratilipi.android.util.AppState;
+import com.pratilipi.android.util.PConstants;
 
 public class TopContentFragment extends BaseFragment {
 

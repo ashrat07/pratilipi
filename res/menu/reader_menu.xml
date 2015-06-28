@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/change_font"
+        android:icon="@drawable/change_font"
+        android:showAsAction="ifRoom"
+        android:title="@string/change_font"/>
+    <item
+        android:id="@+id/bookmark"
+        android:icon="@drawable/bookmark"
+        android:showAsAction="ifRoom"
+        android:title="@string/bookmark"/>
+
+</menu>

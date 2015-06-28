@@ -11,7 +11,7 @@ import com.pratilipi.android.R;
 
 public class AboutFragment extends BaseFragment {
 
-	public static final String TAG_NAME = "about";
+	public static final String TAG_NAME = "About";
 
 	@Override
 	public String getCustomTag() {

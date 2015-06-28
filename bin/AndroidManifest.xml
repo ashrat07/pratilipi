@@ -35,6 +35,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        <activity
+            android:name=".ui.ReaderActivity"
+            android:label="@string/reader"
+            android:theme="@style/PTheme" />
 
         <provider
             android:name=".provider.PSuggestionProvider"
