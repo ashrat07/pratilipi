@@ -1,13 +1,10 @@
 package com.pratilipi.android.util;
 
-import android.graphics.Typeface;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
-import android.text.style.StyleSpan;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 
 public class PageSplitter {
 
@@ -87,7 +84,7 @@ public class PageSplitter {
 	private void appendTextToLine(String appendedText, TextPaint textPaint,
 			int textWidth) {
 		currentLineHeight = Math.max(currentLineHeight, textLineHeight);
-		currentLine.append(renderToSpannable(appendedText, textPaint));
+		currentLine.append(appendedText);
 		currentLineWidth += textWidth;
 	}
 
@@ -102,15 +99,5 @@ public class PageSplitter {
 		lastPage.append(currentLine);
 		copyPages.add(lastPage);
 		return copyPages;
-	}
-
-	private SpannableString renderToSpannable(String text, TextPaint textPaint) {
-		SpannableString spannable = new SpannableString(text);
-
-		if (textPaint.isFakeBoldText()) {
-			spannable.setSpan(new StyleSpan(Typeface.BOLD), 0,
-					spannable.length(), 0);
-		}
-		return spannable;
 	}
 }

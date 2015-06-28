@@ -27,6 +27,7 @@ import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
+import com.pratilipi.android.util.PUtils;
 import com.pratilipi.android.util.PageSplitter;
 import com.pratilipi.android.util.SystemUiHelper;
 
@@ -42,7 +43,7 @@ public class ReaderActivity extends FragmentActivity implements
 	private SeekBar mSeekBar;
 
 	private Shelf mShelf;
-	private List<CharSequence> mPages;
+	private List<CharSequence> mPageTexts;
 	private Boolean isOnClick;
 	private float mDownX;
 	private float SCROLL_THRESHOLD = 20;
@@ -98,7 +99,6 @@ public class ReaderActivity extends FragmentActivity implements
 					}
 				});
 
-		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 		mViewPager.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
@@ -139,7 +139,7 @@ public class ReaderActivity extends FragmentActivity implements
 					@Override
 					public void onPageSelected(int position) {
 						mChapterTextView.setText("Page " + (position + 1)
-								+ " of " + mPages.size());
+								+ " of " + mPageTexts.size());
 						mSeekBar.setProgress(position);
 					}
 
@@ -165,7 +165,7 @@ public class ReaderActivity extends FragmentActivity implements
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				if (progress < mPages.size()) {
+				if (progress < mPageTexts.size()) {
 					mViewPager.setCurrentItem(progress, true);
 				}
 			}
@@ -234,10 +234,12 @@ public class ReaderActivity extends FragmentActivity implements
 				try {
 					String pageContent = finalResult.getString("pageContent");
 					if (pageContent != null) {
-
-						PageSplitter pageSplitter = new PageSplitter(
-								mViewPager.getWidth(), mViewPager.getHeight(),
-								1, 0);
+						int width = mViewPager.getWidth()
+								- PUtils.convertDpToPixel(20, this);
+						int height = mViewPager.getHeight()
+								- PUtils.convertDpToPixel(40, this);
+						PageSplitter pageSplitter = new PageSplitter(width,
+								height, 1, 0);
 
 						TextPaint textPaint = new TextPaint();
 						textPaint.setTypeface(FontManager.getInstance().get(
@@ -248,12 +250,14 @@ public class ReaderActivity extends FragmentActivity implements
 						pageSplitter.append(Html.fromHtml(pageContent)
 								.toString(), textPaint);
 
-						mPages = pageSplitter.getPages();
+						mPageTexts = pageSplitter.getPages();
 						mViewPager.setAdapter(new TextPagerAdapter(
-								getSupportFragmentManager(), mPages));
+								getSupportFragmentManager(), mPageTexts,
+								mShelf.language));
 
-						mChapterTextView.setText("Page 1 of " + mPages.size());
-						mSeekBar.setMax(mPages.size() - 1);
+						mChapterTextView.setText("Page 1 of "
+								+ mPageTexts.size());
+						mSeekBar.setMax(mPageTexts.size() - 1);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
