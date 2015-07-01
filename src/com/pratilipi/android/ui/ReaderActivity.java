@@ -1,7 +1,6 @@
 package com.pratilipi.android.ui;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,24 +10,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.text.Html;
-import android.text.TextPaint;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.pratilipi.android.R;
-import com.pratilipi.android.adapter.TextPagerAdapter;
+import com.pratilipi.android.htmltextview.HtmlTextView;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
-import com.pratilipi.android.util.PUtils;
-import com.pratilipi.android.util.PageSplitter;
 import com.pratilipi.android.util.SystemUiHelper;
 
 public class ReaderActivity extends FragmentActivity implements
@@ -36,14 +31,15 @@ public class ReaderActivity extends FragmentActivity implements
 
 	private SystemUiHelper mHelper;
 
-	private ViewPager mViewPager;
+	private WebView mWebView;
 	private View mProgressBarLayout;
 	private View mControlView;
 	private TextView mChapterTextView;
 	private SeekBar mSeekBar;
 
 	private Shelf mShelf;
-	private List<CharSequence> mPageTexts;
+
+	// private List<CharSequence> mPageTexts;
 	private Boolean isOnClick;
 	private float mDownX;
 	private float SCROLL_THRESHOLD = 20;
@@ -58,7 +54,7 @@ public class ReaderActivity extends FragmentActivity implements
 
 		setContentView(R.layout.activity_reader);
 
-		mViewPager = (ViewPager) findViewById(R.id.view_pager);
+		mWebView = (WebView) findViewById(R.id.web_view);
 		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
 		mControlView = findViewById(R.id.control_view);
 		mChapterTextView = (TextView) findViewById(R.id.chapter_text_view);
@@ -99,77 +95,78 @@ public class ReaderActivity extends FragmentActivity implements
 					}
 				});
 
-		mViewPager.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View view, MotionEvent event) {
-				switch (event.getAction()) {
-				// when user first touches the screen to swap
-				case MotionEvent.ACTION_DOWN: {
-					mDownX = event.getX();
-					isOnClick = true;
-					break;
-				}
-
-				case MotionEvent.ACTION_CANCEL:
-				case MotionEvent.ACTION_UP:
-					if (isOnClick) {
-						if (mHelper.isShowing()) {
-							mHelper.hide();
-						} else {
-							mHelper.show();
-						}
-					}
-					break;
-
-				case MotionEvent.ACTION_MOVE:
-					float currentX = event.getX();
-					if (isOnClick
-							&& Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
-						isOnClick = false;
-					}
-					break;
-				}
-				return false;
-			}
-		});
-		mViewPager
-				.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-					@Override
-					public void onPageSelected(int position) {
-						mChapterTextView.setText("Page " + (position + 1)
-								+ " of " + mPageTexts.size());
-						mSeekBar.setProgress(position);
-					}
-
-					@Override
-					public void onPageScrolled(int position,
-							float positionOffset, int positionOffsetPixels) {
-					}
-
-					@Override
-					public void onPageScrollStateChanged(int state) {
-					}
-				});
-		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				if (progress < mPageTexts.size()) {
-					mViewPager.setCurrentItem(progress, true);
-				}
-			}
-		});
+		// mHtmlTextView.setOnTouchListener(new View.OnTouchListener() {
+		//
+		// @Override
+		// public boolean onTouch(View view, MotionEvent event) {
+		// switch (event.getAction()) {
+		// // when user first touches the screen to swap
+		// case MotionEvent.ACTION_DOWN: {
+		// mDownX = event.getX();
+		// isOnClick = true;
+		// break;
+		// }
+		//
+		// case MotionEvent.ACTION_CANCEL:
+		// case MotionEvent.ACTION_UP:
+		// if (isOnClick) {
+		// if (mHelper.isShowing()) {
+		// mHelper.hide();
+		// } else {
+		// mHelper.show();
+		// }
+		// }
+		// break;
+		//
+		// case MotionEvent.ACTION_MOVE:
+		// float currentX = event.getX();
+		// if (isOnClick
+		// && Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
+		// isOnClick = false;
+		// }
+		// break;
+		// }
+		// return false;
+		// }
+		// });
+		// mViewPager
+		// .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		//
+		// @Override
+		// public void onPageSelected(int position) {
+		// mChapterTextView.setText("Page " + (position + 1)
+		// + " of " + mPageTexts.size());
+		// mSeekBar.setProgress(position);
+		// }
+		//
+		// @Override
+		// public void onPageScrolled(int position,
+		// float positionOffset, int positionOffsetPixels) {
+		// }
+		//
+		// @Override
+		// public void onPageScrollStateChanged(int state) {
+		// }
+		// });
+		// mSeekBar.setOnSeekBarChangeListener(new
+		// SeekBar.OnSeekBarChangeListener() {
+		//
+		// @Override
+		// public void onStopTrackingTouch(SeekBar seekBar) {
+		// }
+		//
+		// @Override
+		// public void onStartTrackingTouch(SeekBar seekBar) {
+		// }
+		//
+		// @Override
+		// public void onProgressChanged(SeekBar seekBar, int progress,
+		// boolean fromUser) {
+		// if (progress < mPageTexts.size()) {
+		// mViewPager.setCurrentItem(progress, true);
+		// }
+		// }
+		// });
 
 		if (getIntent().getExtras() != null) {
 			Shelf shelf = (Shelf) getIntent().getExtras()
@@ -234,30 +231,38 @@ public class ReaderActivity extends FragmentActivity implements
 				try {
 					String pageContent = finalResult.getString("pageContent");
 					if (pageContent != null) {
-						int width = mViewPager.getWidth()
-								- PUtils.convertDpToPixel(20, this);
-						int height = mViewPager.getHeight()
-								- PUtils.convertDpToPixel(40, this);
-						PageSplitter pageSplitter = new PageSplitter(width,
-								height, 1, 0);
+						// int width = mViewPager.getWidth()
+						// - PUtils.convertDpToPixel(20, this);
+						// int height = mViewPager.getHeight()
+						// - PUtils.convertDpToPixel(40, this);
+						// PageSplitter pageSplitter = new PageSplitter(width,
+						// height, 1, 0);
+						//
+						// TextPaint textPaint = new TextPaint();
+						// textPaint.setTypeface(FontManager.getInstance().get(
+						// mShelf.language));
+						// textPaint.setTextSize(getResources().getDimension(
+						// R.dimen.text_small));
+						//
+						// pageSplitter.append(Html.fromHtml(pageContent)
+						// .toString(), textPaint);
+						//
+						// mPageTexts = pageSplitter.getPages();
+						// mViewPager.setAdapter(new TextPagerAdapter(
+						// getSupportFragmentManager(), mPageTexts,
+						// mShelf.language));
+						// mChapterTextView.setText("Page 1 of "
+						// + mPageTexts.size());
+						// mSeekBar.setMax(mPageTexts.size() - 1);
 
-						TextPaint textPaint = new TextPaint();
-						textPaint.setTypeface(FontManager.getInstance().get(
-								mShelf.language));
-						textPaint.setTextSize(getResources().getDimension(
-								R.dimen.text_small));
+						// mHtmlTextView.setTypeface(FontManager.getInstance()
+						// .get(mShelf.language));
+						// mHtmlTextView.setHtmlFromString(pageContent, false);
+						// mHtmlTextView.setText(Html.fromHtml(pageContent));
 
-						pageSplitter.append(Html.fromHtml(pageContent)
-								.toString(), textPaint);
+						mWebView.getSettings().setJavaScriptEnabled(true);
+						mWebView.loadUrl("http://cubiq.org/dropbox/SwipeView/demo/ereader/");
 
-						mPageTexts = pageSplitter.getPages();
-						mViewPager.setAdapter(new TextPagerAdapter(
-								getSupportFragmentManager(), mPageTexts,
-								mShelf.language));
-
-						mChapterTextView.setText("Page 1 of "
-								+ mPageTexts.size());
-						mSeekBar.setMax(mPageTexts.size() - 1);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
