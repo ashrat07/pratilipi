@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
@@ -18,11 +19,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.pratilipi.android.R;
-import com.pratilipi.android.htmltextview.HtmlTextView;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Shelf;
-import com.pratilipi.android.util.FontManager;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.SystemUiHelper;
 
@@ -95,59 +94,41 @@ public class ReaderActivity extends FragmentActivity implements
 					}
 				});
 
-		// mHtmlTextView.setOnTouchListener(new View.OnTouchListener() {
-		//
-		// @Override
-		// public boolean onTouch(View view, MotionEvent event) {
-		// switch (event.getAction()) {
-		// // when user first touches the screen to swap
-		// case MotionEvent.ACTION_DOWN: {
-		// mDownX = event.getX();
-		// isOnClick = true;
-		// break;
-		// }
-		//
-		// case MotionEvent.ACTION_CANCEL:
-		// case MotionEvent.ACTION_UP:
-		// if (isOnClick) {
-		// if (mHelper.isShowing()) {
-		// mHelper.hide();
-		// } else {
-		// mHelper.show();
-		// }
-		// }
-		// break;
-		//
-		// case MotionEvent.ACTION_MOVE:
-		// float currentX = event.getX();
-		// if (isOnClick
-		// && Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
-		// isOnClick = false;
-		// }
-		// break;
-		// }
-		// return false;
-		// }
-		// });
-		// mViewPager
-		// .addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-		//
-		// @Override
-		// public void onPageSelected(int position) {
-		// mChapterTextView.setText("Page " + (position + 1)
-		// + " of " + mPageTexts.size());
-		// mSeekBar.setProgress(position);
-		// }
-		//
-		// @Override
-		// public void onPageScrolled(int position,
-		// float positionOffset, int positionOffsetPixels) {
-		// }
-		//
-		// @Override
-		// public void onPageScrollStateChanged(int state) {
-		// }
-		// });
+		mWebView.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View view, MotionEvent event) {
+				switch (event.getAction()) {
+				// when user first touches the screen to swap
+				case MotionEvent.ACTION_DOWN: {
+					mDownX = event.getX();
+					isOnClick = true;
+					break;
+				}
+
+				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_UP:
+					if (isOnClick) {
+						if (mHelper.isShowing()) {
+							mHelper.hide();
+						} else {
+							mHelper.show();
+						}
+					}
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+					float currentX = event.getX();
+					if (isOnClick
+							&& Math.abs(mDownX - currentX) > SCROLL_THRESHOLD) {
+						isOnClick = false;
+					}
+					break;
+				}
+				return false;
+			}
+		});
+
 		// mSeekBar.setOnSeekBarChangeListener(new
 		// SeekBar.OnSeekBarChangeListener() {
 		//
@@ -229,39 +210,30 @@ public class ReaderActivity extends FragmentActivity implements
 			mProgressBarLayout.setVisibility(View.GONE);
 			if (finalResult != null) {
 				try {
-					String pageContent = finalResult.getString("pageContent");
+					final String pageContent = finalResult
+							.getString("pageContent");
 					if (pageContent != null) {
-						// int width = mViewPager.getWidth()
-						// - PUtils.convertDpToPixel(20, this);
-						// int height = mViewPager.getHeight()
-						// - PUtils.convertDpToPixel(40, this);
-						// PageSplitter pageSplitter = new PageSplitter(width,
-						// height, 1, 0);
-						//
-						// TextPaint textPaint = new TextPaint();
-						// textPaint.setTypeface(FontManager.getInstance().get(
-						// mShelf.language));
-						// textPaint.setTextSize(getResources().getDimension(
-						// R.dimen.text_small));
-						//
-						// pageSplitter.append(Html.fromHtml(pageContent)
-						// .toString(), textPaint);
-						//
-						// mPageTexts = pageSplitter.getPages();
-						// mViewPager.setAdapter(new TextPagerAdapter(
-						// getSupportFragmentManager(), mPageTexts,
-						// mShelf.language));
-						// mChapterTextView.setText("Page 1 of "
-						// + mPageTexts.size());
-						// mSeekBar.setMax(mPageTexts.size() - 1);
-
-						// mHtmlTextView.setTypeface(FontManager.getInstance()
-						// .get(mShelf.language));
-						// mHtmlTextView.setHtmlFromString(pageContent, false);
-						// mHtmlTextView.setText(Html.fromHtml(pageContent));
-
 						mWebView.getSettings().setJavaScriptEnabled(true);
-						mWebView.loadUrl("http://cubiq.org/dropbox/SwipeView/demo/ereader/");
+						if (PConstants.CONTENT_LANGUAGE.HINDI.toString()
+								.equals(mShelf.language)) {
+							mWebView.loadUrl("file:///android_asset/hindi_wrapper.html");
+						} else if (PConstants.CONTENT_LANGUAGE.TAMIL.toString()
+								.equals(mShelf.language)) {
+							mWebView.loadUrl("file:///android_asset/tamil_wrapper.html");
+						} else if (PConstants.CONTENT_LANGUAGE.GUJARATI
+								.toString().equals(mShelf.language)) {
+							mWebView.loadUrl("file:///android_asset/gujarati_wrapper.html");
+						}
+
+						new Handler().postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								mWebView.loadUrl("javascript:paginate(\""
+										+ pageContent.replace("\"", "'")
+										+ "\")");
+							}
+						}, 1000);
 
 					}
 				} catch (JSONException e) {
