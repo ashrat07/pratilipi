@@ -1,19 +1,23 @@
 package com.pratilipi.android.ui;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,8 +29,7 @@ import com.pratilipi.android.model.Shelf;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.SystemUiHelper;
 
-public class ReaderActivity extends FragmentActivity implements
-		HttpResponseListener {
+public class ReaderActivity extends Activity implements HttpResponseListener {
 
 	private SystemUiHelper mHelper;
 
@@ -94,6 +97,9 @@ public class ReaderActivity extends FragmentActivity implements
 					}
 				});
 
+		mWebView.getSettings().setJavaScriptEnabled(true);
+		JavaScriptInterface jsInterface = new JavaScriptInterface(this);
+		mWebView.addJavascriptInterface(jsInterface, "JSInterface");
 		mWebView.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
@@ -213,7 +219,6 @@ public class ReaderActivity extends FragmentActivity implements
 					final String pageContent = finalResult
 							.getString("pageContent");
 					if (pageContent != null) {
-						mWebView.getSettings().setJavaScriptEnabled(true);
 						if (PConstants.CONTENT_LANGUAGE.HINDI.toString()
 								.equals(mShelf.language)) {
 							mWebView.loadUrl("file:///android_asset/hindi_wrapper.html");
@@ -248,6 +253,25 @@ public class ReaderActivity extends FragmentActivity implements
 	public Boolean setPostStatus(JSONObject finalResult, String postUrl,
 			int responseCode) {
 		return null;
+	}
+
+	class JavaScriptInterface {
+
+		private Activity activity;
+
+		public JavaScriptInterface(Activity activity) {
+			this.activity = activity;
+		}
+
+		@JavascriptInterface
+		public void increment(int page) {
+			Log.e("increment", "~~~~~~~~~~~~~~" + page);
+		}
+
+		@JavascriptInterface
+		public void decrement(int page) {
+			Log.e("decrement", "############" + page);
+		}
 	}
 
 }

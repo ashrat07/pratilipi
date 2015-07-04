@@ -137,6 +137,7 @@
 				if (upcoming != ereader.masterPages[i].dataset.pageIndex) {
 					el = ereader.masterPages[i].querySelector('div');
 					el.innerHTML = pages[upcoming];
+					window.JSInterface.increment(upcoming);
 				}
 			}
 		});
