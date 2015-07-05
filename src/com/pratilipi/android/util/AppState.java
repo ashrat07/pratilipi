@@ -20,7 +20,7 @@ public class AppState {
 	private static final String PASSWORD = "PASSWORD";
 	private static final String LOGIN_TYPE = "LOGIN_TYPE";
 	
-	private static String ACCESS_TOKEN = null;
+	private static String ACCESS_TOKEN = "";
 
 	private static AppState instance;
 

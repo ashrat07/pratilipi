@@ -1,5 +1,9 @@
 package com.pratilipi.android.ui;
 
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +13,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.ProfileAdapter;
+import com.pratilipi.android.http.HttpGet;
+import com.pratilipi.android.iHelper.IHttpResponseHelper;
+import com.pratilipi.android.model.Login;
+import com.pratilipi.android.model.UserProfile;
+import com.pratilipi.android.util.AppState;
+import com.pratilipi.android.util.PConstants;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragment implements
+		IHttpResponseHelper {
 
 	public static final String TAG_NAME = "Profile";
+	private AppState mAppState;
+	private static String userName = "";
+	private static String pwd = "";
+	private UserProfile userProfileObject;
 
 	private Integer[] profileItemsList = new Integer[] {
 			R.string.reset_content_language, R.string.reset_menu_language,
@@ -35,6 +51,23 @@ public class ProfileFragment extends BaseFragment {
 		mRootView = inflater.inflate(R.layout.fragment_profile, container,
 				false);
 
+		// checks for access token. Does auto login if access token is empty
+		mAppState = AppState.getInstance();
+		if (mAppState.getAccessToken().isEmpty()) {
+			Login loginObj = mAppState.getUserCredentials();
+			if (loginObj != null && loginObj.loginName != null
+					&& !loginObj.loginName.isEmpty()
+					&& loginObj.loginPassword != null
+					&& !loginObj.loginPassword.isEmpty()) {
+				userName = loginObj.loginName;
+				pwd = loginObj.loginPassword;
+				makeRequest();
+			} else {
+				mParentActivity.showNextView(new LoginFragment());
+			}
+		}
+
+		String imgURI = "http://lorempixel.com/200/200/people/"; // Default URL
 		TextView userName = (TextView) mRootView.findViewById(R.id.user_name);
 		TextView memberSince = (TextView) mRootView
 				.findViewById(R.id.member_since);
@@ -43,24 +76,29 @@ public class ProfileFragment extends BaseFragment {
 		ImageView userImageView = (ImageView) mRootView
 				.findViewById(R.id.profile_img);
 		mListView = (ListView) mRootView.findViewById(R.id.profile_list_view);
+		if (userProfileObject != null) {
+			if (userProfileObject.firstName != null)
+				userName.setText(userProfileObject.firstName);
+			if (userProfileObject.memberDOJ != null)
+				memberSince.setText(userProfileObject.memberDOJ.toString());
+			// Check not required for below as it will take default values
+			imgURI = userProfileObject.userImgUrl;
+			userShelfCount.setText(userProfileObject.shelfBookCount);
+		}
+		mParentActivity.mImageLoader.displayImage(imgURI, userImageView);
 
-		userName.setText("DEMO USER");
-		memberSince.setText("Member Since");
-		userShelfCount.setText("17 Books in shelf");
-		mParentActivity.mImageLoader.displayImage(
-				"http://lorempixel.com/200/200/people/", userImageView);
-
-		//Login fragment test
-		Button loginBtn= (Button)mRootView.findViewById(R.id.progile_login_btn);
+		// Login fragment test: remove button when testing is done
+		Button loginBtn = (Button) mRootView
+				.findViewById(R.id.progile_login_btn);
 		loginBtn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				mParentActivity.showNextView(new LoginFragment());
-				
+
 			}
 		});
-		
+
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, profileItemsList);
 		mListView.setAdapter(adapter);
@@ -86,4 +124,141 @@ public class ProfileFragment extends BaseFragment {
 		});
 		return mRootView;
 	}
+
+	@Override
+	public void responseSuccess() {
+
+		if (!mAppState.getAccessToken().isEmpty()) {
+			HttpGet userProfileGet = new HttpGet(this,
+					PConstants.USERPROFILE_URL);
+			HashMap<String, String> requestParameters = new HashMap<>();
+			requestParameters.put(PConstants.URL, PConstants.USERPROFILE_URL);
+			requestParameters.put("accessToken", mAppState.getAccessToken());
+			mParentActivity.showProgressBar();
+			userProfileGet.run(requestParameters);
+		} else {
+			mParentActivity.showNextView(new LoginFragment());
+		}
+	}
+
+	@Override
+	public void responseFailure(String failureMessage) {
+		// TODO Auto-generated method stub
+		mParentActivity.hideProgressBar();
+		Toast.makeText(mParentActivity, failureMessage, 5).show();
+	}
+
+	@Override
+	public void makeRequest() {
+		mParentActivity.showProgressBar();
+		mParentActivity.mLoginManager.loginRequest(userName, pwd, this);
+
+	}
+
+	@Override
+	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
+			int responseCode) {
+		mParentActivity.hideProgressBar();
+		if (getUrl.equals(PConstants.USERPROFILE_URL)) {
+			try {
+				if (finalResult != null) {
+					if (finalResult.has("userData")
+							&& finalResult.getString("userData") != null) {
+						JSONObject userDataJSON = finalResult
+								.getJSONObject("userData");
+						if (userDataJSON != null) {
+							if (userDataJSON.has("id")
+									&& userDataJSON.getString("id") != null) {
+								userProfileObject = new UserProfile();
+								userProfileObject.id = userDataJSON
+										.getString("id");
+								if (userDataJSON.has("id")
+										&& userDataJSON.getString("id") != null)
+									userProfileObject.id = userDataJSON
+											.getString("id");
+								if (userDataJSON.has("hasPassword")
+										&& userDataJSON
+												.getString("hasPassword") != null)
+									userProfileObject.hasPassword = userDataJSON
+											.getBoolean("hasPassword");
+								if (userDataJSON.has("firstName")
+										&& userDataJSON.getString("firstName") != null)
+									userProfileObject.firstName = userDataJSON
+											.getString("firstName");
+								if (userDataJSON.has("hasFirstName")
+										&& userDataJSON
+												.getString("hasFirstName") != null)
+									userProfileObject.hasFirstName = userDataJSON
+											.getBoolean("hasFirstName");
+								if (userDataJSON.has("hasLastName")
+										&& userDataJSON
+												.getString("hasLastName") != null)
+									userProfileObject.hasLastName = userDataJSON
+											.getBoolean("hasLastName");
+								if (userDataJSON.has("name")
+										&& userDataJSON.getString("name") != null)
+									userProfileObject.name = userDataJSON
+											.getString("name");
+								if (userDataJSON.has("hasName")
+										&& userDataJSON.getString("hasName") != null)
+									userProfileObject.hasName = userDataJSON
+											.getBoolean("hasName");
+								if (userDataJSON.has("email")
+										&& userDataJSON.getString("email") != null)
+									userProfileObject.email = userDataJSON
+											.getString("email");
+								if (userDataJSON.has("hasEmail")
+										&& userDataJSON.getString("hasEmail") != null)
+									userProfileObject.hasEmail = userDataJSON
+											.getBoolean("hasEmail");
+								if (userDataJSON.has("hasDateOfBirth")
+										&& userDataJSON
+												.getString("hasDateOfBirth") != null)
+									userProfileObject.hasDOB = userDataJSON
+											.getBoolean("hasDateOfBirth");
+								if (userDataJSON.has("hasGender")
+										&& userDataJSON.getString("hasGender") != null)
+									userProfileObject.hasGender = userDataJSON
+											.getBoolean("hasGender");
+								if (userDataJSON.has("hasFacebookRefreshToken")
+										&& userDataJSON
+												.getString("hasFacebookRefreshToken") != null)
+									userProfileObject.hasFBRefreshToken = userDataJSON
+											.getBoolean("hasFacebookRefreshToken");
+								if (userDataJSON.has("hasGoogleRefreshToken")
+										&& userDataJSON
+												.getString("hasGoogleRefreshToken") != null)
+									userProfileObject.hasGoogleRefreshToken = userDataJSON
+											.getBoolean("hasGoogleRefreshToken");
+								if (userDataJSON.has("hasProfilePicUrl")
+										&& userDataJSON
+												.getString("hasProfilePicUrl") != null)
+									userProfileObject.hasProfilePicUrl = userDataJSON
+											.getBoolean("hasProfilePicUrl");
+								if (userDataJSON.has("status")
+										&& userDataJSON.getString("status") != null)
+									userProfileObject.status = userDataJSON
+											.getString("status");
+
+								return true;
+							}// end of userJSON has id check
+
+						}// end of userJSON Object null check
+
+					}// end of has user data check
+
+				}// end of final result check
+				responseFailure("Request is successfull but no valid response found");
+				return false;
+			} catch (Exception e) {
+				responseFailure("Request unsuccessfull due to " + e);
+			}
+
+		} else {
+			responseFailure("Request URL not found");
+		}
+
+		return null;
+	}
+
 }

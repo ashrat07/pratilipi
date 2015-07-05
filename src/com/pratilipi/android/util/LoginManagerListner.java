@@ -48,6 +48,7 @@ public class LoginManagerListner implements HttpResponseListener {
 						mAppState.setUserCredentials(loginObject);
 						if (loginHelper != null) {
 							 loginHelper.responseSuccess();
+							 return true;
 						}
 					}
 				} catch (Exception e) {
@@ -59,7 +60,7 @@ public class LoginManagerListner implements HttpResponseListener {
 					 loginHelper.responseFailure("Please check your internet connection.");
 		}
 		if (loginHelper != null) 
-			 loginHelper.responseSuccess();
+			 loginHelper.responseFailure("Please check your internet connection.");
 		return null;
 	}
 

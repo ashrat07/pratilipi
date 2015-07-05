@@ -67,18 +67,20 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 
 	@Override
 	public void makeRequest() {
-		//TODO 
+		mParentActivity.showProgressBar();
 		mParentActivity.mLoginManager.loginRequest(userName, pwd, this);
 	}
 
 	@Override
 	public void responseSuccess() {
 		// TODO Auto-generated method stub
+		mParentActivity.hideProgressBar();
 		Toast.makeText(mParentActivity, "Login Success", 10).show();;
 	}
 
 	@Override
 	public void responseFailure(String failureMessage) {
+		mParentActivity.hideProgressBar();
 		mParentActivity.showError(failureMessage);
 	}
 

@@ -69,17 +69,20 @@ public class RegisterFragment extends BaseFragment implements IHttpResponseHelpe
 	@Override
 	public void responseSuccess() {
 		// TODO Auto-generated method stub
+		mParentActivity.hideProgressBar();
 		Toast.makeText(mParentActivity, "Registered", 10).show();
 	}
 
 	@Override
 	public void responseFailure(String failureMessage) {
 		// TODO Auto-generated method stub
+		mParentActivity.hideProgressBar();
 		Toast.makeText(mParentActivity, "Registration Failure: "+failureMessage, 10).show();
 	}
 
 	@Override
 	public void makeRequest() {
+		mParentActivity.showProgressBar();
 		mParentActivity.mRegisterManager.registerUserRequest(userName, userPwd, userEmail, this);
 		
 	}
