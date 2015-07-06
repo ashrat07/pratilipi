@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
-import com.pratilipi.android.model.Shelf;
+import com.pratilipi.android.model.ShelfContent;
 import com.pratilipi.android.ui.SplashActivity;
 import com.pratilipi.android.util.FontManager;
 
@@ -18,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ShelfAdapter extends ArrayAdapter<Shelf> {
+public class ShelfContentAdapter extends ArrayAdapter<ShelfContent> {
 
 	SplashActivity activity;
 	int resource;
@@ -29,7 +29,8 @@ public class ShelfAdapter extends ArrayAdapter<Shelf> {
 		TextView titleEnTextView;
 	}
 
-	public ShelfAdapter(Context context, int resource, List<Shelf> list) {
+	public ShelfContentAdapter(Context context, int resource,
+			List<ShelfContent> list) {
 		super(context, resource, list);
 		this.activity = (SplashActivity) context;
 		this.resource = resource;
@@ -54,15 +55,15 @@ public class ShelfAdapter extends ArrayAdapter<Shelf> {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		Shelf shelf = getItem(position);
+		ShelfContent shelfContent = getItem(position);
 		Gson gson = new Gson();
-		Book book = gson.fromJson(shelf.content, new TypeToken<Book>() {
+		Book book = gson.fromJson(shelfContent.content, new TypeToken<Book>() {
 		}.getType());
 		activity.mImageLoader.displayImage(book.coverImageUrl,
 				viewHolder.imageView);
 		viewHolder.titleTextView.setText(book.title);
 		viewHolder.titleTextView.setTypeface(FontManager.getInstance().get(
-				shelf.language));
+				shelfContent.language));
 		viewHolder.titleEnTextView.setText(book.titleEn);
 		return convertView;
 	}

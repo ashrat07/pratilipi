@@ -108,11 +108,13 @@ public class Book implements Parcelable {
 				this.summary = obj.getString(SUMMARY);
 			}
 			if (obj.has(INDEX)) {
-				JSONArray array = obj.getJSONArray(INDEX);
+				String indexString = obj.getString(INDEX);
+				JSONArray array = new JSONArray(indexString);
 				if (array != null) {
 					this.index = new ArrayList<>();
 					for (int i = 0; i < array.length(); i++) {
-						this.index.add(new Chapter(obj));
+						JSONObject chapterObj = array.getJSONObject(i);
+						this.index.add(new Chapter(chapterObj));
 					}
 				}
 			}

@@ -3,23 +3,27 @@ package com.pratilipi.android.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Shelf implements Parcelable {
+public class PageContent implements Parcelable {
 
 	public long id;
 	public long pratilipiId;
+	public int pageNo;
 	public String content;
 	public String language;
 
-	public Shelf(long id, long pratilipiId, String content, String language) {
+	public PageContent(long id, long pratilipiId, int pageNo, String content,
+			String language) {
 		this.id = id;
 		this.pratilipiId = pratilipiId;
+		this.pageNo = pageNo;
 		this.content = content;
 		this.language = language;
 	}
 
-	protected Shelf(Parcel in) {
+	protected PageContent(Parcel in) {
 		id = in.readLong();
 		pratilipiId = in.readLong();
+		pageNo = in.readInt();
 		content = in.readString();
 		language = in.readString();
 	}
@@ -33,19 +37,20 @@ public class Shelf implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeLong(id);
 		dest.writeLong(pratilipiId);
+		dest.writeInt(pageNo);
 		dest.writeString(content);
 		dest.writeString(language);
 	}
 
-	public static final Parcelable.Creator<Shelf> CREATOR = new Parcelable.Creator<Shelf>() {
+	public static final Parcelable.Creator<PageContent> CREATOR = new Parcelable.Creator<PageContent>() {
 		@Override
-		public Shelf createFromParcel(Parcel in) {
-			return new Shelf(in);
+		public PageContent createFromParcel(Parcel in) {
+			return new PageContent(in);
 		}
 
 		@Override
-		public Shelf[] newArray(int size) {
-			return new Shelf[size];
+		public PageContent[] newArray(int size) {
+			return new PageContent[size];
 		}
 	};
 }

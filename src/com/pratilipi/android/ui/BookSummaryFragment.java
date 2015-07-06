@@ -17,9 +17,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
-import com.pratilipi.android.model.Shelf;
+import com.pratilipi.android.model.ShelfContent;
 import com.pratilipi.android.util.FontManager;
-import com.pratilipi.android.util.ShelfDataSource;
+import com.pratilipi.android.util.ShelfContentDataSource;
 
 public class BookSummaryFragment extends BaseFragment {
 
@@ -43,7 +43,7 @@ public class BookSummaryFragment extends BaseFragment {
 	private TextView mReviewTextView;
 	private TextView mSummaryTextView;
 
-	private ShelfDataSource mDataSource;
+	private ShelfContentDataSource mDataSource;
 
 	@Override
 	public String getCustomTag() {
@@ -113,20 +113,22 @@ public class BookSummaryFragment extends BaseFragment {
 								@Override
 								public void onClick(View v) {
 									Gson gson = new Gson();
-									mDataSource = new ShelfDataSource(
+									mDataSource = new ShelfContentDataSource(
 											mParentActivity);
 									mDataSource.open();
-									Shelf shelf = new Shelf(0, book.id, gson
-											.toJson(book), mParentActivity.mApp
-											.getContentLanguage());
-									mDataSource.createShelfContent(shelf);
+									ShelfContent shelfContent = new ShelfContent(
+											0, book.id, gson.toJson(book),
+											mParentActivity.mApp
+													.getContentLanguage());
+									mDataSource
+											.createShelfContent(shelfContent);
 									Toast.makeText(mParentActivity,
 											"Added to Shelf",
 											Toast.LENGTH_SHORT).show();
 
 									Intent i = new Intent(mParentActivity,
 											ReaderActivity.class);
-									i.putExtra("SHELF", shelf);
+									i.putExtra("SHELF_CONTENT", shelfContent);
 									startActivity(i);
 								}
 							});

@@ -19,7 +19,7 @@ public class Chapter implements Parcelable {
 	public Chapter(JSONObject obj) {
 		try {
 			if (obj.has(TITLE)) {
-				this.title = obj.getString(title);
+				this.title = obj.getString(TITLE);
 			}
 			if (obj.has(PAGE_NO)) {
 				this.pageNo = obj.getInt(PAGE_NO);

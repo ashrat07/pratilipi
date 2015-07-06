@@ -1,6 +1,5 @@
 package com.pratilipi.android.ui;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -10,23 +9,27 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pratilipi.android.R;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
-import com.pratilipi.android.model.Shelf;
+import com.pratilipi.android.model.Book;
+import com.pratilipi.android.model.PageContent;
+import com.pratilipi.android.model.ShelfContent;
 import com.pratilipi.android.util.PConstants;
+import com.pratilipi.android.util.PageContentDataSource;
 import com.pratilipi.android.util.SystemUiHelper;
 
 public class ReaderActivity extends Activity implements HttpResponseListener {
@@ -34,17 +37,23 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	private SystemUiHelper mHelper;
 
 	private WebView mWebView;
-	private View mProgressBarLayout;
 	private View mControlView;
 	private TextView mChapterTextView;
 	private SeekBar mSeekBar;
 
-	private Shelf mShelf;
+	private ShelfContent mShelfContent;
+	private Book mBook;
 
-	// private List<CharSequence> mPageTexts;
+	private int mPratilipiPageNo = 1;
+	private int mCurrentPage;
+	private int mTotalPages;
 	private Boolean isOnClick;
 	private float mDownX;
 	private float SCROLL_THRESHOLD = 20;
+
+	private PageContentDataSource mDataSource;
+	private boolean mPageLoaded;
+	private String mPageLoadContent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +66,6 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		setContentView(R.layout.activity_reader);
 
 		mWebView = (WebView) findViewById(R.id.web_view);
-		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
 		mControlView = findViewById(R.id.control_view);
 		mChapterTextView = (TextView) findViewById(R.id.chapter_text_view);
 		mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
@@ -99,7 +107,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		JavaScriptInterface jsInterface = new JavaScriptInterface(this);
-		mWebView.addJavascriptInterface(jsInterface, "JSInterface");
+		mWebView.addJavascriptInterface(jsInterface, "jsInterface");
 		mWebView.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
@@ -134,33 +142,87 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 				return false;
 			}
 		});
+		mWebView.setWebViewClient(new WebViewClient() {
 
-		// mSeekBar.setOnSeekBarChangeListener(new
-		// SeekBar.OnSeekBarChangeListener() {
-		//
-		// @Override
-		// public void onStopTrackingTouch(SeekBar seekBar) {
-		// }
-		//
-		// @Override
-		// public void onStartTrackingTouch(SeekBar seekBar) {
-		// }
-		//
-		// @Override
-		// public void onProgressChanged(SeekBar seekBar, int progress,
-		// boolean fromUser) {
-		// if (progress < mPageTexts.size()) {
-		// mViewPager.setCurrentItem(progress, true);
-		// }
-		// }
-		// });
+			public void onPageFinished(WebView view, String url) {
+				mPageLoaded = true;
+				if (!TextUtils.isEmpty(mPageLoadContent)) {
+					new Handler().postDelayed(new Runnable() {
 
+						@Override
+						public void run() {
+							mWebView.loadUrl("javascript:paginate(\""
+									+ mPageLoadContent.replace("\"", "'")
+									+ "\")");
+						}
+					}, 500);
+					if (mPratilipiPageNo < mBook.pageCount) {
+						mDownloadHandler.postDelayed(mDownloadRunnable, 5000);
+					}
+				}
+			}
+		});
+
+		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			boolean touched;
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				touched = false;
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				touched = true;
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (touched) {
+					mWebView.loadUrl("javascript:goToPage(" + progress + ")");
+				}
+			}
+		});
+
+		mDataSource = new PageContentDataSource(this);
+		mDataSource.open();
 		if (getIntent().getExtras() != null) {
-			Shelf shelf = (Shelf) getIntent().getExtras()
-					.getParcelable("SHELF");
-			if (shelf != null) {
-				mShelf = shelf;
-				requestContent();
+			ShelfContent shelfContent = (ShelfContent) getIntent().getExtras()
+					.getParcelable("SHELF_CONTENT");
+			if (shelfContent != null) {
+				mShelfContent = shelfContent;
+				if (PConstants.CONTENT_LANGUAGE.HINDI.toString().equals(
+						mShelfContent.language)) {
+					mWebView.loadUrl("file:///android_asset/hindi_wrapper.html");
+				} else if (PConstants.CONTENT_LANGUAGE.TAMIL.toString().equals(
+						mShelfContent.language)) {
+					mWebView.loadUrl("file:///android_asset/tamil_wrapper.html");
+				} else if (PConstants.CONTENT_LANGUAGE.GUJARATI.toString()
+						.equals(mShelfContent.language)) {
+					mWebView.loadUrl("file:///android_asset/gujarati_wrapper.html");
+				}
+				Gson gson = new Gson();
+				mBook = gson.fromJson(shelfContent.content,
+						new TypeToken<Book>() {
+						}.getType());
+				final PageContent pageContent = mDataSource.getPageContent(
+						mShelfContent.pratilipiId, mPratilipiPageNo);
+				if (pageContent != null) {
+					if (mPageLoaded) {
+						mWebView.loadUrl("javascript:paginate(\""
+								+ mPageLoadContent.replace("\"", "'") + "\")");
+						if (mPratilipiPageNo < mBook.pageCount) {
+							mDownloadHandler.postDelayed(mDownloadRunnable,
+									5000);
+						}
+					} else {
+						mPageLoadContent = pageContent.content;
+					}
+				} else {
+					requestContent();
+				}
 			}
 		}
 	}
@@ -198,13 +260,33 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		return true;
 	}
 
+	Handler mDownloadHandler = new Handler();
+	Runnable mDownloadRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			++mPratilipiPageNo;
+			PageContent pageContent = mDataSource.getPageContent(
+					mShelfContent.pratilipiId, mPratilipiPageNo);
+			if (pageContent != null) {
+				mWebView.loadUrl("javascript:append(\""
+						+ pageContent.content.replace("\"", "'") + "\")");
+				if (mPratilipiPageNo < mBook.pageCount) {
+					mDownloadHandler.postDelayed(this, 5000);
+				}
+			} else {
+				requestContent();
+			}
+		}
+	};
+
 	private void requestContent() {
 		HttpGet contentRequest = new HttpGet(this, PConstants.CONTENT_URL);
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.CONTENT_URL);
-		requestHashMap.put("pratilipiId", "" + mShelf.pratilipiId);
-		requestHashMap.put("pageNo", "4");
+		requestHashMap.put("pratilipiId", "" + mShelfContent.pratilipiId);
+		requestHashMap.put("pageNo", String.valueOf(mPratilipiPageNo));
 
 		contentRequest.run(requestHashMap);
 	}
@@ -213,33 +295,34 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
 		if (PConstants.CONTENT_URL.equals(getUrl)) {
-			mProgressBarLayout.setVisibility(View.GONE);
 			if (finalResult != null) {
 				try {
-					final String pageContent = finalResult
-							.getString("pageContent");
-					if (pageContent != null) {
-						if (PConstants.CONTENT_LANGUAGE.HINDI.toString()
-								.equals(mShelf.language)) {
-							mWebView.loadUrl("file:///android_asset/hindi_wrapper.html");
-						} else if (PConstants.CONTENT_LANGUAGE.TAMIL.toString()
-								.equals(mShelf.language)) {
-							mWebView.loadUrl("file:///android_asset/tamil_wrapper.html");
-						} else if (PConstants.CONTENT_LANGUAGE.GUJARATI
-								.toString().equals(mShelf.language)) {
-							mWebView.loadUrl("file:///android_asset/gujarati_wrapper.html");
-						}
-
-						new Handler().postDelayed(new Runnable() {
-
-							@Override
-							public void run() {
+					final String content = finalResult.getString("pageContent");
+					if (content != null) {
+						PageContent pageContent = new PageContent(0, mBook.id,
+								mPratilipiPageNo, content,
+								mShelfContent.language);
+						mDataSource.createPageContent(pageContent);
+						if (mPratilipiPageNo < 2) {
+							if (mPageLoaded) {
 								mWebView.loadUrl("javascript:paginate(\""
-										+ pageContent.replace("\"", "'")
+										+ mPageLoadContent.replace("\"", "'")
 										+ "\")");
+								if (mPratilipiPageNo < mBook.pageCount) {
+									mDownloadHandler.postDelayed(
+											mDownloadRunnable, 5000);
+								}
+							} else {
+								mPageLoadContent = content;
 							}
-						}, 1000);
-
+						} else {
+							mWebView.loadUrl("javascript:append(\""
+									+ content.replace("\"", "'") + "\")");
+						}
+						if (mPratilipiPageNo < mBook.pageCount) {
+							mDownloadHandler.postDelayed(mDownloadRunnable,
+									5000);
+						}
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -255,100 +338,51 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		return null;
 	}
 
+	@Override
+	public void onResume() {
+		if (mDataSource != null) {
+			mDataSource.open();
+		}
+		if (mPratilipiPageNo < mBook.pageCount) {
+			mDownloadHandler.postDelayed(mDownloadRunnable, 5000);
+		}
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		if (mDownloadHandler != null) {
+			mDownloadHandler.removeCallbacks(mDownloadRunnable);
+		}
+		if (mDataSource != null) {
+			mDataSource.close();
+		}
+		super.onPause();
+	}
+
 	class JavaScriptInterface {
 
-		private Activity activity;
+		ReaderActivity activity;
 
-		public JavaScriptInterface(Activity activity) {
+		public JavaScriptInterface(ReaderActivity activity) {
 			this.activity = activity;
 		}
 
 		@JavascriptInterface
-		public void increment(int page) {
-			Log.e("increment", "~~~~~~~~~~~~~~" + page);
-		}
+		public void update(int currentPage, int totalPages) {
+			mCurrentPage = currentPage;
+			mTotalPages = totalPages;
+			activity.runOnUiThread(new Runnable() {
 
-		@JavascriptInterface
-		public void decrement(int page) {
-			Log.e("decrement", "############" + page);
-		}
-	}
-
-}
-
-class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-
-	private static final float MIN_SCALE = 0.85f;
-	private static final float MIN_ALPHA = 0.5f;
-
-	public void transformPage(View view, float position) {
-		int pageWidth = view.getWidth();
-		int pageHeight = view.getHeight();
-
-		if (position < -1) { // [-Infinity,-1)
-			// This page is way off-screen to the left.
-			view.setAlpha(0);
-
-		} else if (position <= 1) { // [-1,1]
-			// Modify the default slide transition to shrink the page as well
-			float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-			float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-			float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-			if (position < 0) {
-				view.setTranslationX(horzMargin - vertMargin / 2);
-			} else {
-				view.setTranslationX(-horzMargin + vertMargin / 2);
-			}
-
-			// Scale the page down (between MIN_SCALE and 1)
-			view.setScaleX(scaleFactor);
-			view.setScaleY(scaleFactor);
-
-			// Fade the page relative to its size.
-			view.setAlpha(MIN_ALPHA + (scaleFactor - MIN_SCALE)
-					/ (1 - MIN_SCALE) * (1 - MIN_ALPHA));
-
-		} else { // (1,+Infinity]
-			// This page is way off-screen to the right.
-			view.setAlpha(0);
+				@Override
+				public void run() {
+					mChapterTextView.setText("Page " + (mCurrentPage + 1)
+							+ " out of " + mTotalPages);
+					mSeekBar.setMax(mTotalPages);
+					mSeekBar.setProgress(mCurrentPage);
+				}
+			});
 		}
 	}
-}
 
-class DepthPageTransformer implements ViewPager.PageTransformer {
-
-	private static final float MIN_SCALE = 0.75f;
-
-	public void transformPage(View view, float position) {
-		int pageWidth = view.getWidth();
-
-		if (position < -1) { // [-Infinity,-1)
-			// This page is way off-screen to the left.
-			view.setAlpha(0);
-
-		} else if (position <= 0) { // [-1,0]
-			// Use the default slide transition when moving to the left page
-			view.setAlpha(1);
-			view.setTranslationX(0);
-			view.setScaleX(1);
-			view.setScaleY(1);
-
-		} else if (position <= 1) { // (0,1]
-			// Fade the page out.
-			view.setAlpha(1 - position);
-
-			// Counteract the default slide transition
-			view.setTranslationX(pageWidth * -position);
-
-			// Scale the page down (between MIN_SCALE and 1)
-			float scaleFactor = MIN_SCALE + (1 - MIN_SCALE)
-					* (1 - Math.abs(position));
-			view.setScaleX(scaleFactor);
-			view.setScaleY(scaleFactor);
-
-		} else { // (1,+Infinity]
-			// This page is way off-screen to the right.
-			view.setAlpha(0);
-		}
-	}
 }
