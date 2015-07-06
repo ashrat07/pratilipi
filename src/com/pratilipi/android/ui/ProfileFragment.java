@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,11 @@ public class ProfileFragment extends BaseFragment implements
 	private static String userName = "";
 	private static String pwd = "";
 	private UserProfile userProfileObject;
-
+	private Button loginBtn;
+	private TextView userNameView;
+	private TextView memberSinceView;
+	private TextView userShelfCountView;
+	private ImageView userImageView;
 	private Integer[] profileItemsList = new Integer[] {
 			R.string.reset_content_language, R.string.reset_menu_language,
 			R.string.about };
@@ -51,8 +56,9 @@ public class ProfileFragment extends BaseFragment implements
 		mRootView = inflater.inflate(R.layout.fragment_profile, container,
 				false);
 
-		// checks for access token. Does auto login if access token is empty
 		mAppState = AppState.getInstance();
+		// checks for access token. Does auto login if access token is empty
+		// else make user request
 		if (mAppState.getAccessToken().isEmpty()) {
 			Login loginObj = mAppState.getUserCredentials();
 			if (loginObj != null && loginObj.loginName != null
@@ -62,34 +68,20 @@ public class ProfileFragment extends BaseFragment implements
 				userName = loginObj.loginName;
 				pwd = loginObj.loginPassword;
 				makeRequest();
-			} else {
-				mParentActivity.showNextView(new LoginFragment());
 			}
+		} else {
+			makeUserProfileRequest();
 		}
 
 		String imgURI = "http://lorempixel.com/200/200/people/"; // Default URL
-		TextView userName = (TextView) mRootView.findViewById(R.id.user_name);
-		TextView memberSince = (TextView) mRootView
-				.findViewById(R.id.member_since);
-		TextView userShelfCount = (TextView) mRootView
+		userNameView = (TextView) mRootView.findViewById(R.id.user_name);
+		memberSinceView = (TextView) mRootView.findViewById(R.id.member_since);
+		userShelfCountView = (TextView) mRootView
 				.findViewById(R.id.user_shelf_count);
-		ImageView userImageView = (ImageView) mRootView
-				.findViewById(R.id.profile_img);
+		userImageView = (ImageView) mRootView.findViewById(R.id.profile_img);
 		mListView = (ListView) mRootView.findViewById(R.id.profile_list_view);
-		if (userProfileObject != null) {
-			if (userProfileObject.firstName != null)
-				userName.setText(userProfileObject.firstName);
-			if (userProfileObject.memberDOJ != null)
-				memberSince.setText(userProfileObject.memberDOJ.toString());
-			// Check not required for below as it will take default values
-			imgURI = userProfileObject.userImgUrl;
-			userShelfCount.setText(userProfileObject.shelfBookCount);
-		}
-		mParentActivity.mImageLoader.displayImage(imgURI, userImageView);
 
-		// Login fragment test: remove button when testing is done
-		Button loginBtn = (Button) mRootView
-				.findViewById(R.id.progile_login_btn);
+		loginBtn = (Button) mRootView.findViewById(R.id.progile_login_btn);
 		loginBtn.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -98,6 +90,26 @@ public class ProfileFragment extends BaseFragment implements
 
 			}
 		});
+
+		if (userProfileObject != null) {
+			if (userProfileObject.firstName != null)
+				userNameView.setText(userProfileObject.firstName);
+			if (userProfileObject.memberDOJ != null)
+				memberSinceView.setText(userProfileObject.memberDOJ.toString());
+
+			// Check not required for below as it will take default values
+			imgURI = userProfileObject.userImgUrl;
+			userShelfCountView.setText(userProfileObject.shelfBookCount);
+			mParentActivity.mImageLoader.displayImage(imgURI, userImageView);
+
+			// setting visibility
+			userNameView.setVisibility(View.VISIBLE);
+			memberSinceView.setVisibility(View.VISIBLE);
+			userShelfCountView.setVisibility(View.VISIBLE);
+			userImageView.setVisibility(View.VISIBLE);
+			loginBtn.setVisibility(View.GONE);
+		} else
+			loginBtn.setVisibility(View.VISIBLE);
 
 		ProfileAdapter adapter = new ProfileAdapter(mParentActivity,
 				R.layout.layout_list_view_text_item, profileItemsList);
@@ -125,9 +137,7 @@ public class ProfileFragment extends BaseFragment implements
 		return mRootView;
 	}
 
-	@Override
-	public void responseSuccess() {
-
+	private void makeUserProfileRequest() {
 		if (!mAppState.getAccessToken().isEmpty()) {
 			HttpGet userProfileGet = new HttpGet(this,
 					PConstants.USERPROFILE_URL);
@@ -142,6 +152,12 @@ public class ProfileFragment extends BaseFragment implements
 	}
 
 	@Override
+	public void responseSuccess() {
+		loginBtn.setVisibility(View.GONE);
+		makeUserProfileRequest();
+	}
+
+	@Override
 	public void responseFailure(String failureMessage) {
 		// TODO Auto-generated method stub
 		mParentActivity.hideProgressBar();
@@ -152,7 +168,6 @@ public class ProfileFragment extends BaseFragment implements
 	public void makeRequest() {
 		mParentActivity.showProgressBar();
 		mParentActivity.mLoginManager.loginRequest(userName, pwd, this);
-
 	}
 
 	@Override

@@ -18,9 +18,11 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="30dp"
-            android:contentDescription="@string/add_photo" />
+            android:contentDescription="@string/add_photo"
+            android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/profile_content_holder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -32,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:text="Demo User"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_medium" />
+                android:textSize="@dimen/text_medium"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/member_since"
@@ -40,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:text="Member Since...."
                 android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/text_small" />
+                android:textSize="@dimen/text_small"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/user_shelf_count"
@@ -48,15 +52,17 @@
                 android:layout_height="wrap_content"
                 android:text="17 Books in shelf"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/text_small" />
+                android:textSize="@dimen/text_small"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/progile_login_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LOGIN" >
+            </Button>
         </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/progile_login_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-    </Button>
 
     <ListView
         android:id="@+id/profile_list_view"
