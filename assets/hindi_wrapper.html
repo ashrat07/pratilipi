@@ -116,7 +116,7 @@
 					ereader.masterPages[i].appendChild(el)
 				}
 				document.getElementById('loading').style.display = 'none';
-				window.jsInterface.update(ereader.page, pages.length);
+				window.jsInterface.setTotalPages(pages.length);
 			}
 		}
 
@@ -132,7 +132,7 @@
 					el.innerHTML = pages[upcoming];
 				}
 			}
-			window.jsInterface.update(ereader.page, pages.length);
+			window.jsInterface.setCurrentPage(ereader.page);
 		});
 	}
 
@@ -203,7 +203,7 @@
 				ereader.slider.removeChild(container);
 
 				ereader.updatePageCount(pages.length);
-				window.jsInterface.update(ereader.page, pages.length);
+				window.jsInterface.setTotalPages(pages.length);
 			}
 		}
 		

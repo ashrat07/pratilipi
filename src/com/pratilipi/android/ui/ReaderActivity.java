@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.SeekBar;
@@ -156,9 +158,6 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 									+ "\")");
 						}
 					}, 500);
-					if (mPratilipiPageNo < mBook.pageCount) {
-						mDownloadHandler.postDelayed(mDownloadRunnable, 5000);
-					}
 				}
 			}
 		});
@@ -213,10 +212,6 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 					if (mPageLoaded) {
 						mWebView.loadUrl("javascript:paginate(\""
 								+ mPageLoadContent.replace("\"", "'") + "\")");
-						if (mPratilipiPageNo < mBook.pageCount) {
-							mDownloadHandler.postDelayed(mDownloadRunnable,
-									5000);
-						}
 					} else {
 						mPageLoadContent = pageContent.content;
 					}
@@ -260,25 +255,35 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		return true;
 	}
 
-	Handler mDownloadHandler = new Handler();
-	Runnable mDownloadRunnable = new Runnable() {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.change_font:
+			WebSettings webSettings = mWebView.getSettings();
+			webSettings.setTextZoom(webSettings.getTextZoom() + 10);
+			return true;
 
-		@Override
-		public void run() {
-			++mPratilipiPageNo;
-			PageContent pageContent = mDataSource.getPageContent(
-					mShelfContent.pratilipiId, mPratilipiPageNo);
-			if (pageContent != null) {
-				mWebView.loadUrl("javascript:append(\""
-						+ pageContent.content.replace("\"", "'") + "\")");
-				if (mPratilipiPageNo < mBook.pageCount) {
-					mDownloadHandler.postDelayed(this, 5000);
-				}
-			} else {
-				requestContent();
-			}
+		default:
+			return false;
 		}
-	};
+	}
+
+	// Handler mDownloadHandler = new Handler();
+	// Runnable mDownloadRunnable = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// ++mPratilipiPageNo;
+	// PageContent pageContent = mDataSource.getPageContent(
+	// mShelfContent.pratilipiId, mPratilipiPageNo);
+	// if (pageContent != null) {
+	// mWebView.loadUrl("javascript:append(\""
+	// + pageContent.content.replace("\"", "'") + "\")");
+	// } else {
+	// requestContent();
+	// }
+	// }
+	// };
 
 	private void requestContent() {
 		HttpGet contentRequest = new HttpGet(this, PConstants.CONTENT_URL);
@@ -306,22 +311,13 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 						if (mPratilipiPageNo < 2) {
 							if (mPageLoaded) {
 								mWebView.loadUrl("javascript:paginate(\""
-										+ mPageLoadContent.replace("\"", "'")
-										+ "\")");
-								if (mPratilipiPageNo < mBook.pageCount) {
-									mDownloadHandler.postDelayed(
-											mDownloadRunnable, 5000);
-								}
+										+ content.replace("\"", "'") + "\")");
 							} else {
 								mPageLoadContent = content;
 							}
 						} else {
 							mWebView.loadUrl("javascript:append(\""
 									+ content.replace("\"", "'") + "\")");
-						}
-						if (mPratilipiPageNo < mBook.pageCount) {
-							mDownloadHandler.postDelayed(mDownloadRunnable,
-									5000);
 						}
 					}
 				} catch (JSONException e) {
@@ -343,46 +339,73 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 		if (mDataSource != null) {
 			mDataSource.open();
 		}
-		if (mPratilipiPageNo < mBook.pageCount) {
-			mDownloadHandler.postDelayed(mDownloadRunnable, 5000);
-		}
 		super.onResume();
 	}
 
 	@Override
-	public void onPause() {
-		if (mDownloadHandler != null) {
-			mDownloadHandler.removeCallbacks(mDownloadRunnable);
-		}
+	protected void onDestroy() {
 		if (mDataSource != null) {
 			mDataSource.close();
 		}
-		super.onPause();
+		super.onDestroy();
 	}
 
 	class JavaScriptInterface {
 
 		ReaderActivity activity;
+		PageContent pageContent;
 
 		public JavaScriptInterface(ReaderActivity activity) {
 			this.activity = activity;
 		}
 
 		@JavascriptInterface
-		public void update(int currentPage, int totalPages) {
+		public void setCurrentPage(int currentPage) {
 			mCurrentPage = currentPage;
-			mTotalPages = totalPages;
 			activity.runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
 					mChapterTextView.setText("Page " + (mCurrentPage + 1)
 							+ " out of " + mTotalPages);
-					mSeekBar.setMax(mTotalPages);
 					mSeekBar.setProgress(mCurrentPage);
 				}
 			});
 		}
+
+		@JavascriptInterface
+		public void setTotalPages(int totalPages) {
+			mTotalPages = totalPages;
+
+			if (mPratilipiPageNo < mBook.pageCount) {
+				++mPratilipiPageNo;
+				pageContent = mDataSource.getPageContent(
+						mShelfContent.pratilipiId, mPratilipiPageNo);
+				if (pageContent == null) {
+					requestContent();
+				}
+			}
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					mChapterTextView.setText("Page " + (mCurrentPage + 1)
+							+ " out of " + mTotalPages);
+					mSeekBar.setMax(mTotalPages - 1);
+					if (pageContent != null) {
+						mWebView.loadUrl("javascript:append(\""
+								+ pageContent.content.replace("\"", "'")
+								+ "\")");
+					}
+				}
+			});
+		}
+	}
+
+	@Override
+	public Boolean setPutStatus(JSONObject finalResult, String putUrl,
+			int responseCode) {
+		return null;
 	}
 
 }

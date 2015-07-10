@@ -66,6 +66,28 @@ public abstract class BaseFragment extends Fragment implements
 		return false;
 	}
 
+	/**
+	 * Set result from a HTTP PUT Call
+	 * 
+	 * @param finalResult
+	 *            - JSON Result returned by server
+	 * @param getUrl
+	 *            - URL on which HTTP GET was created
+	 * @return true if result was consumed
+	 */
+	@Override
+	public Boolean setPutStatus(JSONObject finalResult, String getUrl,
+			int responseCode) {
+
+		if (finalResult == null && mParentActivity != null) {
+			LoggerUtils.logWarn("Get Response", "No value returned");
+			mParentActivity.showError(mParentActivity.getResources().getString(
+					R.string.error_system_issue));
+			return true;
+		}
+		return false;
+	}
+
 	public abstract String getCustomTag();
 
 	/**
@@ -85,6 +107,13 @@ public abstract class BaseFragment extends Fragment implements
 	}
 
 	public void toggleSpinner(Boolean b) {
+	}
+
+	/**
+	 * Try doing auto login using app state Returns true if successful
+	 * */
+	public boolean tryAutoLogin() {
+		return false;
 	}
 
 }
