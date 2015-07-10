@@ -25,6 +25,7 @@ public class StoreHomeFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Store Home";
 	private static List<StoreContent> mList = new ArrayList<>();
+	public static String mLanguage;
 
 	private View mRootView;
 	private ListView mListView;
@@ -50,7 +51,10 @@ public class StoreHomeFragment extends BaseFragment {
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();
 
-		if (mList.size() == 0) {
+		if (mList.size() == 0
+				|| !mParentActivity.mApp.getContentLanguage().equals(mLanguage)) {
+			mList.clear();
+			mLanguage = mParentActivity.mApp.getContentLanguage();
 			mProgressBar.setVisibility(View.VISIBLE);
 			requestStoreHomeTopContent();
 		} else {

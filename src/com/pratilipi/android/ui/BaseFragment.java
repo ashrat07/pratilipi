@@ -65,7 +65,7 @@ public abstract class BaseFragment extends Fragment implements
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Set result from a HTTP PUT Call
 	 * 
@@ -108,12 +108,11 @@ public abstract class BaseFragment extends Fragment implements
 
 	public void toggleSpinner(Boolean b) {
 	}
+
 	/**
-	 * Try doing auto login using app state
-	 * Returns true if successful
-	 *  */
-	public boolean tryAutoLogin()
-	{
+	 * Try doing auto login using app state Returns true if successful
+	 * */
+	public boolean tryAutoLogin() {
 		return false;
 	}
 

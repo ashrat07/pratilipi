@@ -1,7 +1,5 @@
 package com.pratilipi.android.ui;
 
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +10,18 @@ import android.widget.Toast;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.iHelper.IHttpResponseHelper;
-import com.pratilipi.android.util.AppState;
 
 public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 
 	public static final String TAG_NAME = "Login";
+
+	private View mRootView;
+	private EditText mUserNameEditText;
+	private EditText mPwdEditText;
+	private Button mRegisterButton;
+
 	private String userName = "";
 	private String pwd = "";
-	private EditText userNameTextView;
-	private EditText pwdTextView;
-	private View mRootView;
 
 	@Override
 	public String getCustomTag() {
@@ -33,35 +33,33 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 			Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_login, container, false);
 		Button loginBtnView = (Button) mRootView.findViewById(R.id.login_btn);
-		userNameTextView = (EditText) mRootView.findViewById(R.id.login_name);
-		pwdTextView = (EditText) mRootView.findViewById(R.id.login_pwd);
-		Button registerBtnView = (Button)mRootView.findViewById(R.id.login_register);
+		mUserNameEditText = (EditText) mRootView.findViewById(R.id.login_name);
+		mPwdEditText = (EditText) mRootView.findViewById(R.id.login_pwd);
+		mRegisterButton = (Button) mRootView.findViewById(R.id.login_register);
 
 		loginBtnView.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				userName = userNameTextView.getText().toString();
-				pwd = pwdTextView.getText().toString();
+				userName = mUserNameEditText.getText().toString();
+				pwd = mPwdEditText.getText().toString();
 				if (userName.isEmpty() || pwd.isEmpty()) {
 					mParentActivity
 							.showError("Please enter user name and password!!");
 					return;
 				}
 				makeRequest();
-
 			}
 		});
 
-		registerBtnView.setOnClickListener(new View.OnClickListener() {
-			
+		mRegisterButton.setOnClickListener(new View.OnClickListener() {
+
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
 				mParentActivity.showNextView(new RegisterFragment(), null);
-				
 			}
 		});
-		
+
 		return mRootView;
 	}
 
@@ -73,9 +71,10 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 
 	@Override
 	public void responseSuccess() {
-		// TODO Auto-generated method stub
 		mParentActivity.hideProgressBar();
-		Toast.makeText(mParentActivity, "Login Success", 10).show();;
+		Toast.makeText(mParentActivity, "Login Success", Toast.LENGTH_SHORT)
+				.show();
+		mParentActivity.mStack.pop();
 	}
 
 	@Override
@@ -83,6 +82,5 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 		mParentActivity.hideProgressBar();
 		mParentActivity.showError(failureMessage);
 	}
-
 
 }

@@ -9,7 +9,7 @@ import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.iHelper.IHttpResponseHelper;
 import com.pratilipi.android.model.Login;
 
-public class RegisterManagerListner implements HttpResponseListener {
+public class RegisterManager implements HttpResponseListener {
 	IHttpResponseHelper registerHelper;
 	private AppState mAppState;
 	private String userName;

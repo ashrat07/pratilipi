@@ -51,6 +51,7 @@
                 style="@style/PRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:numStars="5"
                 android:rating="3.2" />
 

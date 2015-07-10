@@ -29,7 +29,7 @@ public class PConstants {
 	public static final String CATEGORY_URL = HOST + "/category/pratilipilist";
 	public static final String SEARCH_URL = HOST + "/search";
 	public static final String LOGIN_URL = HOST + "/oauth";
-	public static final String USERPROFILE_URL = HOST + "userprofile";
+	public static final String USER_PROFILE_URL = HOST + "/userprofile";
 	public static final String REGISTER_URL = HOST + "/register";
 	public static final String COVER_IMAGE_URL = HOST
 			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=200";

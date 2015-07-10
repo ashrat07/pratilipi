@@ -7,62 +7,64 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_bottom"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:id="@+id/profile_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="30dp"
-            android:contentDescription="@string/add_photo"
-            android:visibility="gone" />
+        android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:id="@+id/profile_content_holder"
+            android:id="@+id/user_profile_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_bottom"
+            android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Demo User"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/text_medium"
-                android:visibility="gone" />
+            <ImageView
+                android:id="@+id/profile_img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="30dp"
+                android:contentDescription="@string/add_photo" />
 
-            <TextView
-                android:id="@+id/member_since"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Member Since...."
-                android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/text_small"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/user_shelf_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="17 Books in shelf"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/text_small"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/progile_login_btn"
+            <LinearLayout
+                android:id="@+id/profile_content_holder"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="LOGIN" >
-            </Button>
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Demo User"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_medium" />
+
+                <TextView
+                    android:id="@+id/member_since"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Member Since...."
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/text_small" />
+
+                <TextView
+                    android:id="@+id/user_shelf_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="17 Books in shelf"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/text_small" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/progile_login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="LOGIN" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/profile_list_view"
