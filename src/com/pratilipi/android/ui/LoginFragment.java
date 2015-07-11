@@ -18,8 +18,6 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 	private View mRootView;
 	private EditText mUserNameEditText;
 	private EditText mPwdEditText;
-	private Button mRegisterButton;
-
 	private String userName = "";
 	private String pwd = "";
 
@@ -35,7 +33,6 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 		Button loginBtnView = (Button) mRootView.findViewById(R.id.login_btn);
 		mUserNameEditText = (EditText) mRootView.findViewById(R.id.login_name);
 		mPwdEditText = (EditText) mRootView.findViewById(R.id.login_pwd);
-		mRegisterButton = (Button) mRootView.findViewById(R.id.login_register);
 
 		loginBtnView.setOnClickListener(new View.OnClickListener() {
 
@@ -49,14 +46,6 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper {
 					return;
 				}
 				makeRequest();
-			}
-		});
-
-		mRegisterButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mParentActivity.showNextView(new RegisterFragment(), null);
 			}
 		});
 

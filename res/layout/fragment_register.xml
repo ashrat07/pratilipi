@@ -3,42 +3,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="25dp" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="Register"
+        android:textColor="@color/text_red"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="First Name"
+        android:textColor="@color/text_gray"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/register_name"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/background_peach"
+        android:editable="true"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Last Name"
+        android:textColor="@color/text_gray"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/register_last_name"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/background_peach"
+        android:editable="true"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textColor="@color/text_gray"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/register_email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="User Email" 
-        android:padding="2px"
-        android:gravity="center_vertical"
-        android:editable="true"/>
-     
-     <EditText
-        android:id="@+id/register_name"
+        android:layout_height="35dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/background_peach"
+        android:editable="true"
+        android:gravity="center_vertical" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="User Name" 
-        android:padding="2px"
-        android:gravity="center_vertical"
-        android:editable="true"/>
+        android:text="Password"
+        android:textColor="@color/text_gray"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/register_pwd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:password="true"
-        android:padding="2px" 
+        android:layout_height="35dp"
+        android:layout_marginBottom="35dp"
+        android:background="@color/background_peach"
         android:editable="true"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical"
+        android:password="true" />
 
     <Button
         android:id="@+id/register_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Sign up"
-        android:padding="2px"
-        android:gravity="center_vertical"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_green"
+        android:gravity="center"
+        android:padding="1dp"
+        android:text="Create Account"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>
