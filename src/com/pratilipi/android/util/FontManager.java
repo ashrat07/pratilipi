@@ -31,8 +31,8 @@ public class FontManager {
 				"fonts/Rupee_Foradian.ttf");
 		mTypefaceCache.put("rupee", type);
 
-		type = Typeface
-				.createFromAsset(context.getAssets(), "fonts/Mangal.ttf");
+		type = Typeface.createFromAsset(context.getAssets(),
+				"fonts/devanagari.ttf");
 		mTypefaceCache.put("hindi", type);
 
 		type = Typeface.createFromAsset(context.getAssets(), "fonts/Tamil.ttf");

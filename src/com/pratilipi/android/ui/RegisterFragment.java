@@ -1,10 +1,5 @@
 package com.pratilipi.android.ui;
 
-import org.json.JSONObject;
-
-import com.pratilipi.android.R;
-import com.pratilipi.android.iHelper.IHttpResponseHelper;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.pratilipi.android.R;
+import com.pratilipi.android.iHelper.IHttpResponseHelper;
+
+import org.json.JSONObject;
 
 public class RegisterFragment extends BaseFragment implements
 		IHttpResponseHelper {
@@ -71,14 +71,16 @@ public class RegisterFragment extends BaseFragment implements
 	@Override
 	public void responseSuccess() {
 		mParentActivity.hideProgressBar();
-		Toast.makeText(mParentActivity, "Registered", 10).show();
+		Toast.makeText(mParentActivity, "Registered", Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
 	public void responseFailure(String failureMessage) {
 		mParentActivity.hideProgressBar();
 		Toast.makeText(mParentActivity,
-				"Registration Failure: " + failureMessage, 10).show();
+				"Registration Failure: " + failureMessage, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override

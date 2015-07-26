@@ -19,7 +19,10 @@ public class AppState {
 	private static final String USER_NAME = "USER_NAME";
 	private static final String PASSWORD = "PASSWORD";
 	private static final String LOGIN_TYPE = "LOGIN_TYPE";
-	
+	private static final String LOGGED_IN = "LOGGED_IN";
+	private static final String GPLUS_LOGIN = "GPLUS_LOGIN";
+	private static final String GPLUS_EMAIL = "GPLUS_EMAIL";
+
 	private static String ACCESS_TOKEN = "";
 
 	private static AppState instance;
@@ -115,18 +118,70 @@ public class AppState {
 	public void setAccessToken(String accessToken) {
 		ACCESS_TOKEN = accessToken;
 	}
-	
-	public void setUserCredentials(Login userCredentials)
-	{
-		SharedPreferences.Editor ed= mConf.edit();
+
+	public void setUserCredentials(Login userCredentials) {
+		SharedPreferences.Editor ed = mConf.edit();
 		ed.putString(USER_NAME, userCredentials.loginName);
 		ed.putString(PASSWORD, userCredentials.loginPassword);
 		ed.putString(LOGIN_TYPE, userCredentials.loginType);
 		ed.commit();
 	}
-	public Login getUserCredentials()
-	{
-		Login login= new Login(mConf.getString(USER_NAME,null),mConf.getString(PASSWORD,null),mConf.getString(LOGIN_TYPE,null));
+
+	public Login getUserCredentials() {
+		String userName = mConf.getString(USER_NAME, null);
+		String password = mConf.getString(PASSWORD, null);
+		String loginType = mConf.getString(LOGIN_TYPE, null);
+		Login login = new Login(userName, password, loginType);
 		return login;
+	}
+
+	public enum LoginStatus {
+		PENDING, SESSION_SUCCESS, SESSION_FAILED, LOGIN_SUCCESS, LOGIN_FAILED
+	}
+
+	private LoginStatus loginStatus = LoginStatus.PENDING;
+
+	public LoginStatus getLoginStatus() {
+		return loginStatus;
+	}
+
+	public void setLoginStatus(LoginStatus loginStatus) {
+		this.loginStatus = loginStatus;
+	}
+
+	public Boolean isGPlusLogin() {
+		return mConf.contains(GPLUS_LOGIN);
+	}
+
+	public Boolean setGPlusLogin(Boolean login) {
+		if (setLoggedIn(login)) {
+			if (login) {
+				SharedPreferences.Editor ed = mConf.edit();
+				ed.putBoolean(GPLUS_LOGIN, login);
+				return ed.commit();
+			} else {
+				SharedPreferences.Editor ed = mConf.edit();
+				ed.remove(GPLUS_LOGIN);
+				return ed.commit();
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public Boolean setLoggedIn(Boolean login) {
+		SharedPreferences.Editor ed = mConf.edit();
+		ed.putBoolean(LOGGED_IN, login);
+		return ed.commit();
+	}
+
+	public String getGPlusEmail() {
+		return mConf.getString(GPLUS_EMAIL, "");
+	}
+
+	public Boolean setGPlusEmail(String email) {
+		SharedPreferences.Editor ed = mConf.edit();
+		ed.putString(GPLUS_EMAIL, email);
+		return ed.commit();
 	}
 }

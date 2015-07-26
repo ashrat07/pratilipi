@@ -24,7 +24,7 @@
         android:background="@android:color/transparent" />
 
     <RelativeLayout
-        android:id="@+id/progress_bar_parent"
+        android:id="@+id/progress_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"

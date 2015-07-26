@@ -11,5 +11,10 @@
         android:icon="@drawable/bookmark"
         android:showAsAction="ifRoom"
         android:title="@string/bookmark"/>
+    <item
+        android:id="@+id/index"
+        android:icon="@drawable/index"
+        android:showAsAction="ifRoom"
+        android:title="@string/index"/>
 
 </menu>

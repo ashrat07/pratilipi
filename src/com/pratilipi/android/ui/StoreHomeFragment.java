@@ -1,25 +1,28 @@
 package com.pratilipi.android.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pratilipi.android.R;
 import com.pratilipi.android.adapter.StoreHomeAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Book;
 import com.pratilipi.android.model.StoreContent;
 import com.pratilipi.android.util.PConstants;
+import com.pratilipi.android.util.StoreHomeDataSource;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class StoreHomeFragment extends BaseFragment {
 
@@ -29,8 +32,10 @@ public class StoreHomeFragment extends BaseFragment {
 
 	private View mRootView;
 	private ListView mListView;
-	private View mProgressBar;
+	private View mProgressBarLayout;
 	private StoreHomeAdapter mAdapter;
+	private StoreHomeDataSource mDataSource;
+	private HttpGet storeHomeListingsRequest;
 
 	@Override
 	public String getCustomTag() {
@@ -44,7 +49,7 @@ public class StoreHomeFragment extends BaseFragment {
 				false);
 
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
-		mProgressBar = mRootView.findViewById(R.id.progress_bar);
+		mProgressBarLayout = mRootView.findViewById(R.id.progress_bar_layout);
 
 		mAdapter = new StoreHomeAdapter(mParentActivity,
 				R.layout.layout_store_home_list_view_item, mList);
@@ -55,8 +60,19 @@ public class StoreHomeFragment extends BaseFragment {
 				|| !mParentActivity.mApp.getContentLanguage().equals(mLanguage)) {
 			mList.clear();
 			mLanguage = mParentActivity.mApp.getContentLanguage();
-			mProgressBar.setVisibility(View.VISIBLE);
-			requestStoreHomeTopContent();
+			mDataSource = new StoreHomeDataSource(mParentActivity);
+			mDataSource.open();
+			String content = mDataSource.getContent(mLanguage);
+			if (content != null) {
+				Gson gson = new Gson();
+				List<StoreContent> list = gson.fromJson(content,
+						new TypeToken<List<StoreContent>>() {
+						}.getType());
+				mList.addAll(list);
+			} else {
+				mProgressBarLayout.setVisibility(View.VISIBLE);
+				requestStoreHomeTopContent();
+			}
 		} else {
 			mListView.setVisibility(View.VISIBLE);
 		}
@@ -64,8 +80,16 @@ public class StoreHomeFragment extends BaseFragment {
 		return mRootView;
 	}
 
+	@Override
+	public void onBackPressed() {
+		if (storeHomeListingsRequest != null) {
+			storeHomeListingsRequest.cancel(true);
+		}
+		super.onBackPressed();
+	}
+
 	private void requestStoreHomeTopContent() {
-		HttpGet storeHomeListingsRequest = new HttpGet(this,
+		storeHomeListingsRequest = new HttpGet(this,
 				PConstants.STORE_TOP_CONTENT_URL);
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
@@ -86,6 +110,7 @@ public class StoreHomeFragment extends BaseFragment {
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
 		if (PConstants.STORE_TOP_CONTENT_URL.equals(getUrl)) {
+			mProgressBarLayout.setVisibility(View.GONE);
 			if (finalResult != null) {
 				try {
 					JSONObject responseObject = finalResult
@@ -113,7 +138,9 @@ public class StoreHomeFragment extends BaseFragment {
 							}
 						}
 					}
-					mProgressBar.setVisibility(View.GONE);
+					Gson gson = new Gson();
+					mDataSource.createStoreHomeContent(gson.toJson(mList),
+							mLanguage);
 					mAdapter.notifyDataSetChanged();
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -121,6 +148,22 @@ public class StoreHomeFragment extends BaseFragment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onResume() {
+		if (mDataSource != null) {
+			mDataSource.open();
+		}
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		if (mDataSource != null) {
+			mDataSource.close();
+		}
+		super.onPause();
 	}
 
 	@Override

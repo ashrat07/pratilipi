@@ -19,12 +19,6 @@
     <string name="categories">CATEGORIES</string>
     <string name="featured_books">Featured Books</string>
     <string name="new_releases">New Releases</string>
-    <string name="classics">Classics</string>
-    <string name="horror">Horror</string>
-    <string name="poems">Poems</string>
-    <string name="romance">Romance</string>
-    <string name="stories">Stories</string>
-    <string name="ghazals">Ghazals</string>
     <string name="content_language">CONTENT LANGUAGE</string>
     <string name="menu_language">MENU LANGUAGE</string>
     <string name="reset_content_language">Reset Content Language</string>
@@ -44,9 +38,11 @@
     <string name="read_sample">READ SAMPLE</string>
     <string name="review">REVIEW</string>
     <string name="reader">Reader</string>
-    <string name="add_to_shelf">Add to shelf</string>
+    <string name="add_to_shelf">ADD TO SHELF</string>
     <string name="change_font">Change font</string>
     <string name="bookmark">Bookmark</string>
+    <string name="index">Index</string>
     <string name="oops_no_books_found">OOPS!!\nNo books found.\nAdd more books to find them here.</string>
+    <string name="facebook_app_id">293990794105516</string>
 
 </resources>

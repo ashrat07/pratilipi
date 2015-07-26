@@ -1,5 +1,24 @@
 package com.pratilipi.android.util;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,21 +27,6 @@ import java.net.URL;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 public class PUtils {
 
@@ -126,13 +130,13 @@ public class PUtils {
 	 * @return A float value to represent px equivalent to dp depending on
 	 *         device density
 	 */
+	public static int convertDpToPixel(float dp, Context context) {
+		return convertDpToPixel(dp, context.getResources());
+	}
+
 	public static int convertDpToPixel(float dp, Resources resources) {
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		return (int) (dp * (metrics.densityDpi / 160f));
-	}
-
-	public static int convertDpToPixel(float dp, Context context) {
-		return convertDpToPixel(dp, context.getResources());
 	}
 
 	public static SpannableStringBuilder getRupeeEncodedString(String text) {
@@ -185,5 +189,36 @@ public class PUtils {
 		Configuration conf = res.getConfiguration();
 		conf.locale = locale;
 		res.updateConfiguration(conf, display);
+	}
+
+	public static void sendBroadcast(Context context, String action) {
+		sendBroadcast(context, action, null);
+	}
+
+	public static void sendBroadcast(Context context, String action,
+			Bundle extras) {
+		try {
+			Intent broadcastIntent = new Intent();
+			broadcastIntent.setAction(action);
+			if (extras != null)
+				broadcastIntent.putExtras(extras);
+
+			// Use LocalBroadcastManager instead of context broadcast
+			LocalBroadcastManager lbm = LocalBroadcastManager
+					.getInstance(context);
+			lbm.sendBroadcast(broadcastIntent);
+		} catch (Exception e) {
+			LoggerUtils.logWarn("Error sending broadcast",
+					action + "\n" + e.getMessage());
+		}
+	}
+
+	public static void unregisterReceiver(Context context,
+			BroadcastReceiver receiver) {
+		if (receiver != null) {
+			LocalBroadcastManager lbm = LocalBroadcastManager
+					.getInstance(context);
+			lbm.unregisterReceiver(receiver);
+		}
 	}
 }

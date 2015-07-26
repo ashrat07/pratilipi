@@ -35,6 +35,11 @@ public class PConstants {
 			+ "/pratilipi/cover?pratilipiId={pratilipi_id}&width=200";
 	public static final String CONTENT_URL = HOST + "/pratilipi/content";
 
+	// Local Broadcasts
+	public static final String LOGIN_DONE_BROADCAST = "LoginDoneBroadcast";
+	public static final String LOGIN_FAILED_BROADCAST = "LoginFailedBroadcast";
+	public static final String LOGIN_MANAGER_CANCELED_BROADCAST = "LoginManagerCanceledBroadcast";
+
 	public enum CONTENT_LANGUAGE {
 
 		HINDI("hindi", 0, "5130467284090880"), TAMIL("tamil", 1,

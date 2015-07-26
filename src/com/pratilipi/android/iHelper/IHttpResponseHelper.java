@@ -9,9 +9,5 @@ public interface IHttpResponseHelper {
 
 	void responseFailure(String failureMessage);
 
-	/**
-	 * This is called to make any request so as object of this interface be
-	 * available
-	 */
 	void makeRequest();
 }

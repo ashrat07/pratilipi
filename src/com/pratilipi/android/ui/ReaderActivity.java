@@ -1,43 +1,51 @@
 package com.pratilipi.android.ui;
 
-import java.util.HashMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratilipi.android.R;
+import com.pratilipi.android.adapter.ChapterAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.model.Book;
+import com.pratilipi.android.model.Chapter;
 import com.pratilipi.android.model.PageContent;
 import com.pratilipi.android.model.ShelfContent;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PageContentDataSource;
 import com.pratilipi.android.util.SystemUiHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ReaderActivity extends Activity implements HttpResponseListener {
 
 	private SystemUiHelper mHelper;
 
+	private DrawerLayout mDrawerLayout;
+	private ListView mChapterListView;
 	private WebView mWebView;
 	private View mControlView;
 	private TextView mChapterTextView;
@@ -45,6 +53,8 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 	private ShelfContent mShelfContent;
 	private Book mBook;
+	private ChapterAdapter mChapterAdapter;
+	private ArrayList<Chapter> mIndexList = new ArrayList<>();;
 
 	private int mPratilipiPageNo = 1;
 	private int mCurrentPage;
@@ -53,6 +63,7 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	private float mDownX;
 	private float SCROLL_THRESHOLD = 20;
 
+	private HttpGet contentRequest;
 	private PageContentDataSource mDataSource;
 	private boolean mPageLoaded;
 	private String mPageLoadContent;
@@ -61,12 +72,16 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-			getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-		}
+		// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+		// getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		// }
 
 		setContentView(R.layout.activity_reader);
 
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		mChapterListView = (ListView) findViewById(R.id.right_drawer);
+		mChapterListView.setOnItemClickListener(new DrawerItemClickListener());
 		mWebView = (WebView) findViewById(R.id.web_view);
 		mControlView = findViewById(R.id.control_view);
 		mChapterTextView = (TextView) findViewById(R.id.chapter_text_view);
@@ -218,6 +233,15 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 				} else {
 					requestContent();
 				}
+				if (mBook.index != null) {
+					for (Chapter chapter : mBook.index) {
+						mIndexList.add(chapter);
+					}
+				}
+				mChapterAdapter = new ChapterAdapter(this,
+						R.layout.layout_drawer_list_view_item, mIndexList,
+						mShelfContent.language);
+				mChapterListView.setAdapter(mChapterAdapter);
 			}
 		}
 	}
@@ -263,30 +287,45 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 			webSettings.setTextZoom(webSettings.getTextZoom() + 10);
 			return true;
 
+		case R.id.index:
+			openIndex();
+			return true;
+
 		default:
 			return false;
 		}
 	}
 
-	// Handler mDownloadHandler = new Handler();
-	// Runnable mDownloadRunnable = new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// ++mPratilipiPageNo;
-	// PageContent pageContent = mDataSource.getPageContent(
-	// mShelfContent.pratilipiId, mPratilipiPageNo);
-	// if (pageContent != null) {
-	// mWebView.loadUrl("javascript:append(\""
-	// + pageContent.content.replace("\"", "'") + "\")");
-	// } else {
-	// requestContent();
-	// }
-	// }
-	// };
+	/* The click listner for ListView in the navigation drawer */
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			// launchChapter(mTitleChapters.get(position));
+			mHelper.hide();
+			mDrawerLayout.closeDrawer(mChapterListView);
+		}
+	}
+
+	public void openIndex() {
+		if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+			mDrawerLayout.closeDrawer(Gravity.RIGHT);
+		} else {
+			mDrawerLayout.openDrawer(Gravity.RIGHT);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (contentRequest != null) {
+			contentRequest.cancel(true);
+		}
+		super.onBackPressed();
+	}
 
 	private void requestContent() {
-		HttpGet contentRequest = new HttpGet(this, PConstants.CONTENT_URL);
+		contentRequest = new HttpGet(this, PConstants.CONTENT_URL);
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.CONTENT_URL);

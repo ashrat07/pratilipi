@@ -1,9 +1,5 @@
 package com.pratilipi.android.ui;
 
-import java.util.HashMap;
-
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,6 +21,10 @@ import com.pratilipi.android.model.UserProfile;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 public class ProfileFragment extends BaseFragment implements
 		IHttpResponseHelper {
 
@@ -37,6 +37,7 @@ public class ProfileFragment extends BaseFragment implements
 	private TextView mMemberSinceTextView;
 	private TextView mUserShelfCountTextView;
 	private Button mLoginButton;
+	private View mProgressBarLayout;
 	private ListView mListView;
 	private Integer[] mProfileItemsList = new Integer[] {
 			R.string.reset_content_language, R.string.reset_menu_language,
@@ -83,8 +84,9 @@ public class ProfileFragment extends BaseFragment implements
 		mUserShelfCountTextView = (TextView) mRootView
 				.findViewById(R.id.user_shelf_count);
 		mListView = (ListView) mRootView.findViewById(R.id.profile_list_view);
-
 		mLoginButton = (Button) mRootView.findViewById(R.id.progile_login_btn);
+		mProgressBarLayout = mRootView.findViewById(R.id.progress_bar_layout);
+
 		mLoginButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -102,7 +104,7 @@ public class ProfileFragment extends BaseFragment implements
 
 			// Check not required for below as it will take default values
 			String imgURI = mUserProfile.userImgUrl;
-			mUserShelfCountTextView.setText(mUserProfile.shelfBookCount);
+			mUserShelfCountTextView.setText("" + mUserProfile.shelfBookCount);
 			mParentActivity.mImageLoader.displayImage(imgURI, mUserImageView);
 
 			// setting visibility
@@ -162,22 +164,22 @@ public class ProfileFragment extends BaseFragment implements
 
 	@Override
 	public void responseFailure(String failureMessage) {
-		mParentActivity.hideProgressBar();
+		mProgressBarLayout.setVisibility(View.GONE);
 		Toast.makeText(mParentActivity, failureMessage, Toast.LENGTH_SHORT)
 				.show();
 	}
 
 	@Override
 	public void makeRequest() {
-		mParentActivity.showProgressBar();
-		mParentActivity.mLoginManager.loginRequest(mUserName, mPwd, this);
+		mProgressBarLayout.setVisibility(View.VISIBLE);
+		mParentActivity.mLoginManager.pratilipiLoginRequest(mUserName, mPwd,
+				this);
 	}
 
 	@Override
 	public Boolean setPostStatus(JSONObject finalResult, String postUrl,
 			int responseCode) {
-
-		mParentActivity.hideProgressBar();
+		mProgressBarLayout.setVisibility(View.GONE);
 		if (postUrl.equals(PConstants.USER_PROFILE_URL)) {
 			try {
 				if (finalResult != null) {
@@ -196,9 +198,10 @@ public class ProfileFragment extends BaseFragment implements
 									mUserProfile.firstName = userDataJSON
 											.getString("firstName");
 								}
-								if (userDataJSON.has("name"))
+								if (userDataJSON.has("name")) {
 									mUserProfile.name = userDataJSON
 											.getString("name");
+								}
 								if (userDataJSON.has("email")) {
 									mUserProfile.email = userDataJSON
 											.getString("email");
@@ -211,20 +214,19 @@ public class ProfileFragment extends BaseFragment implements
 								mLoginButton.setVisibility(View.GONE);
 								mUserProfileLayout.setAlpha(1);
 								return true;
-							}// end of userJSON has id check
-						}// end of userJSON Object null check
-					}// end of has user data check
-				}// end of final result check
+							}
+						}
+					}
+				}
 				responseFailure("Request is successfull but no valid response found");
 				return false;
 			} catch (Exception e) {
 				responseFailure("Request unsuccessfull due to " + e);
 			}
-
 		} else {
 			responseFailure("Request URL not found");
 		}
-		return super.setPostStatus(finalResult, postUrl, responseCode);
+		return null;
 	}
 
 }

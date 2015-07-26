@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.pratilipi.android.R;
@@ -32,18 +31,16 @@ public class StoreHomeRecyclerViewAdapter extends
 		View view;
 		ImageView imageView;
 		TextView titleTextView;
-		RatingBar ratingBar;
 		TextView freeTextView;
 		TextView sellingPriceTextView;
 
 		public ViewHolder(View view, ImageView imageView,
-				TextView titleTextView, RatingBar ratingBar,
-				TextView freeTextView, TextView sellingPriceTextView) {
+				TextView titleTextView, TextView freeTextView,
+				TextView sellingPriceTextView) {
 			super(view);
 			this.view = view;
 			this.imageView = imageView;
 			this.titleTextView = titleTextView;
-			this.ratingBar = ratingBar;
 			this.freeTextView = freeTextView;
 			this.sellingPriceTextView = sellingPriceTextView;
 		}
@@ -62,13 +59,12 @@ public class StoreHomeRecyclerViewAdapter extends
 		ImageView imageView = (ImageView) view.findViewById(R.id.image_view);
 		TextView titleTextView = (TextView) view
 				.findViewById(R.id.title_text_view);
-		RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 		TextView freeTextView = (TextView) view
 				.findViewById(R.id.free_text_view);
 		TextView sellingPriceTextView = (TextView) view
 				.findViewById(R.id.selling_price_text_view);
 		ViewHolder viewHolder = new ViewHolder(view, imageView, titleTextView,
-				ratingBar, freeTextView, sellingPriceTextView);
+				freeTextView, sellingPriceTextView);
 		return viewHolder;
 	}
 
@@ -90,7 +86,6 @@ public class StoreHomeRecyclerViewAdapter extends
 				+ "<br />&#45" + book.author.name));
 		viewHolder.titleTextView.setTypeface(FontManager.getInstance().get(
 				AppState.getInstance().getContentLanguage()));
-		viewHolder.ratingBar.setRating(book.ratingCount);
 		if (Math.random() > 0.5) {
 			viewHolder.freeTextView.setVisibility(View.VISIBLE);
 			viewHolder.sellingPriceTextView.setVisibility(View.GONE);

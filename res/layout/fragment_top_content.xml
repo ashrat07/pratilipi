@@ -25,4 +25,18 @@
         android:visibility="gone"
         app:textStyle="regular" />
 
+    <RelativeLayout
+        android:id="@+id/progress_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:background="@android:color/transparent"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -18,7 +18,9 @@ import com.google.gson.Gson;
 import com.pratilipi.android.R;
 import com.pratilipi.android.model.Book;
 import com.pratilipi.android.model.ShelfContent;
+import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
+import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.ShelfContentDataSource;
 
 public class BookSummaryFragment extends BaseFragment {
@@ -28,7 +30,6 @@ public class BookSummaryFragment extends BaseFragment {
 	private View mRootView;
 	private ImageView mImageView;
 	private TextView mTitleTextView;
-	private TextView mTitleEnTextView;
 	private TextView mAuthorNameTextView;
 	private RatingBar mRatingBar;
 	private TextView mStarCountTextView;
@@ -39,8 +40,7 @@ public class BookSummaryFragment extends BaseFragment {
 	private TextView mSellingPriceTextView;
 	private TextView mReadTextView;
 	private TextView mBuyNowTextView;
-	private TextView mReadSampleTextView;
-	private TextView mReviewTextView;
+	private TextView mAddToShelfTextView;
 	private TextView mSummaryTextView;
 
 	private ShelfContentDataSource mDataSource;
@@ -59,8 +59,6 @@ public class BookSummaryFragment extends BaseFragment {
 		mImageView = (ImageView) mRootView.findViewById(R.id.image_view);
 		mTitleTextView = (TextView) mRootView
 				.findViewById(R.id.title_text_view);
-		mTitleEnTextView = (TextView) mRootView
-				.findViewById(R.id.title_en_text_view);
 		mAuthorNameTextView = (TextView) mRootView
 				.findViewById(R.id.author_name_text_view);
 		mRatingBar = (RatingBar) mRootView.findViewById(R.id.rating_bar);
@@ -75,10 +73,8 @@ public class BookSummaryFragment extends BaseFragment {
 		mReadTextView = (TextView) mRootView.findViewById(R.id.read_text_view);
 		mBuyNowTextView = (TextView) mRootView
 				.findViewById(R.id.buy_now_text_view);
-		mReadSampleTextView = (TextView) mRootView
-				.findViewById(R.id.read_sample_text_view);
-		mReviewTextView = (TextView) mRootView
-				.findViewById(R.id.review_text_view);
+		mAddToShelfTextView = (TextView) mRootView
+				.findViewById(R.id.add_to_shelf_text_view);
 		mSummaryTextView = (TextView) mRootView
 				.findViewById(R.id.summary_text_view);
 
@@ -89,8 +85,69 @@ public class BookSummaryFragment extends BaseFragment {
 				mParentActivity.mImageLoader.displayImage(book.coverImageUrl,
 						mImageView);
 				mTitleTextView.setText(book.title);
-				mTitleEnTextView.setText(book.titleEn);
-				mAuthorNameTextView.setText(book.author.nameEn);
+				if (book.language != null) {
+					String pratilipiLanguageId = String
+							.valueOf(book.language.id);
+					if (pratilipiLanguageId
+							.equals(PConstants.CONTENT_LANGUAGE.HINDI
+									.getHashCode())) {
+						mTitleTextView.setTypeface(FontManager.getInstance()
+								.get(PConstants.CONTENT_LANGUAGE.HINDI
+										.toString()));
+					} else if (pratilipiLanguageId
+							.equals(PConstants.CONTENT_LANGUAGE.TAMIL
+									.getHashCode())) {
+						mTitleTextView.setTypeface(FontManager.getInstance()
+								.get(PConstants.CONTENT_LANGUAGE.TAMIL
+										.toString()));
+					} else if (pratilipiLanguageId
+							.equals(PConstants.CONTENT_LANGUAGE.GUJARATI
+									.getHashCode())) {
+						mTitleTextView.setTypeface(FontManager.getInstance()
+								.get(PConstants.CONTENT_LANGUAGE.GUJARATI
+										.toString()));
+					} else {
+						mTitleTextView.setTypeface(FontManager.getInstance()
+								.get(AppState.getInstance()
+										.getContentLanguage()));
+					}
+				} else {
+					mTitleTextView.setTypeface(FontManager.getInstance().get(
+							AppState.getInstance().getContentLanguage()));
+				}
+				mAuthorNameTextView.setText(book.author.name);
+				if (book.author != null) {
+					String languageId = String.valueOf(book.author.languageId);
+					if (languageId.equals(PConstants.CONTENT_LANGUAGE.HINDI
+							.getHashCode())) {
+						mAuthorNameTextView.setTypeface(FontManager
+								.getInstance().get(
+										PConstants.CONTENT_LANGUAGE.HINDI
+												.toString()));
+					} else if (languageId
+							.equals(PConstants.CONTENT_LANGUAGE.TAMIL
+									.getHashCode())) {
+						mAuthorNameTextView.setTypeface(FontManager
+								.getInstance().get(
+										PConstants.CONTENT_LANGUAGE.TAMIL
+												.toString()));
+					} else if (languageId
+							.equals(PConstants.CONTENT_LANGUAGE.GUJARATI
+									.getHashCode())) {
+						mAuthorNameTextView.setTypeface(FontManager
+								.getInstance().get(
+										PConstants.CONTENT_LANGUAGE.GUJARATI
+												.toString()));
+					} else {
+						mAuthorNameTextView.setTypeface(FontManager
+								.getInstance().get(
+										AppState.getInstance()
+												.getContentLanguage()));
+					}
+				} else {
+					mAuthorNameTextView.setTypeface(FontManager.getInstance()
+							.get(AppState.getInstance().getContentLanguage()));
+				}
 				mRatingBar.setRating(book.ratingCount);
 				mStarCountTextView.setText("(" + book.starCount + ")");
 				mGenreLayout.removeAllViews();
@@ -113,6 +170,23 @@ public class BookSummaryFragment extends BaseFragment {
 								@Override
 								public void onClick(View v) {
 									Gson gson = new Gson();
+									ShelfContent shelfContent = new ShelfContent(
+											0, book.id, gson.toJson(book),
+											mParentActivity.mApp
+													.getContentLanguage());
+
+									Intent i = new Intent(mParentActivity,
+											ReaderActivity.class);
+									i.putExtra("SHELF_CONTENT", shelfContent);
+									startActivity(i);
+								}
+							});
+					mAddToShelfTextView
+							.setOnClickListener(new View.OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									Gson gson = new Gson();
 									mDataSource = new ShelfContentDataSource(
 											mParentActivity);
 									mDataSource.open();
@@ -125,11 +199,6 @@ public class BookSummaryFragment extends BaseFragment {
 									Toast.makeText(mParentActivity,
 											"Added to Shelf",
 											Toast.LENGTH_SHORT).show();
-
-									Intent i = new Intent(mParentActivity,
-											ReaderActivity.class);
-									i.putExtra("SHELF_CONTENT", shelfContent);
-									startActivity(i);
 								}
 							});
 				} else {
@@ -142,19 +211,6 @@ public class BookSummaryFragment extends BaseFragment {
 					mReadTextView.setVisibility(View.GONE);
 					mBuyNowTextView.setVisibility(View.VISIBLE);
 				}
-				mReadSampleTextView
-						.setOnClickListener(new View.OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-							}
-						});
-				mReviewTextView.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-					}
-				});
 				if (!TextUtils.isEmpty(book.summary)) {
 					mSummaryTextView.setText(Html.fromHtml(book.summary));
 					mSummaryTextView.setTypeface(FontManager.getInstance().get(

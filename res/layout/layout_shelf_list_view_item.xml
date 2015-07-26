@@ -10,29 +10,12 @@
     android:orientation="horizontal"
     android:padding="10dp" >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="120dp"
-            android:layout_height="150dp"
-            android:contentDescription="@string/blank"
-            android:scaleType="fitXY" />
-
-        <com.pratilipi.android.widget.PTextView
-            android:id="@+id/title_text_view"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/image_view"
-            android:layout_gravity="center"
-            android:background="@color/background_transparent_white"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/text_xsmall" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/blank"
+        android:scaleType="fitXY" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -43,12 +26,12 @@
         android:paddingRight="10dp" >
 
         <com.pratilipi.android.widget.PTextView
-            android:id="@+id/title_en_text_view"
+            android:id="@+id/title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/text_xsmall"
+            android:textSize="@dimen/text_small"
             app:textStyle="regular" />
 
         <LinearLayout

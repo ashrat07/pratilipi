@@ -1,7 +1,5 @@
 package com.pratilipi.android.ui;
 
-import java.util.Vector;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import com.facebook.FacebookSdk;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -32,10 +31,12 @@ import com.pratilipi.android.util.PThreadPool;
 import com.pratilipi.android.util.PopupErrorRunner;
 import com.pratilipi.android.util.RegisterManager;
 
+import java.util.Vector;
+
 public class SplashActivity extends FragmentActivity implements
 		OnBackStackChangedListener {
 
-	private View mProgressBarParent;
+	private View mProgressBarLayout;
 	private Menu mMenu;
 
 	public AppState mApp;
@@ -43,6 +44,9 @@ public class SplashActivity extends FragmentActivity implements
 	public PStack mStack;
 	private Vector<Runnable> runners = new Vector<>();
 	private Boolean isUISaved = false;
+
+	public Boolean isBackgroundLogin = false;
+	public Boolean isAutoLogin = false;
 	public LoginManager mLoginManager = new LoginManager();
 	public RegisterManager mRegisterManager = new RegisterManager();
 
@@ -61,7 +65,7 @@ public class SplashActivity extends FragmentActivity implements
 		mStack = new PStack(getSupportFragmentManager());
 
 		setContentView(R.layout.activity_splash);
-		mProgressBarParent = findViewById(R.id.progress_bar_parent);
+		mProgressBarLayout = findViewById(R.id.progress_bar_layout);
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 		shouldDisplayHomeUp();
 
@@ -74,6 +78,8 @@ public class SplashActivity extends FragmentActivity implements
 		ImageLoader.getInstance().init(config);
 		mImageLoader = ImageLoader.getInstance();
 
+		FacebookSdk.sdkInitialize(this);
+
 		handleSearchIntent(getIntent());
 
 		if (TextUtils.isEmpty(mApp.getContentLanguageHashCode())) {
@@ -81,7 +87,6 @@ public class SplashActivity extends FragmentActivity implements
 		} else {
 			showNextView(new StoreFragment());
 		}
-
 	}
 
 	@Override
@@ -115,6 +120,16 @@ public class SplashActivity extends FragmentActivity implements
 				bundle.putString("QUERY", query);
 				showNextView(new SearchFragment(), bundle);
 			}
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == LoginFragment.RC_SIGN_IN) {
+			LoginFragment fragment = (LoginFragment) getSupportFragmentManager()
+					.findFragmentByTag(LoginFragment.TAG_NAME);
+			fragment.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -165,10 +180,10 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (mStack.getCount() <= 1) {
-			finish();
-		} else {
-
+		// if (mStack.getCount() <= 1) {
+		// finish();
+		// } else {
+		if (mStack.getCount() > 1) {
 			if (mStack.getCount() == 2
 					&& mMenu.findItem(R.id.search).isActionViewExpanded()) {
 				mMenu.findItem(R.id.search).collapseActionView();
@@ -191,16 +206,16 @@ public class SplashActivity extends FragmentActivity implements
 	}
 
 	public void showProgressBar() {
-		if (mProgressBarParent != null
-				&& mProgressBarParent.getVisibility() != View.VISIBLE) {
-			mProgressBarParent.setVisibility(View.VISIBLE);
+		if (mProgressBarLayout != null
+				&& mProgressBarLayout.getVisibility() != View.VISIBLE) {
+			mProgressBarLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
 	public void hideProgressBar() {
-		if (mProgressBarParent != null
-				&& mProgressBarParent.getVisibility() == View.VISIBLE) {
-			mProgressBarParent.setVisibility(View.GONE);
+		if (mProgressBarLayout != null
+				&& mProgressBarLayout.getVisibility() == View.VISIBLE) {
+			mProgressBarLayout.setVisibility(View.GONE);
 		}
 	}
 

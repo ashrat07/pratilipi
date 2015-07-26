@@ -1,7 +1,5 @@
 package com.pratilipi.android.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -18,6 +16,9 @@ import com.pratilipi.android.model.Book;
 import com.pratilipi.android.ui.SplashActivity;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.FontManager;
+import com.pratilipi.android.util.PConstants;
+
+import java.util.List;
 
 public class CategoryAdapter extends ArrayAdapter<Book> {
 
@@ -27,7 +28,6 @@ public class CategoryAdapter extends ArrayAdapter<Book> {
 	static class ViewHolder {
 		ImageView imageView;
 		TextView titleTextView;
-		TextView titleEnTextView;
 		TextView authorNameTextView;
 		RatingBar ratingBar;
 		TextView starCountTextView;
@@ -56,10 +56,6 @@ public class CategoryAdapter extends ArrayAdapter<Book> {
 					.findViewById(R.id.image_view);
 			viewHolder.titleTextView = (TextView) convertView
 					.findViewById(R.id.title_text_view);
-			viewHolder.titleTextView.setTypeface(FontManager.getInstance().get(
-					AppState.getInstance().getContentLanguage()));
-			viewHolder.titleEnTextView = (TextView) convertView
-					.findViewById(R.id.title_en_text_view);
 			viewHolder.authorNameTextView = (TextView) convertView
 					.findViewById(R.id.author_name_text_view);
 			viewHolder.ratingBar = (RatingBar) convertView
@@ -87,8 +83,55 @@ public class CategoryAdapter extends ArrayAdapter<Book> {
 		activity.mImageLoader.displayImage(book.coverImageUrl,
 				viewHolder.imageView);
 		viewHolder.titleTextView.setText(book.title);
-		viewHolder.titleEnTextView.setText(book.titleEn);
-		viewHolder.authorNameTextView.setText(book.author.nameEn);
+		if (book.language != null) {
+			String pratilipiLanguageId = String.valueOf(book.language.id);
+			if (pratilipiLanguageId.equals(PConstants.CONTENT_LANGUAGE.HINDI
+					.getHashCode())) {
+				viewHolder.titleTextView.setTypeface(FontManager.getInstance()
+						.get(PConstants.CONTENT_LANGUAGE.HINDI.toString()));
+			} else if (pratilipiLanguageId
+					.equals(PConstants.CONTENT_LANGUAGE.TAMIL.getHashCode())) {
+				viewHolder.titleTextView.setTypeface(FontManager.getInstance()
+						.get(PConstants.CONTENT_LANGUAGE.TAMIL.toString()));
+			} else if (pratilipiLanguageId
+					.equals(PConstants.CONTENT_LANGUAGE.GUJARATI.getHashCode())) {
+				viewHolder.titleTextView.setTypeface(FontManager.getInstance()
+						.get(PConstants.CONTENT_LANGUAGE.GUJARATI.toString()));
+			} else {
+				viewHolder.titleTextView.setTypeface(FontManager.getInstance()
+						.get(AppState.getInstance().getContentLanguage()));
+			}
+		} else {
+			viewHolder.titleTextView.setTypeface(FontManager.getInstance().get(
+					AppState.getInstance().getContentLanguage()));
+		}
+		viewHolder.authorNameTextView.setText(book.author.name);
+		if (book.author != null) {
+			String languageId = String.valueOf(book.author.languageId);
+			if (languageId.equals(PConstants.CONTENT_LANGUAGE.HINDI
+					.getHashCode())) {
+				viewHolder.authorNameTextView.setTypeface(FontManager
+						.getInstance().get(
+								PConstants.CONTENT_LANGUAGE.HINDI.toString()));
+			} else if (languageId.equals(PConstants.CONTENT_LANGUAGE.TAMIL
+					.getHashCode())) {
+				viewHolder.authorNameTextView.setTypeface(FontManager
+						.getInstance().get(
+								PConstants.CONTENT_LANGUAGE.TAMIL.toString()));
+			} else if (languageId.equals(PConstants.CONTENT_LANGUAGE.GUJARATI
+					.getHashCode())) {
+				viewHolder.authorNameTextView.setTypeface(FontManager
+						.getInstance()
+						.get(PConstants.CONTENT_LANGUAGE.GUJARATI.toString()));
+			} else {
+				viewHolder.authorNameTextView.setTypeface(FontManager
+						.getInstance().get(
+								AppState.getInstance().getContentLanguage()));
+			}
+		} else {
+			viewHolder.authorNameTextView.setTypeface(FontManager.getInstance()
+					.get(AppState.getInstance().getContentLanguage()));
+		}
 		viewHolder.ratingBar.setRating(book.ratingCount);
 		viewHolder.starCountTextView.setText("(" + book.starCount + ")");
 		if (Math.random() < 0.5) {

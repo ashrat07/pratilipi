@@ -14,7 +14,7 @@ public class RegisterManager implements HttpResponseListener {
 	private AppState mAppState;
 	private String userName;
 	private String userPwd;
-	
+
 	public void registerUserRequest(String userName, String userPwd,
 			String userEmail, IHttpResponseHelper registerHelper) {
 		this.registerHelper = registerHelper;
@@ -25,7 +25,6 @@ public class RegisterManager implements HttpResponseListener {
 		requestHashMap.put("name", userName);
 		requestHashMap.put("password", userPwd);
 		registerPutRequest.run(requestHashMap);
-
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class RegisterManager implements HttpResponseListener {
 					if (finalResult.has("accessToken")
 							&& finalResult.getString("accessToken") != null) {
 						mAppState = AppState.getInstance();
-						//Assign access token and Login credentials to appstate
+						// Assign access token and Login credentials to appstate
 						mAppState.setAccessToken(finalResult
 								.getString("accessToken"));
 						Login loginObject = new Login(userName, userPwd, "");
@@ -52,26 +51,24 @@ public class RegisterManager implements HttpResponseListener {
 								.responseFailure("Please check internet connection.");
 
 				}
-			} else if (registerHelper != null)
-			{
+			} else if (registerHelper != null) {
 				registerHelper
 						.responseFailure("Please check internet connection.");
 				return null;
-		}}
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Boolean setPostStatus(JSONObject finalResult, String postUrl,
 			int responseCode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

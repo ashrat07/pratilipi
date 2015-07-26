@@ -1,13 +1,5 @@
 package com.pratilipi.android.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -26,6 +18,14 @@ import com.pratilipi.android.model.Book;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class TopContentFragment extends BaseFragment {
 
 	public static final String TAG_NAME = "Store Listing";
@@ -34,12 +34,14 @@ public class TopContentFragment extends BaseFragment {
 	private View mRootView;
 	private ListView mListView;
 	private View mEmptyMessageView;
-	private View mHeaderView;
 	private View mFooterView;
+	private View mProgressViewLayout;
+
 	private TopContentAdapter mAdapter;
 	private String mCategory;
 	private String mCursor;
 	private boolean mLoadNext = false;
+	private HttpGet topContentRequest;
 
 	@Override
 	public String getCustomTag() {
@@ -48,20 +50,17 @@ public class TopContentFragment extends BaseFragment {
 
 	@Override
 	@Nullable
-	public View onCreateView(LayoutInflater inflater,
-			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_top_content, container,
 				false);
 		mListView = (ListView) mRootView.findViewById(R.id.list_view);
 		mEmptyMessageView = mRootView.findViewById(R.id.empty_message_view);
-		mHeaderView = inflater.inflate(
-				R.layout.layout_top_content_list_view_header, new LinearLayout(
-						mParentActivity));
 		mFooterView = inflater.inflate(
 				R.layout.layout_top_content_list_view_footer, new LinearLayout(
 						mParentActivity));
+		mProgressViewLayout = mRootView.findViewById(R.id.progress_bar_layout);
 
-		mListView.addHeaderView(mHeaderView);
 		mListView.addFooterView(mFooterView);
 		mAdapter = new TopContentAdapter(mParentActivity,
 				R.layout.layout_top_content_list_view_item, mList);
@@ -71,7 +70,7 @@ public class TopContentFragment extends BaseFragment {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long id) {
-				Book book = mList.get(position - 1);
+				Book book = mList.get(position);
 				Bundle bundle = new Bundle();
 				bundle.putParcelable("BOOK", book);
 				mParentActivity.showNextView(new BookSummaryFragment(), bundle);
@@ -99,7 +98,7 @@ public class TopContentFragment extends BaseFragment {
 			String category = bundle.getString("CATEGORY", "");
 			mCategory = category;
 			if (mList.size() == 0) {
-				mParentActivity.showProgressBar();
+				mProgressViewLayout.setVisibility(View.VISIBLE);
 				requestTopContent();
 			} else {
 				mListView.setVisibility(View.VISIBLE);
@@ -112,6 +111,14 @@ public class TopContentFragment extends BaseFragment {
 		}
 
 		return mRootView;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (topContentRequest != null) {
+			topContentRequest.cancel(true);
+		}
+		super.onBackPressed();
 	}
 
 	private void requestTopContent() {
@@ -136,7 +143,7 @@ public class TopContentFragment extends BaseFragment {
 	public Boolean setGetStatus(JSONObject finalResult, String getUrl,
 			int responseCode) {
 		if (PConstants.TOP_CONTENT_URL.equals(getUrl)) {
-			mParentActivity.hideProgressBar();
+			mProgressViewLayout.setVisibility(View.GONE);
 			if (finalResult != null) {
 				try {
 					JSONArray dataArray = finalResult
