@@ -8,18 +8,18 @@ import android.os.Parcelable;
 
 public class StoreContent implements Parcelable {
 
-	public String id;
+	public Long id;
 	public String name;
 	public List<Book> content;
 
-	public StoreContent(String id, String name, List<Book> content) {
+	public StoreContent(Long id, String name, List<Book> content) {
 		this.id = id;
 		this.name = name;
 		this.content = content;
 	}
 
 	protected StoreContent(Parcel in) {
-		id = in.readString();
+		id = in.readLong();
 		name = in.readString();
 		if (in.readByte() == 0x01) {
 			content = new ArrayList<Book>();
@@ -36,7 +36,7 @@ public class StoreContent implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(id);
+		dest.writeLong(id);
 		dest.writeString(name);
 		if (content == null) {
 			dest.writeByte((byte) (0x00));

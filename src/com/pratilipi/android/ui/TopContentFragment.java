@@ -38,7 +38,7 @@ public class TopContentFragment extends BaseFragment {
 	private View mProgressViewLayout;
 
 	private TopContentAdapter mAdapter;
-	private String mCategory;
+	private Long mCategoryId;
 	private String mCursor;
 	private boolean mLoadNext = false;
 	private HttpGet topContentRequest;
@@ -95,8 +95,8 @@ public class TopContentFragment extends BaseFragment {
 
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-			String category = bundle.getString("CATEGORY", "");
-			mCategory = category;
+			Long categoryId = bundle.getLong("CATEGORY_ID");
+			mCategoryId = categoryId;
 			if (mList.size() == 0) {
 				mProgressViewLayout.setVisibility(View.VISIBLE);
 				requestTopContent();
@@ -130,7 +130,7 @@ public class TopContentFragment extends BaseFragment {
 		requestHashMap.put("languageId", AppState.getInstance()
 				.getContentLanguageHashCode());
 		requestHashMap.put("state", "PUBLISHED");
-		requestHashMap.put("category", mCategory);
+		requestHashMap.put("categoryId", String.valueOf(mCategoryId));
 		requestHashMap.put("resultCount", "10");
 		if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
 			requestHashMap.put("cursor", mCursor);

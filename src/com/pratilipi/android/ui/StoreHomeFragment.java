@@ -123,7 +123,7 @@ public class StoreHomeFragment extends BaseFragment {
 								JSONObject listingObject = listingArray
 										.getJSONObject(i);
 								String name = listingObject.getString("name");
-								String id = listingObject.getString("id");
+								Long id = listingObject.getLong("id");
 								JSONArray contentArray = listingObject
 										.getJSONArray("content");
 								List<Book> content = new ArrayList<>();

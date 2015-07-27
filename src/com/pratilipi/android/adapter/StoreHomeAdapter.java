@@ -72,7 +72,7 @@ public class StoreHomeAdapter extends ArrayAdapter<StoreContent> {
 					@Override
 					public void onClick(View v) {
 						Bundle bundle = new Bundle();
-						bundle.putString("CATEGORY", storeContent.id);
+						bundle.putLong("CATEGORY_ID", storeContent.id);
 						activity.showNextView(new TopContentFragment(), bundle);
 					}
 				});

@@ -329,7 +329,8 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 
 		HashMap<String, String> requestHashMap = new HashMap<>();
 		requestHashMap.put(PConstants.URL, PConstants.CONTENT_URL);
-		requestHashMap.put("pratilipiId", "" + mShelfContent.pratilipiId);
+		requestHashMap.put("pratilipiId",
+				String.valueOf(mShelfContent.pratilipiId));
 		requestHashMap.put("pageNo", String.valueOf(mPratilipiPageNo));
 
 		contentRequest.run(requestHashMap);

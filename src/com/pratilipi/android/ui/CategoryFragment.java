@@ -127,7 +127,7 @@ public class CategoryFragment extends BaseFragment {
 		requestHashMap.put(PConstants.URL, PConstants.CATEGORY_URL);
 		requestHashMap.put("languageId",
 				mParentActivity.mApp.getContentLanguageHashCode());
-		requestHashMap.put("categoryId", "" + mCategoryId);
+		requestHashMap.put("categoryId", String.valueOf(mCategoryId));
 		requestHashMap.put("resultCount", "10");
 		if (mCursor != null && !TextUtils.isEmpty(mCursor)) {
 			requestHashMap.put("cursor", mCursor);
