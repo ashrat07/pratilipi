@@ -2,12 +2,12 @@ package com.pratilipi.android.ui;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.support.v4.app.Fragment;
+
 import com.pratilipi.android.R;
 import com.pratilipi.android.http.HttpResponseListener;
 import com.pratilipi.android.util.LoggerUtils;
-
-import android.app.Activity;
-import android.support.v4.app.Fragment;
 
 public abstract class BaseFragment extends Fragment implements
 		HttpResponseListener {

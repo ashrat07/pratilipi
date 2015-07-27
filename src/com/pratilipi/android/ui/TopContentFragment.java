@@ -1,5 +1,13 @@
 package com.pratilipi.android.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -17,14 +25,6 @@ import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Book;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class TopContentFragment extends BaseFragment {
 
@@ -114,11 +114,11 @@ public class TopContentFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onBackPressed() {
+	public void onStop() {
 		if (topContentRequest != null) {
 			topContentRequest.cancel(true);
 		}
-		super.onBackPressed();
+		super.onStop();
 	}
 
 	private void requestTopContent() {

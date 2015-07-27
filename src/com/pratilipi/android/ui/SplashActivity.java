@@ -1,5 +1,7 @@
 package com.pratilipi.android.ui;
 
+import java.util.Vector;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -30,8 +32,6 @@ import com.pratilipi.android.util.PStack;
 import com.pratilipi.android.util.PThreadPool;
 import com.pratilipi.android.util.PopupErrorRunner;
 import com.pratilipi.android.util.RegisterManager;
-
-import java.util.Vector;
 
 public class SplashActivity extends FragmentActivity implements
 		OnBackStackChangedListener {
@@ -162,7 +162,9 @@ public class SplashActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.onBackPressed();
+			if (mStack.getCount() > 1) {
+				this.onBackPressed();
+			}
 			return true;
 
 		case R.id.profile:
@@ -180,10 +182,9 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		// if (mStack.getCount() <= 1) {
-		// finish();
-		// } else {
-		if (mStack.getCount() > 1) {
+		if (mStack.getCount() <= 1) {
+			finish();
+		} else {
 			if (mStack.getCount() == 2
 					&& mMenu.findItem(R.id.search).isActionViewExpanded()) {
 				mMenu.findItem(R.id.search).collapseActionView();

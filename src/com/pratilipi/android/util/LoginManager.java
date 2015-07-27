@@ -47,7 +47,7 @@ public class LoginManager implements HttpResponseListener {
 		requestHashMap.put("socialId", socialId);
 		requestHashMap.put("loginType", "google");
 
-		googleLogin.execute(requestHashMap);
+		googleLogin.run(requestHashMap);
 	}
 
 	public void facebookLoginRequest(String accessToken, String socialId,
@@ -63,7 +63,7 @@ public class LoginManager implements HttpResponseListener {
 		requestHashMap.put("socialId", socialId);
 		requestHashMap.put("loginType", "facebook");
 
-		facebookLogin.execute(requestHashMap);
+		facebookLogin.run(requestHashMap);
 	}
 
 	@Override

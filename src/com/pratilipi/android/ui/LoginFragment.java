@@ -1,5 +1,7 @@
 package com.pratilipi.android.ui;
 
+import java.util.Arrays;
+
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -25,8 +27,6 @@ import com.pratilipi.android.R;
 import com.pratilipi.android.iHelper.IHttpResponseHelper;
 import com.pratilipi.android.util.GoogleManager;
 
-import java.util.Arrays;
-
 public class LoginFragment extends BaseFragment implements IHttpResponseHelper,
 		GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener {
@@ -44,7 +44,6 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper,
 
 	public static final int RC_SIGN_IN = 2930;
 	private GoogleApiClient mGoogleApiClient;
-	private boolean mIntentInProgress;
 	private boolean mIsResolving = false;
 	private boolean mShouldResolve = false;
 
@@ -197,18 +196,6 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper,
 		// TODO: showSignedInUI();
 	}
 
-	private void onSignOutClicked() {
-		// Clear the default account so that GoogleApiClient will not
-		// automatically
-		// connect in the future.
-		if (mGoogleApiClient.isConnected()) {
-			Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-			mGoogleApiClient.disconnect();
-		}
-
-		// TODO: showSignedOutUI();
-	}
-
 	@Override
 	public void onConnectionSuspended(int cause) {
 		Log.e("google", "onConnectionSuspended");
@@ -221,7 +208,7 @@ public class LoginFragment extends BaseFragment implements IHttpResponseHelper,
 		if (requestCode == RC_SIGN_IN) {
 			// If the error resolution was not successful we should not resolve
 			// further.
-			if (resultCode != mParentActivity.RESULT_OK) {
+			if (resultCode != -1) {
 				mShouldResolve = false;
 			}
 

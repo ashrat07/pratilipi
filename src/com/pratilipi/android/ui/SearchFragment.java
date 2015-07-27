@@ -1,5 +1,13 @@
 package com.pratilipi.android.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -16,14 +24,6 @@ import com.pratilipi.android.adapter.SearchAdapter;
 import com.pratilipi.android.http.HttpGet;
 import com.pratilipi.android.model.Book;
 import com.pratilipi.android.util.PConstants;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class SearchFragment extends BaseFragment {
 
@@ -121,11 +121,11 @@ public class SearchFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onBackPressed() {
+	public void onStop() {
 		if (searchRequest != null) {
 			searchRequest.cancel(true);
 		}
-		super.onBackPressed();
+		super.onStop();
 	}
 
 	private void requestSearch() {

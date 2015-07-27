@@ -1,5 +1,11 @@
 package com.pratilipi.android.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,12 +39,6 @@ import com.pratilipi.android.model.ShelfContent;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.PageContentDataSource;
 import com.pratilipi.android.util.SystemUiHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ReaderActivity extends Activity implements HttpResponseListener {
 
@@ -317,11 +317,11 @@ public class ReaderActivity extends Activity implements HttpResponseListener {
 	}
 
 	@Override
-	public void onBackPressed() {
+	protected void onStop() {
 		if (contentRequest != null) {
 			contentRequest.cancel(true);
 		}
-		super.onBackPressed();
+		super.onStop();
 	}
 
 	private void requestContent() {

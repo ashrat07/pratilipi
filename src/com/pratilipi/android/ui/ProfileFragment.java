@@ -1,5 +1,9 @@
 package com.pratilipi.android.ui;
 
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,10 +24,6 @@ import com.pratilipi.android.model.Login;
 import com.pratilipi.android.model.UserProfile;
 import com.pratilipi.android.util.AppState;
 import com.pratilipi.android.util.PConstants;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class ProfileFragment extends BaseFragment implements
 		IHttpResponseHelper {

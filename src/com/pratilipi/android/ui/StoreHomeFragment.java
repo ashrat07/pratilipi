@@ -1,5 +1,13 @@
 package com.pratilipi.android.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +23,6 @@ import com.pratilipi.android.model.Book;
 import com.pratilipi.android.model.StoreContent;
 import com.pratilipi.android.util.PConstants;
 import com.pratilipi.android.util.StoreHomeDataSource;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class StoreHomeFragment extends BaseFragment {
 
@@ -81,11 +81,11 @@ public class StoreHomeFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onBackPressed() {
+	public void onStop() {
 		if (storeHomeListingsRequest != null) {
 			storeHomeListingsRequest.cancel(true);
 		}
-		super.onBackPressed();
+		super.onStop();
 	}
 
 	private void requestStoreHomeTopContent() {

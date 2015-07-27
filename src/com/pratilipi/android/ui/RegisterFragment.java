@@ -1,5 +1,7 @@
 package com.pratilipi.android.ui;
 
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +12,6 @@ import android.widget.Toast;
 
 import com.pratilipi.android.R;
 import com.pratilipi.android.iHelper.IHttpResponseHelper;
-
-import org.json.JSONObject;
 
 public class RegisterFragment extends BaseFragment implements
 		IHttpResponseHelper {
