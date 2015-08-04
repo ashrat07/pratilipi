@@ -1,2 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/com/pratilipi/android/catalog/Catalog.java=UTF-8
+encoding//src/com/pratilipi/android/fragment/ReadingFragment.java=UTF-8
+encoding//src/com/pratilipi/android/htmlspanner/TextUtil.java=UTF-8
 encoding//src/com/pratilipi/android/model/Book.java=UTF-8
+encoding//src/com/pratilipi/android/util/TextUtil.java=UTF-8

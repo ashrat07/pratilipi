@@ -11,4 +11,10 @@
     <dimen name="text_xsmall">12sp</dimen>
     <dimen name="text_xxsmall">10sp</dimen>
 
+    <!-- reader -->
+    <dimen name="ambilwarna_hsvHeight">240dp</dimen>
+    <dimen name="ambilwarna_hsvWidth">240dp</dimen>
+    <dimen name="ambilwarna_hueWidth">30dp</dimen>
+    <dimen name="ambilwarna_spacer">8dp</dimen>
+
 </resources>

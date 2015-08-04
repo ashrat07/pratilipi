@@ -22,4 +22,11 @@
     <color name="background_transparent_white">#C8FFFFFF</color>
     <color name="background_peach">#FAE5CF</color>
 
+    <!-- reader -->
+    <color name="opaque_white">#ffffff</color>
+    <color name="dark_grey">#888888</color>
+    <color name="translucent_black">#C0000000</color>
+    <color name="opaque_black">#000000</color>
+    <color name="orange">#ff5500</color>
+
 </resources>
